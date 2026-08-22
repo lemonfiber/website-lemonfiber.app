@@ -6,7 +6,7 @@
   "type": "module",
   "license": "Hippocratic-3.0",
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=26"
   },
   "scripts": {
     "dev": "astro dev",
@@ -20,13 +20,13 @@
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "5.2.6",
     "@fontsource-variable/jetbrains-mono": "5.2.6",
-    "astro": "7.1.4",
+    "astro": "7.2.4",
     "marked": "^15.0.12"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
     "@astrojs/sitemap": "^3.7.3",
-    "@types/node": "22.18.9",
+    "@types/node": "26.2.0",
     "typescript": "5.7.3"
   }
 }
