@@ -134,7 +134,7 @@ const epochs = [
                         const state = built?.status ?? "todo";
                         return (
                           <li>
-                            <a href={`/roadmap/${f.id.toLowerCase()}`}>
+                            <a href={f.href}>
                               <span class:list={["feat__mark", `is-${state}`]} aria-hidden="true">
                                 {statusGlyph(state)}
                               </span>
