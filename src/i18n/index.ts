@@ -7,4 +7,3 @@
 
 export { copy } from "./copy";
 export { homeCopy } from "./home";
-export { pages } from "./pages";

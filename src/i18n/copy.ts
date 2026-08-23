@@ -19,6 +19,7 @@ export const copy = {
     transparency: "Transparency",
     contribute: "Contribute",
     install: "Install",
+    docs: "Docs",
     changelog: "Changelog",
     faq: "FAQ",
     colophon: "Colophon",
@@ -72,18 +73,6 @@ export const copy = {
     planned: "Planned",
   },
 
-  install: {
-    binaries: "Prebuilt binaries",
-    macos: "macOS",
-    linux: "Linux",
-    windows: "Windows",
-    checksums: "Checksums & signatures",
-    other: "Other",
-    noRelease: "No release has been published yet. The install channels above build from source in the meantime.",
-    noAssets: "This release ships no attached binaries yet — build from source, or see the release notes:",
-    verifyNote:
-      "Every release carries a checksum file. Verify the download against it before running it; the install script does this for you.",
-  },
 
   changelog: {
     eyebrow: "Releases",
@@ -109,24 +98,7 @@ export const copy = {
     noMatches: "Nothing matches those filters.",
   },
 
-  faq: {
-    eyebrow: "Questions",
-    title: "Frequently asked questions",
-    lead: "Answered once, in the specification, and rendered here — so the answer on this page and the answer in the spec cannot disagree.",
-    unavailable:
-      "The specification does not carry an FAQ appendix yet. When 90-appendix/faq.md lands there, it renders here automatically.",
-    source: "Browse the specification",
-  },
 
-  colophon: {
-    eyebrow: "Credits",
-    title: "Colophon",
-    lead: "Lemonfiber orchestrates other people's excellent work. This list is authored in the specification and rendered here, so the credits cannot drift from what is actually used.",
-    unavailable:
-      "The specification does not carry a colophon appendix yet. When 90-appendix/colophon.md lands there, it renders here automatically.",
-    readInSpec: "Browse the specification",
-    source: "Browse the specification",
-  },
 
   notFound: {
     title: "That page isn't here.",

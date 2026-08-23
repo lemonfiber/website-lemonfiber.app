@@ -13,6 +13,7 @@ export const site = {
   repo: "https://github.com/lemonfiber/website-lemonfiber.app",
   discord: "https://discord.nightworks.io",
   specUrl: "https://github.com/lemonfiber/spec",
+  docsUrl: "https://docs.lemonfiber.app",
   roadmapUrl: "https://github.com/lemonfiber/spec/blob/main/00-overview/roadmap.md",
   license: "Hippocratic License 3.0",
   licenseUrl: "https://firstdonoharm.dev",
