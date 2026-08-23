@@ -1,9 +1,11 @@
-# The zero-new-issues standard (Q-R63/R64), enforced here as in every other repo.
+# Zero open SonarCloud issues (Q-R64), enforced here as in every other repo.
 #
 # There is no scan job: this repository is analysed by SonarCloud's Automatic
 # Analysis, which posts the same summary comment a CI-driven scan would. The
-# shared gate reads that comment and fails on any new issue, so the standard is
-# enforced identically whichever way the analysis was produced.
+# shared gate reads that comment and fails on any new issue, which is what holds
+# the open count at zero — the free plan's own gate cannot be configured to that
+# standard (`Q-R63`). It is enforced identically whichever way the analysis was
+# produced.
 #
 # Without this the repository had SonarCloud's own quality gate and nothing else
 # — and that gate passes with new issues on it, which is the whole reason
