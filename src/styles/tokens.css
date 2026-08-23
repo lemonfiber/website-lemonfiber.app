@@ -16,7 +16,7 @@
   --lf-lemon: #f0c419;
   --lf-lemon-bright: #ffd84d;
   --lf-fiber: #e07a17;
-  --lf-fiber-deep: #a85a12;
+  --lf-fiber-deep: #9c5411;
   --lf-fiber-light: #f09a3c;
   --lf-leaf: #5b6b2a;
 
@@ -26,8 +26,8 @@
   --lf-canvas: #ede7d5;
   --lf-line: #dad2bc;
   --lf-line-soft: #e4dcc7;
-  --lf-text-muted: #6e6a57;
-  --lf-text-faint: #8b8770;
+  --lf-text-muted: #565344;
+  --lf-text-faint: #6a6756;
 
   /* ── Type ──────────────────────────────────────────────────────── */
   --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
@@ -141,7 +141,7 @@
   --border-soft: #2b2921;
   --text: var(--lf-paper);
   --text-muted: #b3ac93;
-  --text-faint: #877f66;
+  --text-faint: #958e78;
   --accent: var(--lf-fiber-light);
   --accent-strong: var(--lf-fiber);
   --accent-2: var(--lf-lemon-bright);
@@ -180,7 +180,7 @@
     --border-soft: #2b2921;
     --text: var(--lf-paper);
     --text-muted: #b3ac93;
-    --text-faint: #877f66;
+    --text-faint: #958e78;
     --accent: var(--lf-fiber-light);
     --accent-strong: var(--lf-fiber);
     --accent-2: var(--lf-lemon-bright);
