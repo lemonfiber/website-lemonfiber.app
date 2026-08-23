@@ -1,8 +1,11 @@
 import type { Repo } from "../lib/types";
 
-// Fallback snapshot for the org's repositories. Used only when GitHub is
-// unreachable at build time so a build (and local dev without a token) never
-// fails. When GitHub is reachable, live metrics override all of this.
+// The org's repositories: every public one, in the order the site shows them,
+// each with the role it plays. This list is what the site renders — GitHub
+// overlays description, language, stars, issues and push time onto it at build
+// time, and a repository missing from here appears nowhere, live or not. The
+// committed values are the snapshot a build falls back to when GitHub is
+// unreachable, so a build (and local dev without a token) never fails.
 //
 // The milestone snapshot moved to seed-milestones.ts and the release snapshot
 // to seed-releases.ts. Both are re-exported here so existing imports of
@@ -44,6 +47,33 @@ export const seedRepos: Repo[] = [
     openIssues: 0,
   },
   {
+    name: "lemonfiber-web",
+    role: "the web surface",
+    description: "The operator console and household view — a static app that draws the binary's API and implements nothing.",
+    language: "TypeScript",
+    url: "https://github.com/lemonfiber/lemonfiber-web",
+    stars: 0,
+    openIssues: 0,
+  },
+  {
+    name: "sdk-ts",
+    role: "the TypeScript client",
+    description: "Typed calls, a typed event stream and a typed error over the local web API. @lemonfiber/sdk-ts.",
+    language: "TypeScript",
+    url: "https://github.com/lemonfiber/sdk-ts",
+    stars: 0,
+    openIssues: 0,
+  },
+  {
+    name: "sdk-php",
+    role: "the PHP client",
+    description: "The same contract as a peer, not a translation — lemonfiber/sdk-php on Packagist.",
+    language: "PHP",
+    url: "https://github.com/lemonfiber/sdk-php",
+    stars: 0,
+    openIssues: 0,
+  },
+  {
     name: "brand",
     role: "identity",
     description: "Logo, colour and type — design tokens with contrast CI.",
@@ -67,6 +97,24 @@ export const seedRepos: Repo[] = [
     description: "This frontpage — a build-in-the-open site driven by the org.",
     language: "Astro",
     url: "https://github.com/lemonfiber/website-lemonfiber.app",
+    stars: 0,
+    openIssues: 0,
+  },
+  {
+    name: "website-docs.lemonfiber.app",
+    role: "the docs",
+    description: "docs.lemonfiber.app — the task-shaped documentation, plus each repo's own docs pinned and rendered.",
+    language: "TypeScript",
+    url: "https://github.com/lemonfiber/website-docs.lemonfiber.app",
+    stars: 0,
+    openIssues: 0,
+  },
+  {
+    name: ".github",
+    role: "inherited",
+    description: "Community health files, issue templates and the dependency policy every repo inherits.",
+    language: "Markdown",
+    url: "https://github.com/lemonfiber/.github",
     stars: 0,
     openIssues: 0,
   },

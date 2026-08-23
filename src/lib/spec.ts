@@ -320,9 +320,30 @@ interface ApiPull {
   merged_at: string | null;
 }
 
+// Every repository in the org where a change can land. A `Spec:` trailer is
+// required on all of them, so work is only findable by requirement in the ones
+// named here.
+const INDEXED_REPOS = [
+  "lemonfiber",
+  "spec",
+  "lemonfiber-web",
+  "sdk-ts",
+  "sdk-php",
+  "lemonfiber-media-stack",
+  "website-lemonfiber.app",
+  "website-docs.lemonfiber.app",
+  "brand",
+  "homebrew-tap",
+  ".github",
+];
+
+// A page is only fetched while the one before it came back full, so the bound is
+// what a repository may grow to rather than what it costs today.
+const MAX_PAGES = 20;
+
 /** Read one repository's pull requests into the index, a page at a time. */
 async function indexRepo(repo: string, index: Map<string, FeatureWork[]>): Promise<void> {
-  for (let page = 1; page <= 3; page += 1) {
+  for (let page = 1; page <= MAX_PAGES; page += 1) {
     const pulls = await getJSON<ApiPull[]>(
       `${API}/repos/${ORG}/${repo}/pulls?state=all&per_page=100&page=${page}`,
     );
@@ -350,7 +371,7 @@ export async function featureWorkIndex(): Promise<Map<string, FeatureWork[]>> {
   if (workIndex) return workIndex;
   const index = new Map<string, FeatureWork[]>();
 
-  for (const repo of ["lemonfiber", "spec", "website-lemonfiber.app", "lemonfiber-media-stack"]) {
+  for (const repo of INDEXED_REPOS) {
     await indexRepo(repo, index);
   }
 
