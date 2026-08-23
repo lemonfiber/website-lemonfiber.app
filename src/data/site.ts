@@ -146,7 +146,7 @@ export function servicesForForm(profileKeys: string[]): Service[] {
 }
 
 export const helpWays = [
-  { emoji: "🧪", title: "Try it and tell us what broke", body: "Once there's something to run, bug reports and rough edges are gold." },
+  { emoji: "🧪", title: "Try it and tell us what broke", body: "Install it, run it against your own stack, and file what breaks — bug reports and rough edges are gold." },
   { emoji: "📝", title: "Improve the docs", body: "Something unclear? Fix it — every repo's docs are open, and a docs PR is a real contribution." },
   { emoji: "🎨", title: "Design & UX", body: "The web UI and the brand welcome a good eye." },
   { emoji: "💬", title: "Hang out on Discord", body: "Answer a question, share your setup, help shape the roadmap." },
