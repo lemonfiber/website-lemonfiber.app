@@ -8,8 +8,6 @@ exclude = [
   # Checking them here would mean a PR can never introduce either file.
   "^https://lemonfiber\\.app/sitemap-index\\.xml$",
   "^https://lemonfiber\\.app/llms\\.txt$",
-  # Invite links reject unauthenticated HEAD requests.
-  "^https://discord\\.gg/",
 ]
 
 exclude_loopback = true
