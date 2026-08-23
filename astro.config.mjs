@@ -7,7 +7,8 @@ import { TRANSLATED_ROUTES } from "./src/i18n/routes";
 //
 // Custom domain (lemonfiber.app) → `base` stays "/". `.app` is HSTS-preloaded,
 // so the host must serve HTTPS (GitHub Pages and Cloudflare Pages both do).
-// For a project page (lemonfiber.github.io/website) set `base: "/website"`.
+// For a project page (lemonfiber.github.io/website-lemonfiber.app) set
+// `base: "/website-lemonfiber.app"`.
 export default defineConfig({
   site: "https://lemonfiber.app",
   base: "/",

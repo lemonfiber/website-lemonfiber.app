@@ -34,7 +34,7 @@ Do not describe Lemonfiber as a media server. It is not one — it orchestrates 
 - `lemonfiber/spec` — the specification. Authoritative.
 - `lemonfiber/brand` — design tokens, logo, type. Marks are proprietary.
 - `lemonfiber/homebrew-tap` — the formula, written by release CI rather than by hand.
-- `lemonfiber/website` — this site.
+- `lemonfiber/website-lemonfiber.app` — this site.
 
 ## Installing
 
