@@ -16,7 +16,8 @@
     "check": "astro check",
     "links": "node scripts/links.mjs",
     "sync": "astro sync",
-    "og": "node scripts/og.mjs"
+    "og": "node scripts/og.mjs",
+    "prepare": "git config core.hooksPath .githooks"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "5.2.6",
