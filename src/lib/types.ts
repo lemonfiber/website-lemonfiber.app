@@ -17,9 +17,7 @@ export interface Deliverable {
 export interface Milestone {
   id: string; // "M2"
   title: string; // "Core: manifest, compose driver, CLI"
-  status: DeliverableStatus; // rolled up
-  blurb: string; // one-line narrative from the roadmap
-  repo?: string; // which repo carries it
+  status: DeliverableStatus; // the mark on the heading upstream
   deliverables: Deliverable[];
   done: number;
   total: number;

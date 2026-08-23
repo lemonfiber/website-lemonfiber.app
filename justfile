@@ -22,7 +22,12 @@ build:
 preview:
     npm run preview
 
-# Everything CI runs: types, spelling, and a real build.
+# Check every internal link in the built site — run it after `just build`.
+links:
+    npm run links
+
+# Everything CI runs: types, spelling, a real build, and its internal links.
 ci: check
     typos
     npm run build
+    npm run links

@@ -64,7 +64,8 @@ links there; it does not keep a second copy.
 $ npm ci          # or: just install
 $ npm run dev     # local dev at http://localhost:4321
 $ npm run build   # production build (fetches live org data)
-$ just ci         # type-check + typos + build — what CI runs
+$ npm run links   # every internal link in dist/ resolves to a built route
+$ just ci         # type-check + typos + build + links — what CI runs
 ```
 
 Node — the version in `.nvmrc`, which is what CI installs. `GITHUB_TOKEN` is

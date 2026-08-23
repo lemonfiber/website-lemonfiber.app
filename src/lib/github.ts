@@ -17,6 +17,7 @@ import type {
   SiteData,
 } from "./types";
 import { seedMilestonesRaw, seedRepos } from "../data/seed";
+import type { RawMilestone } from "../data/seed-milestones";
 import { seedReleases } from "../data/seed-releases";
 
 const ORG = "lemonfiber";
@@ -233,41 +234,74 @@ function parseRow(row: string): Deliverable | null {
   return null;
 }
 
-function parseStatus(md: string): Map<string, Deliverable[]> {
-  const out = new Map<string, Deliverable[]>();
+/** What one milestone section of the status file says about itself. */
+interface Section {
+  id: string;
+  title: string;
+  // The mark on the heading itself. A heading and the table under it answer
+  // different questions: the rows say what has been recorded here, the heading
+  // says where the milestone stands including work recorded in another
+  // milestone's table. The heading is the milestone's status, and it is what
+  // the documentation site shows, so the two cannot disagree.
+  declared: DeliverableStatus | null;
+  deliverables: Deliverable[];
+}
+
+function markOf(line: string): DeliverableStatus | null {
+  const emoji = Object.keys(EMOJI).find((e) => line.includes(e));
+  return emoji ? EMOJI[emoji] : null;
+}
+
+// `## M4 — Seed & backup · ◐` — the identifier, the name, and how far it has
+// got. The name is read from here rather than kept in this repo: a milestone
+// renamed upstream used to keep its old name on this page indefinitely.
+const HEADING = /^##\s+(M[\d.]+)\s*—\s*(.+)$/;
+
+function parseStatus(md: string): Section[] {
+  const out: Section[] = [];
   for (const section of md.split(/\n(?=##\s+M\d)/)) {
-    const head = /^##\s+(M[\d.]+)/m.exec(section);
+    const line = section.split("\n")[0];
+    const head = HEADING.exec(line);
     if (!head) continue;
     const deliverables: Deliverable[] = [];
-    for (const line of section.split("\n")) {
-      const row = line.trim();
-      const parsed = parseRow(row);
+    for (const row of section.split("\n")) {
+      const parsed = parseRow(row.trim());
       if (parsed) deliverables.push(parsed);
     }
-    out.set(head[1], deliverables);
+    out.push({
+      id: head[1],
+      title: cleanCell(head[2].replace(/\s*·\s*\S+\s*$/, "")),
+      declared: markOf(line),
+      deliverables,
+    });
   }
   return out;
 }
 
+function counted(raw: RawMilestone): Milestone {
+  const r = rollup(raw.deliverables);
+  return { ...raw, done: r.done, total: r.total, pct: r.pct };
+}
+
+/**
+ * Every milestone, from the status file when it was reachable.
+ *
+ * The file names them, orders them and marks them, so nothing about a milestone
+ * is kept here — this repo used to carry their names and used to carry eight of
+ * them, and both fell behind. The committed snapshot is the offline fallback it
+ * was always meant to be, and nothing more.
+ */
 function buildMilestones(statusMd: string | null): Milestone[] {
-  const parsed = statusMd
-    ? parseStatus(statusMd)
-    : new Map<string, Deliverable[]>();
-  return seedMilestonesRaw.map((seed) => {
-    // Prefer live deliverables when the status file actually lists them for
-    // this milestone; otherwise the seed (M0/M0.5/M1 carry no live table).
-    const live = parsed.get(seed.id);
-    const deliverables = live?.length ? live : seed.deliverables;
-    const r = rollup(deliverables);
-    return {
-      ...seed,
-      deliverables,
-      done: r.done,
-      total: r.total,
-      pct: r.pct,
-      status: r.status,
-    };
-  });
+  const parsed = statusMd ? parseStatus(statusMd) : [];
+  if (parsed.length === 0) return seedMilestonesRaw.map(counted);
+  return parsed.map((section) =>
+    counted({
+      id: section.id,
+      title: section.title,
+      deliverables: section.deliverables,
+      status: section.declared ?? rollup(section.deliverables).status,
+    }),
+  );
 }
 
 // ── GitHub API ────────────────────────────────────────────────────

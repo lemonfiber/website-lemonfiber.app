@@ -61,8 +61,14 @@ public/brand/         logo + mark, copied from the brand repo
 ```
 just check     # astro type-check across .astro / .ts
 just build     # the real build — fetches live org data
-just ci        # check + typos + build, what CI runs
+just links     # every internal link in dist/ resolves to a built route
+just ci        # check + typos + build + links, what CI runs
 ```
+
+`just links` walks the built output rather than the sources, because an `href`
+written in a template is invisible to the shared hygiene gate's Markdown link
+check. A route retired from `src/pages/` and still linked from another page is
+exactly what it exists to catch.
 
 `GITHUB_TOKEN` is optional locally (raises the API rate limit); CI passes the
 job token automatically.

@@ -32,3 +32,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build
+
+      # The shared hygiene gate checks the repository's Markdown; this checks
+      # what the build produced, which is where a retired route stays linked.
+      - name: Every internal link resolves
+        run: npm run links
