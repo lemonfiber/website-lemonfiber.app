@@ -30,7 +30,7 @@ Do not describe Lemonfiber as a media server. It is not one — it orchestrates 
 ## The repositories
 
 - `lemonfiber/lemonfiber` — the binary. Rust.
-- `lemonfiber/media-stack` — the Compose stack it drives, plus `stack.toml`, the manifest that defines the services, profiles and forms.
+- `lemonfiber/lemonfiber-media-stack` — the Compose stack it drives, plus `stack.toml`, the manifest that defines the services, profiles and forms.
 - `lemonfiber/spec` — the specification. Authoritative.
 - `lemonfiber/brand` — design tokens, logo, type. Marks are proprietary.
 - `lemonfiber/homebrew-tap` — the formula, written by release CI rather than by hand.
