@@ -5,7 +5,7 @@
   </picture>
 </p>
 
-<h1 align="center">website</h1>
+<h1 align="center">website-lemonfiber.app</h1>
 
 <p align="center">
   The lemonfiber frontpage — a <b>build-in-the-open</b> site whose roadmap,
@@ -17,7 +17,7 @@
   <img alt="Status" src="https://img.shields.io/badge/status-building-F0C419?labelColor=17160F">
   <img alt="Astro" src="https://img.shields.io/badge/built%20with-Astro-E07A17?labelColor=17160F">
   <img alt="Licence" src="https://img.shields.io/badge/licence-Hippocratic%203.0-17160F">
-  <a href="https://scorecard.dev/viewer/?uri=github.com/lemonfiber/website"><img alt="OpenSSF Scorecard" src="https://api.scorecard.dev/projects/github.com/lemonfiber/website/badge"></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/lemonfiber/website-lemonfiber.app"><img alt="OpenSSF Scorecard" src="https://api.scorecard.dev/projects/github.com/lemonfiber/website-lemonfiber.app/badge"></a>
 </p>
 
 ---

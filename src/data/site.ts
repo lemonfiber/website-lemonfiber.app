@@ -9,7 +9,7 @@ export const site = {
     "A fully open-source, self-hosted media automation stack that sets itself up, runs in the exact slice you need, and proves it's working instead of hoping.",
   org: "lemonfiber",
   githubOrg: "https://github.com/lemonfiber",
-  repo: "https://github.com/lemonfiber/website",
+  repo: "https://github.com/lemonfiber/website-lemonfiber.app",
   discord: "https://discord.nightworks.io",
   specUrl: "https://github.com/lemonfiber/spec",
   roadmapUrl: "https://github.com/lemonfiber/spec/blob/main/00-overview/roadmap.md",

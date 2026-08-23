@@ -62,11 +62,11 @@ export const seedRepos: Repo[] = [
     openIssues: 0,
   },
   {
-    name: "website",
+    name: "website-lemonfiber.app",
     role: "this site",
     description: "This frontpage — a build-in-the-open site driven by the org.",
     language: "Astro",
-    url: "https://github.com/lemonfiber/website",
+    url: "https://github.com/lemonfiber/website-lemonfiber.app",
     stars: 0,
     openIssues: 0,
   },

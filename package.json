@@ -1,5 +1,5 @@
 {
-  "name": "@lemonfiber/website",
+  "name": "@lemonfiber/website-lemonfiber.app",
   "version": "0.1.0",
   "private": true,
   "description": "The lemonfiber frontpage — a build-in-the-open site driven by the GitHub org.",

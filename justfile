@@ -1,4 +1,4 @@
-# Task runner for the website repo. `just` with no argument lists tasks.
+# Task runner for the website-lemonfiber.app repo. `just` with no argument lists tasks.
 default:
     @just --list
 
