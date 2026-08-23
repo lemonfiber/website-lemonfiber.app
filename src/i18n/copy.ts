@@ -30,6 +30,13 @@ export const copy = {
     discord: "Discord",
   },
 
+  // The size of the specification, filled in from the board the spec repo
+  // generates. Never typed here: three copies of this number were live at once,
+  // and all three were wrong.
+  spec: {
+    scale: "{features} features · {requirements} requirements · areas {areas}",
+  },
+
   cta: {
     install: "Install Lemonfiber",
     repo: "Source on GitHub",
@@ -62,43 +69,6 @@ export const copy = {
     liveNote: "Generated from the org at build time.",
     snapshotNote: "GitHub was unreachable at build time — showing the last committed snapshot.",
   },
-
-  roadmap: {
-    title: "Roadmap",
-    lead: "Every milestone, generated from the implementation status the maintainers already keep current.",
-    overall: "Overall progress",
-    milestones: "milestones",
-    deliverables: "deliverables",
-    releasedOn: "Released",
-    planned: "Planned",
-  },
-
-
-  changelog: {
-    eyebrow: "Releases",
-    title: "Changelog",
-    lead: "Every published release across the org, generated from the release notes themselves — there is no file here to forget to update.",
-    prerelease: "Pre-release",
-    assets: "Downloads",
-    source: "All releases on GitHub",
-    onGitHub: "View on GitHub",
-    unavailable: "No releases have been published yet.",
-    statReleases: "releases",
-    statChanges: "changes",
-    statLatest: "latest",
-    filterLabel: "Filter the changelog",
-    searchLabel: "Search the changelog",
-    searchPlaceholder: "Search changes…",
-    matchCount: "{n} matching",
-    reset: "Clear",
-    byType: "By type",
-    byRepo: "By repo",
-    byComponent: "By component",
-    noComponents: "Component tags appear once releases carry conventional-commit scopes.",
-    noMatches: "Nothing matches those filters.",
-  },
-
-
 
   notFound: {
     title: "That page isn't here.",

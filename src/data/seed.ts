@@ -37,7 +37,7 @@ function seed(
 }
 
 export const seedRepos: Repo[] = [
-  seed("spec", "canonical", "Markdown", "The canonical specification — 926 requirements and the why behind every one.", { primary: true }),
+  seed("spec", "canonical", "Markdown", "The canonical specification — every behaviour written down before it is built, and the why behind each one.", { primary: true }),
   seed("lemonfiber", "the binary", "Rust", "The Lemonfiber binary: sets up your media stack, runs it in slices, proves it works. Rust.", { primary: true, latestRelease: "v0.8.0" }),
   seed("lemonfiber-media-stack", "the stack", "Shell", "The Docker Compose stack it orchestrates — 19 services + the stack.toml manifest.", { primary: true }),
   seed("lemonfiber-web", "the web surface", "TypeScript", "The operator console and household view — a static app that draws the binary's API and implements nothing."),

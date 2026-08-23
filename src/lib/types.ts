@@ -49,34 +49,15 @@ export interface Issue {
   createdAt: string;
 }
 
-export interface ReleaseAsset {
-  name: string;
-  url: string;
-  size: number;
-  // Which platform the filename implies. Derived, not declared — the release
-  // workflow names the assets, and this site should follow whatever it
-  // actually produced rather than carry its own list that can fall out of date.
-  platform?: "macos" | "linux" | "windows" | "checksums";
-}
-
 export interface Release {
   repo: string;
   tag: string;
   name: string;
   url: string;
   publishedAt: string;
-  // Pre-1.0, every release is a prerelease. Hiding them would leave the
-  // changelog empty while real releases exist, so they are shown and marked.
+  // Pre-1.0, every release is a prerelease. Hiding them would show a project
+  // that has never shipped, so they are carried and marked.
   prerelease?: boolean;
-  // Both optional so a seed entry that carries neither stays valid.
-  body?: string;
-  assets?: ReleaseAsset[];
-}
-
-export interface FeatureProgress {
-  done: number;
-  total: number;
-  status: DeliverableStatus;
 }
 
 export interface SiteData {
@@ -87,22 +68,14 @@ export interface SiteData {
   milestones: Milestone[];
   goodFirstIssues: Issue[];
   releases: Release[];
-  // Newest published release across the org, for the install page's headline
-  // version. Optional because a fresh org genuinely has none.
+  // Newest published release across the org, for the version the front page
+  // names. Optional because a fresh org genuinely has none.
   latestRelease?: Release;
-  // How much of each feature is built, keyed by feature id — what lets the
-  // roadmap say which items of a version are finished rather than only which
-  // version they belong to.
-  features: Map<string, FeatureProgress>;
   progress: {
     doneMilestones: number;
     totalMilestones: number;
     doneDeliverables: number;
     totalDeliverables: number;
     pct: number;
-    // Implementation progress split by epoch — v1 (the product, M0–M6) and v2
-    // (the ecosystem, M7 onward), keyed by epoch id — so the roadmap can show a
-    // bar per major version rather than one blended figure.
-    byEpoch: Record<string, { pct: number; done: number; total: number }>;
   };
 }

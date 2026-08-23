@@ -38,28 +38,3 @@ const STATUS_LABEL: Record<string, string> = {
 export function statusLabel(s: string): string {
   return STATUS_LABEL[s] ?? STATUS_LABEL.todo;
 }
-
-// Dates on this site are release dates, so day precision is enough, and the
-// month is spelled out to sidestep the DD/MM vs MM/DD ambiguity between
-// regions. Formatted in UTC so the rendered date cannot shift depending on
-// which timezone the build machine happened to run in.
-export function releaseDate(iso: string): string {
-  const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return iso;
-  return new Intl.DateTimeFormat("en-GB", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    timeZone: "UTC",
-  }).format(d);
-}
-
-// Byte size for release assets, in the units a download page actually wants.
-export function fileSize(bytes: number): string {
-  if (!Number.isFinite(bytes) || bytes <= 0) return "";
-  const mb = bytes / 1_048_576;
-  if (mb >= 1024) return `${(mb / 1024).toFixed(1)} GB`;
-  if (mb >= 10) return `${Math.round(mb)} MB`;
-  if (mb >= 1) return `${mb.toFixed(1)} MB`;
-  return `${Math.max(1, Math.round(bytes / 1024))} KB`;
-}

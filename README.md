@@ -8,8 +8,8 @@
 <h1 align="center">website-lemonfiber.app</h1>
 
 <p align="center">
-  The lemonfiber frontpage — a <b>build-in-the-open</b> site whose roadmap,
-  progress and repo state are read from the org, not written by hand.<br>
+  The lemonfiber frontpage — a <b>build-in-the-open</b> site whose progress and
+  repo state are read from the org, not written by hand.<br>
   Astro, static, self-hosted assets. Zero maintenance for maintainers.
 </p>
 
@@ -24,16 +24,16 @@
 
 ## The idea
 
-Most project sites rot: the roadmap on the homepage drifts from the real one, the
-"in progress" list is months stale, and keeping them honest is a chore nobody
-signs up for. This site removes the chore. **The GitHub org is the motor.**
+Most project sites rot: the "in progress" list is months stale, the numbers were
+typed once and never re-counted, and keeping them honest is a chore nobody signs
+up for. This site removes the chore. **The GitHub org is the motor.**
 
 At build time it reads:
 
 - **the org** — repositories, languages, releases, open issues, good-first-issues, stars
-- **`spec/00-overview/roadmap.md`** — the sequenced milestones
 - **`lemonfiber/IMPLEMENTATION-STATUS.md`** — per-deliverable status (✅ / ◐ / ☐)
-- **the spec tree itself** — every page under `spec/`, rendered at `/spec`
+- **the specification's generated feature board** — how many features and
+  requirements the spec currently holds
 
 …and renders them. When a maintainer pushes to any of those repos, CI rebuilds
 and the site moves. Nobody edits a page to ship a milestone.
@@ -42,16 +42,21 @@ If the network is unreachable at build time, a committed snapshot
 (`src/data/seed.ts`, `seed-milestones.ts`, `seed-releases.ts`) keeps the build
 green — live data always overrides it.
 
+Documentation lives elsewhere. The install guide, the FAQ, the colophon, the
+specification, the roadmap and the changelog are published by
+[`website-docs.lemonfiber.app`](https://github.com/lemonfiber/website-docs.lemonfiber.app),
+which renders pinned revisions instead of live ones — so a reader following
+instructions gets the ones that match the release they installed. This site
+links there; it does not keep a second copy.
+
 ## Pages
 
 | Route | What it shows |
 |-------|---------------|
 | `/` | The pitch, a live status strip, the "runs in slices" switcher, the 19 services |
-| `/roadmap`, `/roadmap/<feature>` | Every milestone with progress, derived from the status file |
-| `/spec`, `/spec/<path>` | The specification, rendered from the `spec` repo |
 | `/transparency` | Every repo, release and open issue — read live from GitHub |
 | `/contribute` | Ways to help + live good-first-issues |
-| `/install`, `/changelog`, `/faq`, `/colophon`, `/rfc` | The supporting pages |
+| `/404` | The one that says where everything else went |
 
 ## Develop
 
@@ -69,14 +74,14 @@ optional locally (raises the API rate limit).
 
 ```
 src/lib/github.ts      the motor — fetch + parse, with a resilient fallback
-src/lib/spec.ts        reads the spec tree; src/lib/doc.ts renders a page of it
+src/lib/spec.ts        the specification's own scale, from its generated board
 src/lib/format.ts      shared formatting; src/lib/types.ts the shared shapes
 src/data/site.ts       editorial copy; the service / profile / form model
 src/data/seed*.ts      offline snapshots — org, milestones, releases
 src/i18n/              the site's copy — chrome, front page, content pages
 src/layouts/Base.astro the shell every page renders into
 src/components/        Nav · Footer · Console · FormsSwitcher · RepoCard · …
-src/pages/             index · roadmap · spec · transparency · contribute · …
+src/pages/             index · transparency · contribute · 404
 src/styles/tokens.css  design tokens mirrored from lemonfiber/brand
 ```
 
