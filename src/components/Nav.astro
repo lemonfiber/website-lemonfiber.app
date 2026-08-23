@@ -15,9 +15,9 @@ const { stars, active } = Astro.props;
 const links = [
   { href: "/", label: t.nav.home, key: "home" },
   { href: "/roadmap", label: t.nav.roadmap, key: "roadmap" },
-  { href: "/install", label: t.nav.install, key: "install" },
+  { href: `${site.docsUrl}/start/install/`, label: t.nav.install, key: "install" },
   { href: "/contribute", label: t.nav.contribute, key: "contribute" },
-  { href: "/faq", label: t.nav.faq, key: "faq" },
+  { href: site.docsUrl, label: t.nav.docs, key: "docs" },
 ];
 ---
 

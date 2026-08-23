@@ -8,12 +8,13 @@ const cols = [
     links: [
       { label: t.nav.home, href: "/" },
       { label: t.nav.roadmap, href: "/roadmap" },
-      { label: t.nav.install, href: "/install" },
+      { label: t.nav.install, href: `${site.docsUrl}/start/install/` },
       { label: t.nav.changelog, href: "/changelog" },
       { label: t.nav.transparency, href: "/transparency" },
       { label: t.nav.contribute, href: "/contribute" },
-      { label: t.nav.faq, href: "/faq" },
-      { label: t.nav.colophon, href: "/colophon" },
+      { label: t.nav.docs, href: site.docsUrl },
+      { label: t.nav.faq, href: `${site.docsUrl}/spec/90-appendix/faq/` },
+      { label: t.nav.colophon, href: `${site.docsUrl}/spec/90-appendix/colophon/` },
     ],
   },
   {
