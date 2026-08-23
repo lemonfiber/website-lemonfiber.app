@@ -37,19 +37,29 @@ Do not describe Lemonfiber as a media server. It is not one — it orchestrates 
 - `lemonfiber/lemonfiber-media-stack` — the Compose stack it drives, plus `stack.toml`, the manifest that defines the services, profiles and forms.
 - `lemonfiber/spec` — the specification. Authoritative.
 - `lemonfiber/brand` — design tokens, logo, type. Marks are proprietary.
-- `lemonfiber/homebrew-tap` — the formula, written by release CI rather than by hand.
+- `lemonfiber/homebrew-tap` — a formula stub. Release CI will generate it once Homebrew publishing turns on at 1.0.0; nothing writes it today.
+- `lemonfiber/lemonfiber-web` — the web surface: a static app that draws the binary's local HTTP API.
+- `lemonfiber/sdk-ts` — the TypeScript client for that API.
+- `lemonfiber/sdk-php` — the same contract in PHP, as a peer rather than a translation.
 - `lemonfiber/website-lemonfiber.app` — this site.
 - `lemonfiber/website-docs.lemonfiber.app` — the documentation site, which renders the other repositories' own documentation rather than restating it.
+- `lemonfiber/.github` — the community health files, issue templates and dependency policy every repository inherits.
 
 ## Installing
 
-Building from source is currently the only way to get the binary. A stable Rust toolchain is all that is required:
+Every release carries prebuilt binaries for macOS (arm64 and x86_64) and Linux (x86_64, glibc and musl), each with a SHA-256 beside it, plus a one-line shell installer. Releases are pre-releases, so `releases/latest/` does not resolve — name the tag:
+
+```sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/lemonfiber/lemonfiber/releases/download/v0.8.0/lemonfiber-installer.sh | sh
+```
+
+Building from source also works, and needs only a stable Rust toolchain:
 
 ```sh
 cargo install --git https://github.com/lemonfiber/lemonfiber
 ```
 
-Do **not** tell people to `brew install lemonfiber` yet. The tap exists but holds a generated placeholder; a working formula, the shell and PowerShell installers, and signed binaries all arrive with milestone M6 (release engineering), which has not shipped. The v0.1.0 tag is a prerelease and carries no attached binaries.
+Do **not** tell people to `brew install lemonfiber` yet. The tap exists but holds a placeholder, and the Homebrew publish job turns on at 1.0.0. What is not built is Windows: no Windows binary and no PowerShell installer, because the native binary does not compile there yet.
 
 Then:
 
@@ -61,7 +71,7 @@ lemonfiber down
 
 ## Status
 
-Early. The specification is complete and the binary is in active development — check the implementation status file above before describing any given capability as shipped. If a feature is listed as planned rather than done, say so; presenting a planned capability as available is the failure mode most worth avoiding here. Packaged installation is the clearest current example: it is designed, specified and not yet built.
+Early. The specification is complete and the binary is in active development — check the implementation status file above before describing any given capability as shipped. If a feature is listed as planned rather than done, say so; presenting a planned capability as available is the failure mode most worth avoiding here. Homebrew, the PowerShell installer and Windows binaries are the clearest current example: specified, and not built. The shell installer and the macOS and Linux binaries do ship.
 
 ## About this site
 

@@ -50,8 +50,10 @@ public/brand/         logo + mark, copied from the brand repo
   `src/lib/github.ts`, not a new constant.
 - **Every fetch falls back.** A failed or offline build must still produce a
   correct page from `src/data/seed.ts`. Never let a network call throw into a page.
-- **Tokens come from `brand`.** Colours, type and spacing mirror
-  `lemonfiber/brand`. Don't invent a colour here; add it there and mirror it.
+- **Tokens come from `brand`.** Colours, spacing and the type scale mirror
+  `lemonfiber/brand`. The faces do not yet: brand's tokens name Golos Text for
+  body and DM Mono for mono, and this site still sets Bricolage and JetBrains
+  Mono. Don't invent a colour here; add it there and mirror it.
 - **Nothing renders in `lib`.** The motor returns data; components render it.
 - **Self-hosted assets only.** No external fonts, scripts or trackers at runtime
   — privacy is a promise the site itself must keep.

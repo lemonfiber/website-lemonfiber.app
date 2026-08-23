@@ -1,9 +1,9 @@
 // Shared chrome copy. Every user-facing string in the nav, the footer and the
 // status furniture belongs here — no prose in those templates.
 //
-// Page prose is not all here yet. The hand-built content pages still carry
-// their own copy inline; they move into i18n/pages.ts as each one is converted
-// to the DocPage renderer. Until then this file covers the chrome only.
+// Chrome copy only. The front page's prose lives in home.ts; transparency and
+// contribute keep theirs inline. The documentation pages this repo once rendered
+// now live in website-docs.lemonfiber.app.
 
 export const copy = {
   meta: {
