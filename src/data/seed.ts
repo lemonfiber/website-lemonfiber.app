@@ -1,8 +1,11 @@
 import type { Repo } from "../lib/types";
 
-// Fallback snapshot for the org's repositories. Used only when GitHub is
-// unreachable at build time so a build (and local dev without a token) never
-// fails. When GitHub is reachable, live metrics override all of this.
+// The org's repositories: every public one, in the order the site shows them,
+// each with the role it plays. This list is what the site renders — GitHub
+// overlays description, language, stars, issues and push time onto it at build
+// time, and a repository missing from here appears nowhere, live or not. The
+// committed values are the snapshot a build falls back to when GitHub is
+// unreachable, so a build (and local dev without a token) never fails.
 //
 // The milestone snapshot moved to seed-milestones.ts and the release snapshot
 // to seed-releases.ts. Both are re-exported here so existing imports of
@@ -11,63 +14,38 @@ import type { Repo } from "../lib/types";
 export { seedMilestonesRaw, type RawMilestone } from "./seed-milestones";
 export { seedReleases } from "./seed-releases";
 
+// name, role, language, description — and whatever else that repository has.
+// The address follows from the name; the counts start at zero because GitHub
+// supplies them.
+function seed(
+  name: string,
+  role: string,
+  language: string,
+  description: string,
+  rest: Partial<Repo> = {},
+): Repo {
+  return {
+    name,
+    role,
+    language,
+    description,
+    url: `https://github.com/lemonfiber/${name}`,
+    stars: 0,
+    openIssues: 0,
+    ...rest,
+  };
+}
+
 export const seedRepos: Repo[] = [
-  {
-    name: "spec",
-    role: "canonical",
-    primary: true,
-    description: "The canonical specification — 926 requirements and the why behind every one.",
-    language: "Markdown",
-    url: "https://github.com/lemonfiber/spec",
-    stars: 0,
-    openIssues: 0,
-  },
-  {
-    name: "lemonfiber",
-    role: "the binary",
-    primary: true,
-    description: "The Lemonfiber binary: sets up your media stack, runs it in slices, proves it works. Rust.",
-    language: "Rust",
-    url: "https://github.com/lemonfiber/lemonfiber",
-    stars: 0,
-    openIssues: 0,
-    latestRelease: "v0.8.0",
-  },
-  {
-    name: "lemonfiber-media-stack",
-    role: "the stack",
-    primary: true,
-    description: "The Docker Compose stack it orchestrates — 19 services + the stack.toml manifest.",
-    language: "Shell",
-    url: "https://github.com/lemonfiber/lemonfiber-media-stack",
-    stars: 0,
-    openIssues: 0,
-  },
-  {
-    name: "brand",
-    role: "identity",
-    description: "Logo, colour and type — design tokens with contrast CI.",
-    language: "CSS",
-    url: "https://github.com/lemonfiber/brand",
-    stars: 0,
-    openIssues: 0,
-  },
-  {
-    name: "homebrew-tap",
-    role: "generated",
-    description: "brew install lemonfiber — a formula written by release CI, not by hand.",
-    language: "Ruby",
-    url: "https://github.com/lemonfiber/homebrew-tap",
-    stars: 0,
-    openIssues: 0,
-  },
-  {
-    name: "website-lemonfiber.app",
-    role: "this site",
-    description: "This frontpage — a build-in-the-open site driven by the org.",
-    language: "Astro",
-    url: "https://github.com/lemonfiber/website-lemonfiber.app",
-    stars: 0,
-    openIssues: 0,
-  },
+  seed("spec", "canonical", "Markdown", "The canonical specification — 926 requirements and the why behind every one.", { primary: true }),
+  seed("lemonfiber", "the binary", "Rust", "The Lemonfiber binary: sets up your media stack, runs it in slices, proves it works. Rust.", { primary: true, latestRelease: "v0.8.0" }),
+  seed("lemonfiber-media-stack", "the stack", "Shell", "The Docker Compose stack it orchestrates — 19 services + the stack.toml manifest.", { primary: true }),
+  seed("lemonfiber-web", "the web surface", "TypeScript", "The operator console and household view — a static app that draws the binary's API and implements nothing."),
+  seed("sdk-ts", "the TypeScript client", "TypeScript", "Typed calls, a typed event stream and a typed error over the local web API."),
+  seed("sdk-php", "the PHP client", "PHP", "The same contract implemented as a peer rather than translated."),
+  seed("brand", "identity", "CSS", "Logo, colour and type — design tokens with contrast CI."),
+  seed("homebrew-tap", "generated", "Ruby", "brew install lemonfiber — a formula written by release CI, not by hand."),
+  seed("website-lemonfiber.app", "this site", "Astro", "This frontpage — a build-in-the-open site driven by the org."),
+  seed("website-docs.lemonfiber.app", "the docs", "TypeScript", "docs.lemonfiber.app — the task-shaped documentation, and each repo's own docs pinned and rendered."),
+  seed(".github", "inherited", "Markdown", "Community health files, issue templates and the dependency policy every repo inherits."),
 ];
