@@ -52,7 +52,6 @@ green — live data always overrides it.
 | `/transparency` | Every repo, release and open issue — read live from GitHub |
 | `/contribute` | Ways to help + live good-first-issues |
 | `/install`, `/changelog`, `/faq`, `/colophon`, `/rfc` | The supporting pages |
-| `/nl/…` | Dutch for the pages that have it |
 
 ## Develop
 
@@ -74,7 +73,7 @@ src/lib/spec.ts        reads the spec tree; src/lib/doc.ts renders a page of it
 src/lib/format.ts      shared formatting; src/lib/types.ts the shared shapes
 src/data/site.ts       editorial copy; the service / profile / form model
 src/data/seed*.ts      offline snapshots — org, milestones, releases
-src/i18n/              English and Dutch copy, and the route map between them
+src/i18n/              the site's copy — chrome, front page, content pages
 src/layouts/Base.astro the shell every page renders into
 src/components/        Nav · Footer · Console · FormsSwitcher · RepoCard · …
 src/pages/             index · roadmap · spec · transparency · contribute · …

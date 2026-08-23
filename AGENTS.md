@@ -30,7 +30,7 @@ src/
 ├── lib/types.ts      shapes everything derives from
 ├── data/site.ts      editorial content; the service/profile/form model
 ├── data/seed*.ts     offline fallback snapshots — org, milestones, releases
-├── i18n/             English and Dutch copy, and the route map between them
+├── i18n/             the site's copy — chrome, front page, content pages
 ├── components/       Nav, Footer, Console, FormsSwitcher, RepoCard, …
 ├── layouts/Base.astro
 ├── pages/            index · roadmap · spec · transparency · contribute · …

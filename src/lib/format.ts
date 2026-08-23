@@ -1,7 +1,5 @@
 // Small presentational helpers. Pure, build-time only.
 
-import type { Locale } from "../i18n";
-
 export function relativeTime(iso?: string): string {
   if (!iso) return "";
   const then = new Date(iso).getTime();
@@ -31,33 +29,24 @@ export function statusGlyph(s: string): string {
   return STATUS_GLYPH[s] ?? "○";
 }
 
-// Kept as the English table so `statusLabel(s)` with no locale returns exactly
-// what it always has. The Dutch column is additive.
 const STATUS_LABEL: Record<string, string> = {
   done: "Done",
   partial: "In progress",
   todo: "Planned",
 };
 
-const STATUS_LABEL_NL: Record<string, string> = {
-  done: "Klaar",
-  partial: "Onderweg",
-  todo: "Gepland",
-};
-
-export function statusLabel(s: string, locale: Locale = "en"): string {
-  const table = locale === "nl" ? STATUS_LABEL_NL : STATUS_LABEL;
-  return table[s] ?? table.todo;
+export function statusLabel(s: string): string {
+  return STATUS_LABEL[s] ?? STATUS_LABEL.todo;
 }
 
 // Dates on this site are release dates, so day precision is enough, and the
 // month is spelled out to sidestep the DD/MM vs MM/DD ambiguity between
-// locales. Formatted in UTC so the rendered date cannot shift depending on
+// regions. Formatted in UTC so the rendered date cannot shift depending on
 // which timezone the build machine happened to run in.
-export function releaseDate(iso: string, locale: Locale = "en"): string {
+export function releaseDate(iso: string): string {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return iso;
-  return new Intl.DateTimeFormat(locale === "nl" ? "nl-NL" : "en-GB", {
+  return new Intl.DateTimeFormat("en-GB", {
     year: "numeric",
     month: "long",
     day: "numeric",

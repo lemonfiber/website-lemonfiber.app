@@ -20,15 +20,9 @@
 // the binary and the stack release on different cadences.
 import { getSiteData } from "../lib/github";
 import { site } from "../data/site";
-import { copyFor, DEFAULT_LOCALE, type Locale } from "../i18n";
+import { copy as t } from "../i18n";
 import { releaseDate, fileSize } from "../lib/format";
 
-interface Props {
-  locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
-const t = copyFor(locale);
 const data = await getSiteData();
 
 interface Item {
@@ -293,7 +287,7 @@ const toneFor = (heading: string) =>
                       {r.count}
                     </span>
                     <time class="cl__date" datetime={r.publishedAt}>
-                      {releaseDate(r.publishedAt, locale)}
+                      {releaseDate(r.publishedAt)}
                     </time>
                   </span>
                 </summary>

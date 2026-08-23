@@ -6,19 +6,11 @@ import Pipeline from "./Pipeline.astro";
 import ProgressBar from "./ProgressBar.astro";
 import StatusPill from "./StatusPill.astro";
 import { getSiteData } from "../lib/github";
-import { homeCopy, copyFor, localePath, DEFAULT_LOCALE, type Locale } from "../i18n";
+import { homeCopy as t, copy } from "../i18n";
 import { promises, site, services } from "../data/site";
 import { relativeTime } from "../lib/format";
 
-interface Props {
-  locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
-const t = homeCopy(locale);
-const chrome = copyFor(locale);
-const siteDescription = chrome.meta.description;
-const path = (p: string) => localePath(locale, p);
+const siteDescription = copy.meta.description;
 
 const data = await getSiteData();
 const inProgress = data.milestones.filter((m) => m.status === "partial");
@@ -46,7 +38,7 @@ const application = {
   url: Astro.site?.href ?? "https://lemonfiber.app",
   downloadUrl: `${site.githubOrg}/lemonfiber/releases`,
   description: siteDescription,
-  inLanguage: locale === "nl" ? "nl-NL" : "en-GB",
+  inLanguage: "en-GB",
   license: site.licenseUrl,
   isAccessibleForFree: true,
   offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
@@ -71,10 +63,10 @@ const application = {
           <a class="btn btn--primary" href={site.discord} target="_blank" rel="noopener">
             {t.hero.ctaPrimary}
           </a>
-          <a class="btn btn--ghost" href={path("/roadmap")}> {t.hero.ctaSecondary} </a>
+          <a class="btn btn--ghost" href="/roadmap"> {t.hero.ctaSecondary} </a>
         </div>
         <div class="hero__proof">
-          <StatusPill status="partial" locale={locale} text={t.hero.statusPill} />
+          <StatusPill status="partial" text={t.hero.statusPill} />
           <span class="hero__proof-sep">·</span>
           <span class="mono hero__proof-txt">
             {data.progress.doneMilestones}/{data.progress.totalMilestones} {t.hero.milestones} ·
@@ -140,7 +132,7 @@ const application = {
         <div class="container strip__now">
           <span class="strip__now-label">{t.strip.inProgressNow}</span>
           {inProgress.map((m) => (
-            <a class="strip__now-item" href={`${path("/roadmap")}#${m.id}`}>
+            <a class="strip__now-item" href={`/roadmap#${m.id}`}>
               <b>{m.id}</b> {m.title} <span class="mono">{m.pct}%</span>
             </a>
           ))}
@@ -209,7 +201,7 @@ const application = {
       <h2 class="sec__h">{t.slices.title}</h2>
       <p class="sec__lead">{t.slices.lead}</p>
       <div class="slices__body">
-        <FormsSwitcher locale={locale} />
+        <FormsSwitcher />
       </div>
     </div>
   </section>
@@ -221,7 +213,7 @@ const application = {
       <h2 class="sec__h">{t.pipeline.title}</h2>
       <p class="sec__lead">{t.pipeline.lead}</p>
       <div class="pipeline__body">
-        <Pipeline locale={locale} />
+        <Pipeline />
       </div>
     </div>
   </section>
@@ -236,7 +228,7 @@ const application = {
         </div>
         <p class="inside__sub">{t.inside.sub}</p>
       </div>
-      <ServiceGrid locale={locale} />
+      <ServiceGrid />
     </div>
   </section>
 
@@ -262,9 +254,9 @@ const application = {
         release train, and read any requirement with a link back to its source.
       </p>
       <div class="spec-hl__row">
-        <a class="btn btn--ghost" href={path("/spec")}>Browse the spec</a>
-        <a class="btn btn--ghost" href={path("/rfc")}>RFCs &amp; Drafts</a>
-        <a class="btn btn--ghost" href={path("/roadmap")}>The version train</a>
+        <a class="btn btn--ghost" href="/spec">Browse the spec</a>
+        <a class="btn btn--ghost" href="/rfc">RFCs &amp; Drafts</a>
+        <a class="btn btn--ghost" href="/roadmap">The version train</a>
       </div>
     </div>
   </section>
@@ -277,7 +269,7 @@ const application = {
       <div class="cta__row">
         <a class="btn btn--primary" href={site.discord} target="_blank" rel="noopener">{t.cta.discord}</a>
         <a class="btn btn--ghost" href={site.specUrl} target="_blank" rel="noopener">{t.cta.spec}</a>
-        <a class="btn btn--ghost" href={path("/contribute")}>{t.cta.contribute}</a>
+        <a class="btn btn--ghost" href="/contribute">{t.cta.contribute}</a>
       </div>
     </div>
   </section>

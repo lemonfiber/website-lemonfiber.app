@@ -1,13 +1,11 @@
-// English copy. Every user-facing string that lives in shared chrome (nav,
-// footer, status furniture) belongs here or in nl.ts — no prose in those
-// templates, so the two locales cannot drift apart structurally.
+// Shared chrome copy. Every user-facing string in the nav, the footer and the
+// status furniture belongs here — no prose in those templates.
 //
-// Page prose is not here yet. The content pages still carry their own copy
-// inline; they move into i18n/pages-en.ts as each one is converted to the
-// DocPage renderer. Until then this file covers the chrome only, and adding a
-// key here means adding the same key to nl.ts.
+// Page prose is not all here yet. The hand-built content pages still carry
+// their own copy inline; they move into i18n/pages.ts as each one is converted
+// to the DocPage renderer. Until then this file covers the chrome only.
 
-export const en = {
+export const copy = {
   meta: {
     lang: "en",
     tagline: "Self-host your media — without becoming a sysadmin",
@@ -26,7 +24,6 @@ export const en = {
     colophon: "Colophon",
     skip: "Skip to content",
     theme: "Switch colour theme",
-    language: "Language",
     menu: "Menu",
     github: "Lemonfiber on GitHub",
     discord: "Discord",
