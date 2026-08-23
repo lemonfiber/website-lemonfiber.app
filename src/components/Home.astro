@@ -6,6 +6,7 @@ import Pipeline from "./Pipeline.astro";
 import ProgressBar from "./ProgressBar.astro";
 import StatusPill from "./StatusPill.astro";
 import { getSiteData } from "../lib/github";
+import { specCounts } from "../lib/spec";
 import { homeCopy as t, copy } from "../i18n";
 import { promises, site, services } from "../data/site";
 import { relativeTime } from "../lib/format";
@@ -13,6 +14,18 @@ import { relativeTime } from "../lib/format";
 const siteDescription = copy.meta.description;
 
 const data = await getSiteData();
+const counts = await specCounts();
+
+// The scale of the specification, from the board its own generator writes and
+// its own CI checks. Absent rather than guessed when the board is unreachable:
+// the sentence around it reads correctly without a number, and a number that
+// is nearly right is the failure this page exists to avoid.
+const scale = counts
+  ? copy.spec.scale
+      .replace("{features}", String(counts.features))
+      .replace("{requirements}", String(counts.requirements))
+      .replace("{areas}", counts.areas)
+  : null;
 const inProgress = data.milestones.filter((m) => m.status === "partial");
 const latest = data.releases[0];
 const promiseIcon: Record<string, string> = {
@@ -63,7 +76,9 @@ const application = {
           <a class="btn btn--primary" href={site.discord} target="_blank" rel="noopener">
             {t.hero.ctaPrimary}
           </a>
-          <a class="btn btn--ghost" href="/roadmap"> {t.hero.ctaSecondary} </a>
+          <a class="btn btn--ghost" href={`${site.docsUrl}/project/roadmap/`}>
+            {t.hero.ctaSecondary}
+          </a>
         </div>
         <div class="hero__proof">
           <StatusPill status="partial" text={t.hero.statusPill} />
@@ -132,7 +147,7 @@ const application = {
         <div class="container strip__now">
           <span class="strip__now-label">{t.strip.inProgressNow}</span>
           {inProgress.map((m) => (
-            <a class="strip__now-item" href={`/roadmap#${m.id}`}>
+            <a class="strip__now-item" href={`${site.docsUrl}/project/roadmap/#${m.id}`}>
               <b>{m.id}</b> {m.title} <span class="mono">{m.pct}%</span>
             </a>
           ))}
@@ -253,12 +268,15 @@ const application = {
         specification is browsable on-site. See what's proposed, follow the
         release train, and read any requirement with a link back to its source.
       </p>
+      {scale && <p class="spec-hl__scale mono">{scale}</p>}
       <div class="spec-hl__row">
         <a class="btn btn--ghost" href={`${site.docsUrl}/spec/`}>Browse the spec</a>
         <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/rfcs/`}>
           RFCs &amp; Drafts
         </a>
-        <a class="btn btn--ghost" href="/roadmap">The version train</a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/project/roadmap/`}>
+          The version train
+        </a>
       </div>
     </div>
   </section>
@@ -277,6 +295,11 @@ const application = {
   </section>
 
 <style>
+  .spec-hl__scale {
+    margin-top: var(--space-3);
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
   .spec-hl__p {
     margin-top: var(--space-4);
     max-width: 60ch;

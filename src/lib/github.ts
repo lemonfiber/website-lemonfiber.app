@@ -1,7 +1,7 @@
 // The motor. Everything dynamic on the site is assembled here at BUILD TIME,
-// from the GitHub org and two Markdown files the maintainers already keep
-// current (spec/roadmap.md, lemonfiber/IMPLEMENTATION-STATUS.md). Nothing here
-// runs in the browser — the output is baked into static HTML.
+// from the GitHub org and the Markdown file the maintainers already keep
+// current (lemonfiber/IMPLEMENTATION-STATUS.md). Nothing here runs in the
+// browser — the output is baked into static HTML.
 //
 // Design rule: no single failure may break the build. Every fetch is wrapped,
 // times out fast, and falls back to the committed seed. A maintainer never has
@@ -10,11 +10,9 @@
 import type {
   Deliverable,
   DeliverableStatus,
-  FeatureProgress,
   Issue,
   Milestone,
   Release,
-  ReleaseAsset,
   Repo,
   SiteData,
 } from "./types";
@@ -26,7 +24,7 @@ const API = "https://api.github.com";
 const RAW = "https://raw.githubusercontent.com";
 const TIMEOUT_MS = 8000;
 
-// The two files the roadmap is derived from.
+// The file the milestone figures are derived from.
 const STATUS_FILE = `${RAW}/${ORG}/lemonfiber/main/IMPLEMENTATION-STATUS.md`;
 
 function headers(): HeadersInit {
@@ -42,8 +40,8 @@ function headers(): HeadersInit {
 // ── Local response cache ──────────────────────────────────────────
 //
 // Unauthenticated GitHub allows 60 API calls an hour per IP, and one build
-// spends eight. That is seven builds before the site silently falls back to the
-// seed — which it does correctly, but a developer iterating on layout should
+// spends one per repository plus two. That is a handful of builds before the
+// site silently falls back to the seed — which it does correctly, but a developer iterating on layout should
 // not have to notice. Responses are cached on disk between builds so repeated
 // local builds cost nothing.
 //
@@ -90,7 +88,7 @@ function cacheKey(url: string): string {
 }
 
 // Fetches text, via the cache when it is on. A cached *failure* is stored too —
-// as a null body — so a rate-limited build does not retry eight dead calls on
+// as a null body — so a rate-limited build does not retry every dead call on
 // every subsequent build within the TTL.
 async function fetchText(
   url: string,
@@ -151,33 +149,6 @@ const PARTIAL_CREDIT = 0.25;
 function creditOf(status: DeliverableStatus): number {
   const credit: Record<string, number> = { done: 1, partial: PARTIAL_CREDIT };
   return credit[status] ?? 0;
-}
-
-// Which epoch a milestone belongs to: v1 is the product (M0–M6), v2 the ecosystem
-// (M7 onward), mirroring the spec's roadmap. A decimal like "M0.5" parses to its
-// number, so it groups with M0.
-function epochOfMilestone(id: string): "v1" | "v2" {
-  return Number(id.replace(/^M/, "")) >= 7 ? "v2" : "v1";
-}
-
-// Implementation progress for one epoch: its milestones' deliverables, weighted
-// the same way (via creditOf) as the overall figure so the bars are comparable.
-// An epoch with nothing tracked yet — v2 today — is 0%, not a divide-by-zero.
-function epochProgress(
-  epoch: "v1" | "v2",
-  milestones: Milestone[],
-): { pct: number; done: number; total: number } {
-  const items = milestones
-    .filter((m) => epochOfMilestone(m.id) === epoch)
-    .flatMap((m) => m.deliverables.filter((d) => !d.group));
-  const total = items.length;
-  const doneUnits = items.reduce((n, d) => n + creditOf(d.status), 0);
-  const done = items.filter((d) => d.status === "done").length;
-  return {
-    pct: total ? Math.round((doneUnits / total) * 100) : 0,
-    done,
-    total,
-  };
 }
 
 function rollup(deliverables: Deliverable[]): {
@@ -299,74 +270,6 @@ function buildMilestones(statusMd: string | null): Milestone[] {
   });
 }
 
-// ── Per-feature build status ──────────────────────────────────────
-
-const REQ = /\b([A-Z]{1,3}\d*)-R(\d+)\b/g;
-const RANGE = /\b([A-Z]{1,3}\d*)-R(\d+)\.\.(?:[A-Z]{1,3}\d*-)?R?(\d+)\b/g;
-
-/** Every requirement id a status row names, expanding `C9-R1..R6` into its members. */
-function requirementsIn(line: string): string[] {
-  const ids = new Set<string>();
-  for (const [, feature, lo, hi] of line.matchAll(RANGE)) {
-    for (let n = Number(lo); n <= Number(hi); n += 1)
-      ids.add(`${feature}-R${n}`);
-  }
-  for (const [id] of line.matchAll(REQ)) ids.add(id);
-  return [...ids];
-}
-
-/**
- * What is built, per feature, read from the implementation status file.
- *
- * The file is the project's own record — a row per deliverable, marked done,
- * partial or not started, naming the requirements it covers. Rolling those up by
- * feature is what lets the roadmap say which items of a version are finished
- * rather than only which version they belong to.
- *
- * A feature with some requirements done and others not is partial, which is the
- * common case for anything being worked on now.
- */
-/** Record what one status row says about each requirement it names. */
-function noteRequirements(
-  seen: Map<string, Map<string, DeliverableStatus>>,
-  line: string,
-  status: DeliverableStatus,
-): void {
-  for (const id of requirementsIn(line)) {
-    const feature = id.split("-R")[0];
-    const byReq = seen.get(feature) ?? new Map<string, DeliverableStatus>();
-    // A requirement named on two rows takes the better of them: it was covered.
-    if (byReq.get(id) !== "done") byReq.set(id, status);
-    seen.set(feature, byReq);
-  }
-}
-
-export function featureProgress(
-  statusMd: string | null,
-): Map<string, FeatureProgress> {
-  const seen = new Map<string, Map<string, DeliverableStatus>>();
-  if (!statusMd) return new Map();
-
-  for (const line of statusMd.split("\n")) {
-    const emoji = line.trim().startsWith("|")
-      ? Object.keys(EMOJI).find((e) => line.includes(e))
-      : undefined;
-    if (emoji) noteRequirements(seen, line, EMOJI[emoji]);
-  }
-
-  const out = new Map<string, FeatureProgress>();
-  for (const [feature, byReq] of seen) {
-    const total = byReq.size;
-    const done = [...byReq.values()].filter((s) => s === "done").length;
-    out.set(feature, {
-      done,
-      total,
-      status: rollupStatus(done === total ? 100 : 0, done),
-    });
-  }
-  return out;
-}
-
 // ── GitHub API ────────────────────────────────────────────────────
 
 interface ApiRepo {
@@ -445,12 +348,6 @@ async function fetchGoodFirstIssues(): Promise<Issue[]> {
   return data.items.filter((i) => !i.pull_request).map(toIssue);
 }
 
-interface ApiAsset {
-  name: string;
-  browser_download_url: string;
-  size: number;
-}
-
 interface ApiRelease {
   tag_name: string;
   name: string | null;
@@ -458,23 +355,6 @@ interface ApiRelease {
   published_at: string | null;
   prerelease: boolean;
   draft: boolean;
-  body: string | null;
-  assets: ApiAsset[];
-}
-
-// Which platform an asset belongs to is inferred from its filename rather than
-// listed here, so the site follows whatever the release workflow actually
-// produced instead of carrying a parallel list that can drift. Checksums and
-// signatures are matched first — `lemonfiber_1.0_linux_amd64.tar.gz.sig` is a
-// signature, not a Linux build, and the order is what makes that come out right.
-export function platformFor(name: string): ReleaseAsset["platform"] {
-  const n = name.toLowerCase();
-  if (/(sha256|checksum|\.sig$|\.asc$|\.pem$|\.sbom|\.intoto)/.test(n))
-    return "checksums";
-  if (/(\.dmg$|\.pkg$|darwin|macos|apple)/.test(n)) return "macos";
-  if (/(\.exe$|\.msi$|windows|win32|win64|\bwin\b)/.test(n)) return "windows";
-  if (/(\.appimage$|\.deb$|\.rpm$|linux)/.test(n)) return "linux";
-  return undefined;
 }
 
 function toRelease(repo: string, r: ApiRelease): Release {
@@ -485,23 +365,17 @@ function toRelease(repo: string, r: ApiRelease): Release {
     url: r.html_url,
     publishedAt: r.published_at as string,
     prerelease: r.prerelease,
-    body: r.body ?? undefined,
-    assets: (r.assets ?? []).map((a) => ({
-      name: a.name,
-      url: a.browser_download_url,
-      size: a.size,
-      platform: platformFor(a.name),
-    })),
   };
 }
 
-// The full published history across the org, newest first — which is what the
-// changelog renders.
+// Every published release across the org, newest first. The tag and its date
+// are what this site shows — the newest version on the front page, the latest
+// tag on a repository card, and the recent list on the transparency page. What
+// each release contained is documented at docs.lemonfiber.app/project/changelog/.
 //
 // Drafts are dropped because they are not public. Prereleases are NOT: this
 // project is pre-1.0, so every release it has ever made is one, and filtering
-// them would leave the changelog empty while real releases exist — which reads
-// as "never shipped" and is simply false. They are rendered and marked instead.
+// them would show a project that has never shipped, which is simply false.
 async function fetchReleases(repos: Repo[]): Promise<Release[]> {
   const perRepo = await Promise.all(
     repos.map(async (repo) => {
@@ -536,15 +410,14 @@ export async function getSiteData(): Promise<SiteData> {
   const stars = repoResult?.stars ?? 0;
 
   const milestones = buildMilestones(statusMd);
-  const features = featureProgress(statusMd);
 
   // Only hit the search + releases APIs when the org was reachable at all.
   const [goodFirstIssues, liveReleases] = live
     ? await Promise.all([fetchGoodFirstIssues(), fetchReleases(baseRepos)])
     : [[] as Issue[], [] as Release[]];
 
-  // Falls back rather than rendering an empty history: a changelog that shows
-  // nothing reads as "this project has never shipped", which is worse than
+  // Falls back rather than showing no version at all: a site that names no
+  // release reads as "this project has never shipped", which is worse than
   // showing a build-time-old copy of the truth.
   const releases = liveReleases.length ? liveReleases : seedReleases;
 
@@ -579,17 +452,12 @@ export async function getSiteData(): Promise<SiteData> {
     goodFirstIssues,
     releases,
     latestRelease: releases[0],
-    features,
     progress: {
       doneMilestones: milestones.filter((m) => m.status === "done").length,
       totalMilestones: milestones.length,
       doneDeliverables,
       totalDeliverables,
       pct: Math.round((doneUnits / (totalDeliverables || 1)) * 100),
-      byEpoch: {
-        v1: epochProgress("v1", milestones),
-        v2: epochProgress("v2", milestones),
-      },
     },
   };
   return cached;

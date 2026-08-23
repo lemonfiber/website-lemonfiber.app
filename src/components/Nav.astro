@@ -14,7 +14,11 @@ const { stars, active } = Astro.props;
 // keeps the row short.
 const links = [
   { href: "/", label: t.nav.home, key: "home" },
-  { href: "/roadmap", label: t.nav.roadmap, key: "roadmap" },
+  {
+    href: `${site.docsUrl}/project/roadmap/`,
+    label: t.nav.roadmap,
+    key: "roadmap",
+  },
   { href: `${site.docsUrl}/start/install/`, label: t.nav.install, key: "install" },
   { href: "/contribute", label: t.nav.contribute, key: "contribute" },
   { href: site.docsUrl, label: t.nav.docs, key: "docs" },

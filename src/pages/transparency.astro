@@ -84,7 +84,8 @@ const secondary = data.repos.filter((r) => !r.primary);
           ) : (
             <p class="empty card">
               No tagged releases yet — the binary is source-only until the release
-              milestone (M6). Follow along on the <a href="/roadmap">roadmap</a>.
+              milestone (M6). Follow along on the
+              <a href={`${site.docsUrl}/project/roadmap/`}>roadmap</a>.
             </p>
           )
         }

@@ -18,16 +18,16 @@ import { site } from "../data/site";
           lines={[
             `<span class="c-prompt">$</span> <span class="c-cmd">lemonfiber up</span> <span class="c-flag">that-page</span>`,
             `<span class="c-warn">  !</span> Unknown form <span class="c-dim">· not found in stack.toml</span>`,
-            `<span class="c-dim">  Known routes: home · roadmap · install · changelog</span>`,
-            `<span class="c-dim">                transparency · contribute · faq · colophon</span>`,
+            `<span class="c-dim">  Known routes: home · transparency · contribute</span>`,
+            `<span class="c-dim">  On docs.lemonfiber.app: install · roadmap · changelog · faq</span>`,
           ]}
         />
       </div>
       <div class="nf__cta">
         <a class="btn btn--primary" href="/">Back home</a>
         <a class="btn btn--ghost" href={`${site.docsUrl}/start/install/`}>Install</a>
-        <a class="btn btn--ghost" href="/roadmap">Roadmap</a>
-        <a class="btn btn--ghost" href="/faq">FAQ</a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/project/roadmap/`}>Roadmap</a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/spec/90-appendix/faq/`}>FAQ</a>
       </div>
     </div>
   </section>
