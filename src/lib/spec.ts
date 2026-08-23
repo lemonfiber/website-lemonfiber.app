@@ -350,7 +350,7 @@ export async function featureWorkIndex(): Promise<Map<string, FeatureWork[]>> {
   if (workIndex) return workIndex;
   const index = new Map<string, FeatureWork[]>();
 
-  for (const repo of ["lemonfiber", "spec", "website-lemonfiber.app", "media-stack"]) {
+  for (const repo of ["lemonfiber", "spec", "website-lemonfiber.app", "lemonfiber-media-stack"]) {
     await indexRepo(repo, index);
   }
 

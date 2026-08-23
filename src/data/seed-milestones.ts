@@ -42,7 +42,7 @@ export const seedMilestonesRaw: RawMilestone[] = [
     id: "M1",
     title: "media-stack works standalone",
     status: "done",
-    repo: "media-stack",
+    repo: "lemonfiber-media-stack",
     blurb: "The 19-service Compose stack, usable with bare docker compose — no Rust involved.",
     deliverables: [
       { title: "compose.yml + per-profile fragments", status: "done" },

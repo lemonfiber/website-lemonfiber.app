@@ -26,8 +26,8 @@ export const pagesNl: Record<keyof typeof pagesEn, Doc> = {
           "De stack is een Compose-project en Lemonfiber is het gereedschap dat hem aanstuurt. Je kunt hem ook zelf klonen en rechtstreeks draaien — handig als je eerst wilt lezen wat er precies gestart wordt.",
         ],
         code: [
-          "git clone https://github.com/lemonfiber/media-stack",
-          "cd media-stack",
+          "git clone https://github.com/lemonfiber/lemonfiber-media-stack",
+          "cd lemonfiber-media-stack",
           "docker compose up -d",
         ].join("\n"),
         note: "Downloads en media moeten onder één mountpunt staan, anders kopieert een import in plaats van te hardlinken — trager, dubbel zoveel schijf, en het breekt seeding. Lemonfiber controleert dit in plaats van het aan te nemen.",

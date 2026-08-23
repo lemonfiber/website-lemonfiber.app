@@ -33,8 +33,8 @@ export const pagesEn: Record<string, Doc> = {
           "The stack is a Compose project, and Lemonfiber is the tool that drives it. You can also clone and run it directly — useful if you want to read exactly what is being started before anything starts it for you.",
         ],
         code: [
-          "git clone https://github.com/lemonfiber/media-stack",
-          "cd media-stack",
+          "git clone https://github.com/lemonfiber/lemonfiber-media-stack",
+          "cd lemonfiber-media-stack",
           "docker compose up -d",
         ].join("\n"),
         note: "Downloads and media must sit under one mount point, or imports copy instead of hardlinking — slower, double the disk, and it breaks seeding. Lemonfiber checks this rather than assuming it.",

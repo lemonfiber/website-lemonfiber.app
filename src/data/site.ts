@@ -1,6 +1,7 @@
 // Static, editorial content — the parts of the site that are prose, not motor
-// data. The service/profile/form model mirrors media-stack/stack.toml exactly,
-// so the "runs in slices" switcher shows what `lemonfiber up <form>` truly boots.
+// data. The service/profile/form model mirrors lemonfiber-media-stack/stack.toml
+// exactly, so the "runs in slices" switcher shows what `lemonfiber up <form>`
+// truly boots.
 
 export const site = {
   name: "Lemonfiber",
