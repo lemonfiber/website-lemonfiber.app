@@ -18,7 +18,7 @@ and
 and the spec tree itself, which `/spec` renders page for page.
 A maintainer never edits this site to update a milestone; they push to the repo
 that owns the fact, and CI rebuilds. Spec:
-[`30-repos/website.md`](https://github.com/lemonfiber/spec/blob/main/30-repos/website.md).
+[`30-repos/website-lemonfiber.md`](https://github.com/lemonfiber/spec/blob/main/30-repos/website-lemonfiber.md).
 
 ## Layout
 
