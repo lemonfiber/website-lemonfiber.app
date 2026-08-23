@@ -1,30 +1,15 @@
 ---
-// Rendered from the spec's 90-appendix/faq.md, translated into Dutch by
-// question. Also emits FAQPage structured data — which is why the answers in
-// the spec are written to stand alone: a search result shows one answer with
-// none of its surrounding context.
+// Rendered from the spec's 90-appendix/faq.md. Also emits FAQPage structured
+// data — which is why the answers in the spec are written to stand alone: a
+// search result shows one answer with none of its surrounding context.
 import { getFaq } from "../lib/github";
-import { faqNl, faqHeadingsNl } from "../i18n/faq";
 import { site } from "../data/site";
-import { copyFor, DEFAULT_LOCALE, type Locale } from "../i18n";
+import { copy as t } from "../i18n";
 
-interface Props {
-  locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
-const t = copyFor(locale);
-const specGroups = await getFaq();
+const groups = await getFaq();
 // Links to the spec repo root, not to the appendix file — that file does not
 // exist yet, and a link to a 404 is worse than a link to the tree it will land in.
 const specUrl = site.specUrl;
-
-// An English question with no Dutch entry falls back to English rather than
-// vanishing — a missing translation should be visible, not silently lossy.
-const groups = specGroups.map((g) => ({
-  heading: locale === "nl" ? (faqHeadingsNl[g.heading] ?? g.heading) : g.heading,
-  items: g.items.map((i) => (locale === "nl" ? (faqNl[i.q] ?? i) : i)),
-}));
 
 const jsonLd = {
   "@context": "https://schema.org",

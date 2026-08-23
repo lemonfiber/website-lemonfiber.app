@@ -5,16 +5,10 @@
 // on this page without the site being touched, and a target that stopped being
 // built disappears rather than 404-ing.
 import { getSiteData } from "../lib/github";
-import { copyFor, DEFAULT_LOCALE, type Locale } from "../i18n";
+import { copy as t } from "../i18n";
 import { releaseDate, fileSize } from "../lib/format";
 import type { ReleaseAsset } from "../lib/types";
 
-interface Props {
-  locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
-const t = copyFor(locale);
 const data = await getSiteData();
 
 const release = data.latestRelease;
@@ -52,7 +46,7 @@ const other = assets.filter((a) => !a.platform);
           <span class="ra__dot" aria-hidden="true">
             ·
           </span>
-          <time datetime={release.publishedAt}>{releaseDate(release.publishedAt, locale)}</time>
+          <time datetime={release.publishedAt}>{releaseDate(release.publishedAt)}</time>
         </p>
 
         <div class="ra__groups">

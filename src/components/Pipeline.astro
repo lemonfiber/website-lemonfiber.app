@@ -8,20 +8,14 @@
 // it cannot disagree with the stack, and there is no image to re-export when a
 // service is added.
 import { services } from "../data/site";
-import { homeCopy, DEFAULT_LOCALE, type Locale } from "../i18n";
+import { homeCopy } from "../i18n";
 
-interface Props {
-  locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
-const t = homeCopy(locale).pipeline;
+const t = homeCopy.pipeline;
 
 // The four stages media actually moves through, in order. Tune and Access are
 // deliberately not in the chain — they sit alongside every stage rather than
 // between two of them, so drawing them inline would misrepresent the flow.
-// The group keys are the manifest's, and stay English; only what a reader sees
-// is translated.
+// The group keys are the manifest's; `t.groups` maps them to the label shown.
 const STAGES = ["Find", "Download", "Organise", "Enjoy"];
 
 const stages = STAGES.map((name) => ({

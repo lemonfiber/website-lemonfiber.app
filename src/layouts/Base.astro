@@ -4,33 +4,17 @@ import "@fontsource-variable/jetbrains-mono";
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
-import LanguageRedirect from "../components/LanguageRedirect.astro";
 import { site } from "../data/site";
-import { copyFor, localePath, localesFor, DEFAULT_LOCALE, type Locale } from "../i18n";
+import { copy as t } from "../i18n";
 
 interface Props {
-  // Optional, defaulting to English, so the pages written before the locale
-  // tree existed keep working untouched.
-  locale?: Locale;
-  // Which locales this page exists in. Derived from the route registry in
-  // i18n/index.ts by default, so a page never has to assert it — and a new
-  // translation is one entry there rather than an edit in several files.
-  translated?: Locale[];
   title?: string;
   description?: string;
   stars?: number;
   active?: string;
 }
 
-const {
-  locale = DEFAULT_LOCALE,
-  translated,
-  title,
-  description,
-  stars,
-  active,
-} = Astro.props;
-const t = copyFor(locale);
+const { title, description, stars, active } = Astro.props;
 
 const metaDescription = description ?? t.meta.description;
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} — ${t.meta.tagline}`;
@@ -38,23 +22,7 @@ const fullTitle = title ? `${title} · ${site.name}` : `${site.name} — ${t.met
 const origin = Astro.site ?? new URL("https://lemonfiber.app");
 const canonical = new URL(Astro.url.pathname, origin).href;
 
-// The same page in the other locale, for hreflang. Derived from the current
-// path with its locale segment stripped, so every page advertises its own
-// twin rather than every page pointing at the two front pages.
-const route = (Astro.url.pathname.replace(/^\/nl(?=\/|$)/, "") || "/").replace(/\/$/, "") || "/";
-const available = translated ?? localesFor(route);
-
-// hreflang must advertise the same URL form the canonical uses — the build
-// emits directory-style URLs, so these carry the trailing slash too. A
-// canonical and an alternate that differ by a slash are two URLs to a crawler,
-// and the pairing between them is lost.
-const alternate = (l: Locale) => {
-  const p = localePath(l, route);
-  return new URL(p.endsWith("/") ? p : `${p}/`, origin).href;
-};
-
-const card = site.ogImage[locale];
-const ogImage = card ? new URL(card, origin).href : undefined;
+const ogImage = new URL(site.ogImage, origin).href;
 
 // Sitewide identity. Page-specific types (the application itself, the FAQ)
 // are declared by the pages that own them, so this graph stays the one thing
@@ -75,7 +43,7 @@ const identity = {
       "@id": `${origin.origin}/#site`,
       name: site.name,
       url: origin.origin,
-      inLanguage: available.map((l) => (l === "nl" ? "nl-NL" : "en-GB")),
+      inLanguage: "en-GB",
       publisher: { "@id": `${origin.origin}/#org` },
     },
   ],
@@ -92,18 +60,6 @@ const identity = {
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 
-    {/* Only the locales this page is genuinely published in. Advertising a
-        hreflang for a page that does not exist is worse than advertising none. */}
-    {
-      available.length > 1 &&
-        available.map((l) => <link rel="alternate" hreflang={l} href={alternate(l)} />)
-    }
-    {
-      available.length > 1 && (
-        <link rel="alternate" hreflang="x-default" href={alternate(DEFAULT_LOCALE)} />
-      )
-    }
-
     <meta name="theme-color" content="#17160F" media="(prefers-color-scheme: dark)" />
     <meta name="theme-color" content="#FBF7EA" media="(prefers-color-scheme: light)" />
     <meta name="color-scheme" content="light dark" />
@@ -113,27 +69,13 @@ const identity = {
     <meta property="og:description" content={metaDescription} />
     <meta property="og:url" content={canonical} />
     <meta property="og:site_name" content={site.name} />
-    <meta property="og:locale" content={locale === "nl" ? "nl_NL" : "en_GB"} />
-    {
-      available.filter((l) => l !== locale).map((l) => (
-        <meta property="og:locale:alternate" content={l === "nl" ? "nl_NL" : "en_GB"} />
-      ))
-    }
-    {
-      ogImage && (
-        <>
-          <meta property="og:image" content={ogImage} />
-          <meta property="og:image:width" content="1200" />
-          <meta property="og:image:height" content="630" />
-          <meta property="og:image:alt" content={t.meta.tagline} />
-          <meta name="twitter:image" content={ogImage} />
-        </>
-      )
-    }
-    {/* Downgrades to `summary` until site.ogImage names a real card —
-        `summary_large_image` with no image is downgraded by every crawler
-        anyway, so claiming it would only be noise. */}
-    <meta name="twitter:card" content={ogImage ? "summary_large_image" : "summary"} />
+    <meta property="og:locale" content="en_GB" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={t.meta.tagline} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
 
     <meta name="generator" content={Astro.generator} />
 
@@ -152,12 +94,11 @@ const identity = {
     </script>
   </head>
   <body>
-    <LanguageRedirect locale={locale} translated={available} />
     <a class="skip-link" href="#main">{t.nav.skip}</a>
-    <Nav locale={locale} translated={available} stars={stars} active={active} />
+    <Nav stars={stars} active={active} />
     <main id="main">
       <slot />
     </main>
-    <Footer locale={locale} />
+    <Footer />
   </body>
 </html>

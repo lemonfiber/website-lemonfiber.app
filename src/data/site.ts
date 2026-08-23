@@ -18,17 +18,16 @@ export const site = {
   licenseUrl: "https://firstdonoharm.dev",
   by: { name: "NightWorks.io", url: "https://nightworks.io" },
 
-  // The 1200×630 share cards, one per locale. The card carries the headline, so
-  // an English card on a Dutch page would be the wrong headline rather than a
-  // neutral one. Regenerate with `just og` after changing the design or the
-  // wording; scripts/og.mjs renders them from the site's own tokens and font.
-  ogImage: { en: "/og.png", nl: "/og-nl.png" } as Record<string, string>,
+  // The 1200×630 share card. Regenerate with `just og` after changing the
+  // design or the wording; scripts/og.mjs renders it from the site's own
+  // tokens and font.
+  ogImage: "/og.png",
 };
 
 // Sibling projects from the same workshop. Listed in the footer so the three
 // find each other; each is an independent product with its own org and site.
-// The blurbs are prose, so they live in the locale dictionaries under
-// `footer[key]` rather than here.
+// The blurbs are prose, so they live in i18n/copy.ts under `footer[key]`
+// rather than here.
 export const siblings = [
   { key: "beatrax", label: "Beatrax", url: "https://beatrax.app" },
   { key: "happklaar", label: "Happklaar", url: "https://happklaar.nl" },

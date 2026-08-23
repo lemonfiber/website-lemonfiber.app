@@ -1,15 +1,14 @@
-// The front page's copy, English.
+// The front page's copy.
 //
-// Split out of en.ts because the homepage carries more prose than all the
+// Split out of copy.ts because the homepage carries more prose than all the
 // chrome combined, and mixing the two made both harder to scan. The shape here
 // is the shape Home.astro renders, section by section, in page order.
 //
 // The `forms` and `services` maps key into data/site.ts by the identifier the
-// manifest uses. A key missing here falls back to the English text in site.ts
-// rather than rendering blank — a missing translation should be visible, not
-// lossy.
+// manifest uses. A key missing here falls back to the text in site.ts rather
+// than rendering blank.
 
-export const homeEn = {
+export const homeCopy = {
   hero: {
     titleLead: "Self-host your media —",
     titleAccent: "without becoming a sysadmin.",

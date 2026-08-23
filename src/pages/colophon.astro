@@ -1,12 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
 import Colophon from "../components/Colophon.astro";
-import { copyFor } from "../i18n";
-
-const t = copyFor("en");
+import { copy as t } from "../i18n";
 ---
 
-<Base locale="en" active="colophon" title={t.colophon.title} description={t.colophon.lead}>
+<Base active="colophon" title={t.colophon.title} description={t.colophon.lead}>
   <header class="section doc__head">
     <div class="container">
       <p class="eyebrow">{t.colophon.eyebrow}</p>
@@ -15,7 +13,7 @@ const t = copyFor("en");
     </div>
   </header>
   <div class="container doc__body">
-    <Colophon locale="en" />
+    <Colophon />
   </div>
 </Base>
 

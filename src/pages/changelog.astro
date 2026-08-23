@@ -1,12 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
 import Changelog from "../components/Changelog.astro";
-import { copyFor } from "../i18n";
-
-const t = copyFor("en");
+import { copy as t } from "../i18n";
 ---
 
-<Base locale="en" active="changelog" title={t.changelog.title} description={t.changelog.lead}>
+<Base active="changelog" title={t.changelog.title} description={t.changelog.lead}>
   <header class="section doc__head">
     <div class="container">
       <p class="eyebrow">{t.changelog.eyebrow}</p>
@@ -15,7 +13,7 @@ const t = copyFor("en");
     </div>
   </header>
   <div class="container doc__body">
-    <Changelog locale="en" />
+    <Changelog />
   </div>
 </Base>
 

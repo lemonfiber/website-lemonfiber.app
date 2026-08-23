@@ -1,12 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
 import Faq from "../components/Faq.astro";
-import { copyFor } from "../i18n";
-
-const t = copyFor("en");
+import { copy as t } from "../i18n";
 ---
 
-<Base locale="en" active="faq" title={t.faq.title} description={t.faq.lead}>
+<Base active="faq" title={t.faq.title} description={t.faq.lead}>
   <header class="section doc__head">
     <div class="container">
       <p class="eyebrow">{t.faq.eyebrow}</p>
@@ -15,7 +13,7 @@ const t = copyFor("en");
     </div>
   </header>
   <div class="container doc__body">
-    <Faq locale="en" />
+    <Faq />
   </div>
 </Base>
 

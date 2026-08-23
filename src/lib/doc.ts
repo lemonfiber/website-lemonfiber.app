@@ -1,10 +1,9 @@
 // The shape every content page is written in.
 //
 // Hand-building each page as its own template guarantees they drift apart in
-// styling and in structure, and doubles again once a second locale exists.
-// Instead each page is data in the locale dictionaries and renders through one
-// component, so a Dutch page cannot end up laid out differently from its
-// English twin, and a new section type is added once.
+// styling and in structure. Instead each page is data in i18n/pages.ts and
+// renders through one component, so the pages cannot end up laid out
+// differently from one another, and a new section type is added once.
 //
 // Adopted from the beatrax site. The existing hand-built pages (index,
 // roadmap, transparency, contribute) are deliberately NOT expressed in this

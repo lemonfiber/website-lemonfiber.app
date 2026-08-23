@@ -6,6 +6,6 @@ import { getSiteData } from "../lib/github";
 const data = await getSiteData();
 ---
 
-<Base locale="en" active="home" stars={data.stars}>
-  <Home locale="en" />
+<Base active="home" stars={data.stars}>
+  <Home />
 </Base>

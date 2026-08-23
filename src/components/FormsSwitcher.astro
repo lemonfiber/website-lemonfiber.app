@@ -1,5 +1,5 @@
 ---
-import { homeCopy, DEFAULT_LOCALE, type Locale } from "../i18n";
+import { homeCopy } from "../i18n";
 import { forms, servicesForForm, profiles } from "../data/site";
 
 const panels = forms.map((f) => {
@@ -13,12 +13,7 @@ const panels = forms.map((f) => {
 });
 const defaultKey = "tv";
 
-interface Props {
-  locale?: Locale;
-}
-
-const { locale = DEFAULT_LOCALE } = Astro.props;
-const tf = homeCopy(locale).forms;
+const tf = homeCopy.forms;
 ---
 
 <div class="fs">

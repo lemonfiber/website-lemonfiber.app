@@ -1,52 +1,29 @@
 ---
 import { site } from "../data/site";
 import { compact } from "../lib/format";
-import {
-  copyFor,
-  localePath,
-  pathFor,
-  isTranslated,
-  stripLocale,
-  LOCALES,
-  LOCALE_LABELS,
-  LOCALE_KEY,
-  DEFAULT_LOCALE,
-  type Locale,
-} from "../i18n";
+import { copy as t } from "../i18n";
 
 interface Props {
-  locale?: Locale;
-  translated?: Locale[];
   stars?: number;
   active?: string;
 }
-const { locale = DEFAULT_LOCALE, translated = [...LOCALES], stars, active } = Astro.props;
-const t = copyFor(locale);
-const here = stripLocale(Astro.url.pathname);
+const { stars, active } = Astro.props;
 
 // Transparency lives in the footer: it is a reference page for someone already
 // checking the project's claims, not a step on the way in. Dropping it also
-// keeps the row short enough to survive the longer Dutch labels.
-const routes = [
-  { route: "/", label: t.nav.home, key: "home" },
-  { route: "/roadmap", label: t.nav.roadmap, key: "roadmap" },
-  { route: "/install", label: t.nav.install, key: "install" },
-  { route: "/contribute", label: t.nav.contribute, key: "contribute" },
-  { route: "/faq", label: t.nav.faq, key: "faq" },
+// keeps the row short.
+const links = [
+  { href: "/", label: t.nav.home, key: "home" },
+  { href: "/roadmap", label: t.nav.roadmap, key: "roadmap" },
+  { href: "/install", label: t.nav.install, key: "install" },
+  { href: "/contribute", label: t.nav.contribute, key: "contribute" },
+  { href: "/faq", label: t.nav.faq, key: "faq" },
 ];
-
-// A link to a page with no translation stays on the English URL and says so, so
-// a screen reader and a browser both know the language is about to change.
-const links = routes.map((r) => ({
-  ...r,
-  href: pathFor(locale, r.route),
-  foreign: locale !== "en" && !isTranslated(r.route),
-}));
 ---
 
 <header class="nav">
   <div class="nav__inner container">
-    <a class="brand" href={localePath(locale, "/")} aria-label="Lemonfiber home">
+    <a class="brand" href="/" aria-label="Lemonfiber home">
       <img src="/brand/mark-small.svg" alt="" width="32" height="32" class="brand__mark" />
       <span class="brand__word">Lemonfiber</span>
     </a>
@@ -56,8 +33,6 @@ const links = routes.map((r) => ({
         links.map((l) => (
           <a
             href={l.href}
-            hreflang={l.foreign ? "en" : undefined}
-            lang={l.foreign ? "en" : undefined}
             class:list={["nav__link", { "is-active": active === l.key }]}
             aria-current={active === l.key ? "page" : undefined}
           >
@@ -68,26 +43,6 @@ const links = routes.map((r) => ({
     </nav>
 
     <div class="nav__actions">
-      {/* Hidden entirely when this page has only one locale — an inert switcher
-          is worse than no switcher. */}
-      <div class="langswitch" role="group" aria-label={t.nav.language} hidden={translated.length < 2}>
-        {
-          translated.map((l) => (
-            <a
-              class:list={["langswitch__opt", { "is-active": l === locale }]}
-              href={localePath(l, here)}
-              hreflang={l}
-              lang={l}
-              aria-current={l === locale ? "true" : undefined}
-              data-set-locale={l}
-            >
-              {l.toUpperCase()}
-              <span class="visually-hidden"> — {LOCALE_LABELS[l]}</span>
-            </a>
-          ))
-        }
-      </div>
-
       <a class="nav__icon" href={site.discord} target="_blank" rel="noopener" aria-label="Discord">
         <img src="/brand/discord.svg" alt="" width="20" height="20" />
       </a>
@@ -127,8 +82,6 @@ const links = routes.map((r) => ({
           <a
             class:list={["navpanel__link", { "is-active": active === l.key }]}
             href={l.href}
-            hreflang={l.foreign ? "en" : undefined}
-            lang={l.foreign ? "en" : undefined}
             aria-current={active === l.key ? "page" : undefined}
           >
             {l.label}
@@ -156,7 +109,7 @@ const links = routes.map((r) => ({
   })();
 </script>
 
-<script is:inline define:vars={{ localeKey: LOCALE_KEY }}>
+<script is:inline>
   (() => {
     const toggle = document.querySelector("[data-nav-toggle]");
     const panel = document.querySelector("[data-nav-panel]");
@@ -181,16 +134,6 @@ const links = routes.map((r) => ({
       if (e.matches) setOpen(false);
     });
   })();
-
-  // Choosing a language explicitly pins it, which also switches off the
-  // one-shot detection redirect for good.
-  document.querySelectorAll("[data-set-locale]").forEach((el) => {
-    el.addEventListener("click", () => {
-      try {
-        localStorage.setItem(localeKey, el.getAttribute("data-set-locale") || "en");
-      } catch {}
-    });
-  });
 </script>
 
 <style>
@@ -304,30 +247,6 @@ const links = routes.map((r) => ({
     }
   }
 
-  /* ── Language switcher ─────────────────────────────────────────── */
-  .langswitch {
-    display: flex;
-    border: 1px solid var(--border);
-    border-radius: var(--radius-pill);
-    overflow: hidden;
-    background: var(--surface);
-  }
-  .langswitch__opt {
-    padding: 0.42em 0.7em;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    color: var(--text-faint);
-    transition: background-color 0.14s ease, color 0.14s ease;
-  }
-  .langswitch__opt:hover {
-    color: var(--text);
-  }
-  .langswitch__opt.is-active {
-    background: var(--surface-2);
-    color: var(--text);
-  }
-
   /* ── Mobile menu ───────────────────────────────────────────────── */
   .navtoggle {
     display: none;
@@ -380,9 +299,9 @@ const links = routes.map((r) => ({
     color: var(--text);
   }
 
-  /* Measured, not guessed: with five links the whole row needs ~750px in
-     Dutch (the wider of the two) plus ~120px once the brand word is shown.
-     900px collapses just below that, with headroom for a longer label later. */
+  /* Measured, not guessed: with five links the whole row needs ~750px plus
+     ~120px once the brand word is shown. 900px collapses just below that,
+     with headroom for a longer label later. */
   @media (max-width: 900px) {
     .nav__inner {
       gap: var(--space-3);

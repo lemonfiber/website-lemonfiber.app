@@ -1,10 +1,10 @@
-// Renders the 1200×630 share cards into public/.
+// Renders the 1200×630 share card into public/.
 //
 // The card is built from the site's own design tokens and the woff2 the build
 // already emitted, so it cannot drift from the brand: change a token and the
 // next render follows. Headless Chrome does the rasterising, which keeps this
-// dependency-free — there is no image library in the tree and one card per
-// locale does not justify adding one.
+// dependency-free — there is no image library in the tree and one card does
+// not justify adding one.
 //
 // Usage: npm run build && node scripts/og.mjs
 import { readFileSync, writeFileSync, readdirSync, rmSync, mkdtempSync } from "node:fs";
@@ -60,10 +60,6 @@ const CARDS = {
   "og.png": {
     head: "Self-host your media —<br><em>without becoming a sysadmin.</em>",
     foot: "Nineteen apps, set up for you · open source · lemonfiber.app",
-  },
-  "og-nl.png": {
-    head: "Self-host je media —<br><em>zonder sysadmin te worden.</em>",
-    foot: "Negentien apps, voor je opgezet · open source · lemonfiber.app",
   },
 };
 
