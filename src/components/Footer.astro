@@ -29,11 +29,17 @@ const cols = [
   {
     title: "Specification",
     links: [
-      { label: "Browse the spec", href: "/spec" },
-      { label: "RFCs & Drafts", href: "/rfc" },
-      { label: "Features", href: "/spec/10-functional/features/README" },
-      { label: "User journeys", href: "/spec/10-functional/journeys/README" },
-      { label: "Architecture", href: "/spec/20-architecture/README" },
+      { label: "Browse the spec", href: `${site.docsUrl}/spec/` },
+      { label: "RFCs & Drafts", href: `${site.docsUrl}/contributing/rfcs/` },
+      {
+        label: "Features",
+        href: `${site.docsUrl}/spec/10-functional/features/`,
+      },
+      {
+        label: "User journeys",
+        href: `${site.docsUrl}/spec/10-functional/journeys/`,
+      },
+      { label: "Architecture", href: `${site.docsUrl}/spec/20-architecture/` },
     ],
   },
   {

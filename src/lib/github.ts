@@ -72,7 +72,10 @@ async function cacheWrite(key: string, body: string | null): Promise<void> {
   try {
     const { mkdir, writeFile } = await import("node:fs/promises");
     await mkdir(CACHE_DIR, { recursive: true });
-    await writeFile(`${CACHE_DIR}/${key}.json`, JSON.stringify({ at: Date.now(), body }));
+    await writeFile(
+      `${CACHE_DIR}/${key}.json`,
+      JSON.stringify({ at: Date.now(), body }),
+    );
   } catch {
     // A cache that cannot be written is not an error worth failing a build for.
   }
@@ -80,13 +83,19 @@ async function cacheWrite(key: string, body: string | null): Promise<void> {
 
 // Stable, filesystem-safe key for a URL.
 function cacheKey(url: string): string {
-  return url.replace(/^https?:\/\//, "").replace(/[^a-zA-Z0-9._-]+/g, "_").slice(0, 180);
+  return url
+    .replace(/^https?:\/\//, "")
+    .replace(/[^a-zA-Z0-9._-]+/g, "_")
+    .slice(0, 180);
 }
 
 // Fetches text, via the cache when it is on. A cached *failure* is stored too —
 // as a null body — so a rate-limited build does not retry eight dead calls on
 // every subsequent build within the TTL.
-async function fetchText(url: string, withHeaders: boolean): Promise<string | null> {
+async function fetchText(
+  url: string,
+  withHeaders: boolean,
+): Promise<string | null> {
   const key = cacheKey(url);
   const hit = await cacheRead(key);
   if (hit !== null) return hit === "\u0000null" ? null : hit;
@@ -164,7 +173,11 @@ function epochProgress(
   const total = items.length;
   const doneUnits = items.reduce((n, d) => n + creditOf(d.status), 0);
   const done = items.filter((d) => d.status === "done").length;
-  return { pct: total ? Math.round((doneUnits / total) * 100) : 0, done, total };
+  return {
+    pct: total ? Math.round((doneUnits / total) * 100) : 0,
+    done,
+    total,
+  };
 }
 
 function rollup(deliverables: Deliverable[]): {
@@ -180,23 +193,24 @@ function rollup(deliverables: Deliverable[]): {
   const doneUnits = items.reduce((n, d) => n + creditOf(d.status), 0);
   const done = items.filter((d) => d.status === "done").length;
   const pct = Math.round((doneUnits / total) * 100);
-  const status: DeliverableStatus =
-    rollupStatus(pct, doneUnits);
+  const status: DeliverableStatus = rollupStatus(pct, doneUnits);
   return { done, total: items.length, pct, status };
 }
 
 // ── Markdown parsing ──────────────────────────────────────────────
 
 function cleanCell(s: string): string {
-  return s
-    .replace(/`([^`]*)`/g, "$1") // strip inline code
-    .replaceAll(/\[([^\]]{1,200})\]\([^)]{0,500}\)/g, "$1") // link → text
-    .replaceAll("**", "")
-    // Markdown escapes are for the Markdown renderer, not for us. `\*arr`
-    // means a literal asterisk; carrying the backslash through would print it.
-    .replace(/\\([\\`*_{}[\]()#+\-.!|])/g, "$1")
-    .replace(/\s+/g, " ") // collapse runs, so joined prose lines read cleanly
-    .trim();
+  return (
+    s
+      .replace(/`([^`]*)`/g, "$1") // strip inline code
+      .replaceAll(/\[([^\]]{1,200})\]\([^)]{0,500}\)/g, "$1") // link → text
+      .replaceAll("**", "")
+      // Markdown escapes are for the Markdown renderer, not for us. `\*arr`
+      // means a literal asterisk; carrying the backslash through would print it.
+      .replace(/\\([\\`*_{}[\]()#+\-.!|])/g, "$1")
+      .replace(/\s+/g, " ") // collapse runs, so joined prose lines read cleanly
+      .trim()
+  );
 }
 
 // Parse IMPLEMENTATION-STATUS.md into per-milestone deliverables. Column order
@@ -209,7 +223,8 @@ function rowToDeliverable(row: string): Deliverable | null {
     .map((c) => c.trim());
   if (cells.length < 2) return null;
   // header and separator rows
-  if (/^-+$/.test(cells[0].replace(/[:\s]/g, "")) || cells[0] === "") return null;
+  if (/^-+$/.test(cells[0].replace(/[:\s]/g, "")) || cells[0] === "")
+    return null;
   if (/^deliverable$/i.test(cells[0])) return null;
 
   let status: DeliverableStatus | null = null;
@@ -263,9 +278,10 @@ function parseStatus(md: string): Map<string, Deliverable[]> {
   return out;
 }
 
-
 function buildMilestones(statusMd: string | null): Milestone[] {
-  const parsed = statusMd ? parseStatus(statusMd) : new Map<string, Deliverable[]>();
+  const parsed = statusMd
+    ? parseStatus(statusMd)
+    : new Map<string, Deliverable[]>();
   return seedMilestonesRaw.map((seed) => {
     // Prefer live deliverables when the status file actually lists them for
     // this milestone; otherwise the seed (M0/M0.5/M1 carry no live table).
@@ -283,7 +299,6 @@ function buildMilestones(statusMd: string | null): Milestone[] {
   });
 }
 
-
 // ── Per-feature build status ──────────────────────────────────────
 
 const REQ = /\b([A-Z]{1,3}\d*)-R(\d+)\b/g;
@@ -293,7 +308,8 @@ const RANGE = /\b([A-Z]{1,3}\d*)-R(\d+)\.\.(?:[A-Z]{1,3}\d*-)?R?(\d+)\b/g;
 function requirementsIn(line: string): string[] {
   const ids = new Set<string>();
   for (const [, feature, lo, hi] of line.matchAll(RANGE)) {
-    for (let n = Number(lo); n <= Number(hi); n += 1) ids.add(`${feature}-R${n}`);
+    for (let n = Number(lo); n <= Number(hi); n += 1)
+      ids.add(`${feature}-R${n}`);
   }
   for (const [id] of line.matchAll(REQ)) ids.add(id);
   return [...ids];
@@ -325,7 +341,9 @@ function noteRequirements(
   }
 }
 
-export function featureProgress(statusMd: string | null): Map<string, FeatureProgress> {
+export function featureProgress(
+  statusMd: string | null,
+): Map<string, FeatureProgress> {
   const seen = new Map<string, Map<string, DeliverableStatus>>();
   if (!statusMd) return new Map();
 
@@ -424,111 +442,7 @@ async function fetchGoodFirstIssues(): Promise<Issue[]> {
     `${API}/search/issues?q=${q}&per_page=12&sort=created`,
   );
   if (!data?.items) return [];
-  return data.items
-    .filter((i) => !i.pull_request)
-    .map(toIssue);
-}
-
-// ── RFC feed ──────────────────────────────────────────────────────
-//
-// The pre-approval surface (GOV-R45): open `rfc` issues on the spec repo, and
-// the spec's own `Draft` features (read from its generated board), together —
-// what is under consideration before it binds. Both fall back to empty so a
-// GitHub hiccup never breaks the build.
-
-// One shape for both kinds of pre-approval item, so the page can filter them
-// together by area, status and label.
-export interface RfcItem {
-  kind: "issue" | "draft";
-  title: string;
-  url: string;
-  ref: string; // "#64" for an issue, "C10" for a Draft feature
-  area: string; // "A".."K", or "" if unknown
-  status: string; // "open" | "approved" | "draft"
-  labels: string[];
-  createdAt: string;
-}
-
-export interface RfcFeed {
-  items: RfcItem[];
-  areas: string[];
-}
-
-function areaFromBody(body: string | undefined): string {
-  // The whitespace between the heading and the letter is matched once, as one
-  // run, rather than as three adjacent classes that each accept whitespace and
-  // so can divide it between them in many ways.
-  const found = /###[ \t]{1,20}Area\s{1,100}([A-K])\b/.exec(body ?? "");
-  return found ? found[1] : "";
-}
-
-async function fetchRfcIssues(): Promise<RfcItem[]> {
-  const q = encodeURIComponent(`repo:${ORG}/spec label:rfc state:open is:issue`);
-  const data = await getJSON<{ items: ApiIssue[] }>(
-    `${API}/search/issues?q=${q}&per_page=40&sort=created`,
-  );
-  if (!data?.items) return [];
-  return data.items
-    .filter(
-      (i) => !i.pull_request && !i.labels.some((l) => l.name === "rfc:declined"),
-    )
-    .map((i) => {
-      const names = i.labels.map((l) => l.name);
-      return {
-        kind: "issue" as const,
-        title: i.title.replace(/^RFC:\s*/i, ""),
-        url: i.html_url,
-        ref: `#${i.number}`,
-        area: areaFromBody(i.body),
-        status: names.includes("rfc:approved") ? "approved" : "open",
-        labels: names.filter((n) => n !== "rfc" && !n.startsWith("rfc:")),
-        createdAt: i.created_at,
-      };
-    });
-}
-
-interface ApiBoardFeature {
-  id: string;
-  title: string;
-  area: string;
-  status: string;
-  path: string;
-  labels?: string[];
-}
-
-async function fetchDraftFeatures(): Promise<RfcItem[]> {
-  const idx = await getJSON<{ features: ApiBoardFeature[] }>(
-    `${RAW}/${ORG}/spec/main/10-functional/features/index.json`,
-  );
-  if (!idx?.features) return [];
-  return idx.features
-    .filter((f) => f.status === "draft")
-    .map((f) => ({
-      kind: "draft" as const,
-      title: f.title,
-      url: `/spec/10-functional/features/${f.path.replace(/\.md$/, "")}`,
-      ref: f.id,
-      area: f.area,
-      status: "draft",
-      labels: f.labels ?? [],
-      createdAt: "",
-    }));
-}
-
-let rfcCache: RfcFeed | null = null;
-
-export async function getRfc(): Promise<RfcFeed> {
-  if (rfcCache) return rfcCache;
-  const [issues, drafts] = await Promise.all([
-    fetchRfcIssues(),
-    fetchDraftFeatures(),
-  ]);
-  const items = [...issues, ...drafts];
-  const areas = [...new Set(items.map((i) => i.area).filter(Boolean))].sort(
-    (a, b) => a.localeCompare(b),
-  );
-  rfcCache = { items, areas };
-  return rfcCache;
+  return data.items.filter((i) => !i.pull_request).map(toIssue);
 }
 
 interface ApiAsset {
@@ -555,7 +469,8 @@ interface ApiRelease {
 // signature, not a Linux build, and the order is what makes that come out right.
 export function platformFor(name: string): ReleaseAsset["platform"] {
   const n = name.toLowerCase();
-  if (/(sha256|checksum|\.sig$|\.asc$|\.pem$|\.sbom|\.intoto)/.test(n)) return "checksums";
+  if (/(sha256|checksum|\.sig$|\.asc$|\.pem$|\.sbom|\.intoto)/.test(n))
+    return "checksums";
   if (/(\.dmg$|\.pkg$|darwin|macos|apple)/.test(n)) return "macos";
   if (/(\.exe$|\.msi$|windows|win32|win64|\bwin\b)/.test(n)) return "windows";
   if (/(\.appimage$|\.deb$|\.rpm$|linux)/.test(n)) return "linux";
@@ -594,10 +509,14 @@ async function fetchReleases(repos: Repo[]): Promise<Release[]> {
         `${API}/repos/${ORG}/${repo.name}/releases?per_page=20`,
       );
       if (!api) return [];
-      return api.filter((r) => !r.draft && r.published_at).map((r) => toRelease(repo.name, r));
+      return api
+        .filter((r) => !r.draft && r.published_at)
+        .map((r) => toRelease(repo.name, r));
     }),
   );
-  return perRepo.flat().sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
+  return perRepo
+    .flat()
+    .sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 }
 
 // ── Public entry point ────────────────────────────────────────────
