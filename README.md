@@ -33,21 +33,26 @@ At build time it reads:
 - **the org** — repositories, languages, releases, open issues, good-first-issues, stars
 - **`spec/00-overview/roadmap.md`** — the sequenced milestones
 - **`lemonfiber/IMPLEMENTATION-STATUS.md`** — per-deliverable status (✅ / ◐ / ☐)
+- **the spec tree itself** — every page under `spec/`, rendered at `/spec`
 
 …and renders them. When a maintainer pushes to any of those repos, CI rebuilds
 and the site moves. Nobody edits a page to ship a milestone.
 
 If the network is unreachable at build time, a committed snapshot
-(`src/data/seed.ts`) keeps the build green — live data always overrides it.
+(`src/data/seed.ts`, `seed-milestones.ts`, `seed-releases.ts`) keeps the build
+green — live data always overrides it.
 
 ## Pages
 
 | Route | What it shows |
 |-------|---------------|
 | `/` | The pitch, a live status strip, the "runs in slices" switcher, the 19 services |
-| `/roadmap` | Every milestone with progress, derived from the status file |
+| `/roadmap`, `/roadmap/<feature>` | Every milestone with progress, derived from the status file |
+| `/spec`, `/spec/<path>` | The specification, rendered from the `spec` repo |
 | `/transparency` | Every repo, release and open issue — read live from GitHub |
 | `/contribute` | Ways to help + live good-first-issues |
+| `/install`, `/changelog`, `/faq`, `/colophon`, `/rfc` | The supporting pages |
+| `/nl/…` | Dutch for the pages that have it |
 
 ## Develop
 
@@ -58,16 +63,21 @@ $ npm run build   # production build (fetches live org data)
 $ just ci         # type-check + typos + build — what CI runs
 ```
 
-Node ≥ 20. `GITHUB_TOKEN` is optional locally (raises the API rate limit).
+Node — the version in `.nvmrc`, which is what CI installs. `GITHUB_TOKEN` is
+optional locally (raises the API rate limit).
 
 ## Layout
 
 ```
-src/lib/github.ts     the motor — fetch + parse, with a resilient fallback
-src/data/site.ts      editorial copy; the service / profile / form model
-src/data/seed.ts      offline snapshot
+src/lib/github.ts      the motor — fetch + parse, with a resilient fallback
+src/lib/spec.ts        reads the spec tree; src/lib/doc.ts renders a page of it
+src/lib/format.ts      shared formatting; src/lib/types.ts the shared shapes
+src/data/site.ts       editorial copy; the service / profile / form model
+src/data/seed*.ts      offline snapshots — org, milestones, releases
+src/i18n/              English and Dutch copy, and the route map between them
+src/layouts/Base.astro the shell every page renders into
 src/components/        Nav · Footer · Console · FormsSwitcher · RepoCard · …
-src/pages/             index · roadmap · transparency · contribute · 404
+src/pages/             index · roadmap · spec · transparency · contribute · …
 src/styles/tokens.css  design tokens mirrored from lemonfiber/brand
 ```
 

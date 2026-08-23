@@ -16,7 +16,7 @@ export const seedRepos: Repo[] = [
     name: "spec",
     role: "canonical",
     primary: true,
-    description: "The canonical specification — 795 requirements and the why behind every one.",
+    description: "The canonical specification — 926 requirements and the why behind every one.",
     language: "Markdown",
     url: "https://github.com/lemonfiber/spec",
     stars: 0,
@@ -31,7 +31,7 @@ export const seedRepos: Repo[] = [
     url: "https://github.com/lemonfiber/lemonfiber",
     stars: 0,
     openIssues: 0,
-    latestRelease: "v0.1.0",
+    latestRelease: "v0.8.0",
   },
   {
     name: "media-stack",
