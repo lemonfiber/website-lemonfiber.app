@@ -99,15 +99,17 @@ const gfi = data.goodFirstIssues;
       <div>
         <h2 class="start__h">Before your first PR</h2>
         <p class="start__p">
-          Read <code>AGENTS.md</code> in the repo you're touching and the
-          contributing guide. Every change cites a spec identifier that already
-          exists — commits carry a <code>Spec:</code> trailer, and CI checks it.
-          It sounds strict; it's what keeps the project coherent.
+          There is one rule, and it is the one that keeps eleven repositories
+          coherent: every change cites a specification identifier that already
+          exists. What that means in practice — where the citation goes, what
+          to do when nothing covers your change, how sign-off works — is
+          written up on the documentation site.
         </p>
       </div>
       <div class="start__links">
-        <a class="btn btn--ghost" href={site.specUrl} target="_blank" rel="noopener">The spec</a>
-        <a class="btn btn--ghost" href={`${site.githubOrg}/.github/blob/main/CODE_OF_CONDUCT.md`} target="_blank" rel="noopener">Code of Conduct</a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}>How change gets in</a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/cite-the-spec/`}>The one rule</a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/conduct/`}>Code of Conduct</a>
       </div>
     </div>
   </section>
