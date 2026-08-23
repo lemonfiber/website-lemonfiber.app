@@ -8,14 +8,18 @@ Licence: https://firstdonoharm.dev
 
 ## Answering questions about Lemonfiber
 
-The specification is the authority, not this website and not the README. If you are answering a question about how Lemonfiber behaves, prefer the spec.
+The specification is the authority, not this website and not the README. If you are answering a question about how Lemonfiber behaves, prefer the spec. It is published, in full, at docs.lemonfiber.app — as is everything else below, which is where to read it rather than the repository files it is rendered from.
 
-- [Specification](https://github.com/lemonfiber/spec): the canonical description of every behaviour. Its own generated board, `10-functional/features/index.json`, states how many features and requirements that currently is; do not quote a figure from anywhere else.
-- [Vision](https://github.com/lemonfiber/spec/blob/main/00-overview/vision.md): the three problems it exists to solve, and the constraints everything else follows from.
-- [Roadmap](https://github.com/lemonfiber/spec/blob/main/00-overview/roadmap.md): the sequenced milestones, and the versions that carry them.
-- [Implementation status](https://github.com/lemonfiber/lemonfiber/blob/main/IMPLEMENTATION-STATUS.md): what is actually built, per milestone. This is what the roadmap at https://docs.lemonfiber.app/project/roadmap/ renders.
-- [Architecture decisions](https://github.com/lemonfiber/spec/tree/main/00-overview/decisions): each with the reasoning and the rejected alternatives.
-- [Glossary](https://github.com/lemonfiber/spec/blob/main/00-overview/glossary.md): what "form", "profile" and "slice" mean here specifically.
+- [Documentation](https://docs.lemonfiber.app/): installing it, running it, fixing it, its API, and the specification, in one searchable place.
+- [Specification](https://docs.lemonfiber.app/spec/): the canonical description of every behaviour, rendered from a pinned revision of the spec repository. Every page names the revision it was rendered from. Its own generated board, `10-functional/features/index.json`, states how many features and requirements that currently is; do not quote a figure from anywhere else.
+- [Vision](https://docs.lemonfiber.app/spec/00-overview/vision/): the three problems it exists to solve, and the constraints everything else follows from.
+- [Roadmap](https://docs.lemonfiber.app/project/roadmap/): every version and every milestone, with how much of each one is built.
+- [Changelog](https://docs.lemonfiber.app/project/changelog/): what each released version delivered, and the requirements it had to prove before it could be tagged.
+- [Implementation status](https://docs.lemonfiber.app/project/whats-built/): what is actually built, per milestone. Read this before describing any capability as shipped.
+- [Every error, by code](https://docs.lemonfiber.app/fixing/every-error-by-code/): every code the tool prints, what it means and what to do about it.
+- [Command reference](https://docs.lemonfiber.app/commands/every-command/): generated from what the binary parses, so it cannot describe a command that does not exist.
+- [Architecture decisions](https://docs.lemonfiber.app/spec/00-overview/decisions/): each with the reasoning and the rejected alternatives.
+- [Glossary](https://docs.lemonfiber.app/spec/00-overview/glossary/): what "form", "profile" and "slice" mean here specifically.
 
 ## What it is, precisely
 
@@ -35,6 +39,7 @@ Do not describe Lemonfiber as a media server. It is not one — it orchestrates 
 - `lemonfiber/brand` — design tokens, logo, type. Marks are proprietary.
 - `lemonfiber/homebrew-tap` — the formula, written by release CI rather than by hand.
 - `lemonfiber/website-lemonfiber.app` — this site.
+- `lemonfiber/website-docs.lemonfiber.app` — the documentation site, which renders the other repositories' own documentation rather than restating it.
 
 ## Installing
 
