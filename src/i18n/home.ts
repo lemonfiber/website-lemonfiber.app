@@ -66,7 +66,7 @@ export const homeCopy = {
 
   slices: {
     eyebrow: "Run only the part you need",
-    title: "Not “all sixteen services or nothing.”",
+    title: "Not “all nineteen services or nothing.”",
     lead: "A form is a name for one part of the stack. Ask for that name and only those apps start — the rest stays off. Pick one and see what actually runs.",
   },
 
@@ -123,7 +123,7 @@ export const homeCopy = {
     music: "Track down and file your music.",
     books: "Ebooks, fetched and shelved.",
     library: "Just serve what you already have.",
-    full: "The lot — all nineteen services.",
+    full: "The lot — everything but the optional proxy.",
   } as Record<string, string>,
 
   // Keyed by the service `name` in site.ts `services`.

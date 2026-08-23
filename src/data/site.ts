@@ -100,7 +100,7 @@ export const forms: {
   {
     key: "full",
     label: "full",
-    blurb: "The lot — all nineteen services.",
+    blurb: "The lot — everything but the optional proxy.",
     profiles: ["search", "usenet", "torrent", "tv", "movies", "music", "books", "subs", "media", "tuning", "dash"],
     featured: true,
   },
