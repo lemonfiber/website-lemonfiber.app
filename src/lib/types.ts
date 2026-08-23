@@ -14,13 +14,14 @@ export interface Deliverable {
   group?: boolean;
 }
 
+// One milestone as the site shows it. The deliverables behind the counts are
+// parsed and totted up, never carried: nothing on this site renders the list,
+// and holding it here made the committed snapshot a transcription of a file it
+// only ever needed the totals of.
 export interface Milestone {
   id: string; // "M2"
   title: string; // "Core: manifest, compose driver, CLI"
-  status: DeliverableStatus; // rolled up
-  blurb: string; // one-line narrative from the roadmap
-  repo?: string; // which repo carries it
-  deliverables: Deliverable[];
+  status: DeliverableStatus; // the mark on the heading upstream
   done: number;
   total: number;
   pct: number; // 0..100

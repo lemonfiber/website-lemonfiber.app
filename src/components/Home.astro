@@ -148,7 +148,10 @@ const application = {
           <span class="strip__now-label">{t.strip.inProgressNow}</span>
           {inProgress.map((m) => (
             <a class="strip__now-item" href={`${site.docsUrl}/project/roadmap/#${m.id}`}>
-              <b>{m.id}</b> {m.title} <span class="mono">{m.pct}%</span>
+              <b>{m.id}</b> {m.title}{" "}
+              <span class="mono">
+                {m.done}/{m.total}
+              </span>
             </a>
           ))}
         </div>
