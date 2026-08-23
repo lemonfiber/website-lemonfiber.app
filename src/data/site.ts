@@ -10,7 +10,7 @@ export const site = {
   org: "lemonfiber",
   githubOrg: "https://github.com/lemonfiber",
   repo: "https://github.com/lemonfiber/website",
-  discord: "https://discord.gg/FYuV9CbTHR",
+  discord: "https://discord.nightworks.io",
   specUrl: "https://github.com/lemonfiber/spec",
   roadmapUrl: "https://github.com/lemonfiber/spec/blob/main/00-overview/roadmap.md",
   license: "Hippocratic License 3.0",
