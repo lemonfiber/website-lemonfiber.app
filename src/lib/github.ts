@@ -16,8 +16,7 @@ import type {
   Repo,
   SiteData,
 } from "./types";
-import { seedMilestonesRaw, seedRepos } from "../data/seed";
-import type { RawMilestone } from "../data/seed-milestones";
+import { seedMilestones, seedRepos } from "../data/seed";
 import { seedReleases } from "../data/seed-releases";
 
 const ORG = "lemonfiber";
@@ -128,9 +127,9 @@ export async function getText(url: string): Promise<string | null> {
 }
 
 /** What a set of parts amounts to: all of them, some of them, or none. */
-function rollupStatus(pct: number, doneUnits: number): DeliverableStatus {
-  if (pct >= 100) return "done";
-  return doneUnits === 0 ? "todo" : "partial";
+function rollupStatus(done: number, total: number): DeliverableStatus {
+  if (total > 0 && done === total) return "done";
+  return done === 0 ? "todo" : "partial";
 }
 
 const EMOJI: Record<string, DeliverableStatus> = {
@@ -139,34 +138,30 @@ const EMOJI: Record<string, DeliverableStatus> = {
   "☐": "todo",
 };
 
-// How much a deliverable counts toward a progress figure: a full unit when done,
-// a quarter when partial. Partial credit is deliberately light. A row in the
-// status file often stands for a whole epic barely begun — the entire read-only
-// TUI is one ◐ row — and half-credit read that as "halfway" when it was not,
-// which is what made the bars overstate. One weight, used by both the
-// per-milestone rollup and the overall figure, so the two cannot disagree.
-const PARTIAL_CREDIT = 0.25;
-
-function creditOf(status: DeliverableStatus): number {
-  const credit: Record<string, number> = { done: 1, partial: PARTIAL_CREDIT };
-  return credit[status] ?? 0;
-}
-
+/**
+ * What a milestone's rows add up to, counted rather than weighted.
+ *
+ * A row is done or it is not. A partial row used to count as a quarter of one,
+ * which put a figure on this page that the file it came from does not contain
+ * — and which the documentation site, reading the same file, does not agree
+ * with. Group headings are section titles rather than work items, so they are
+ * excluded from every count.
+ */
 function rollup(deliverables: Deliverable[]): {
   done: number;
   total: number;
   pct: number;
   status: DeliverableStatus;
 } {
-  // Group headings are section titles, not work items, so they are excluded
-  // from every count — including them would inflate progress.
   const items = deliverables.filter((d) => !d.group);
-  const total = items.length || 1;
-  const doneUnits = items.reduce((n, d) => n + creditOf(d.status), 0);
   const done = items.filter((d) => d.status === "done").length;
-  const pct = Math.round((doneUnits / total) * 100);
-  const status: DeliverableStatus = rollupStatus(pct, doneUnits);
-  return { done, total: items.length, pct, status };
+  const total = items.length;
+  return {
+    done,
+    total,
+    pct: total === 0 ? 0 : Math.round((done / total) * 100),
+    status: rollupStatus(done, total),
+  };
 }
 
 // ── Markdown parsing ──────────────────────────────────────────────
@@ -252,56 +247,67 @@ function markOf(line: string): DeliverableStatus | null {
   return emoji ? EMOJI[emoji] : null;
 }
 
-// `## M4 — Seed & backup · ◐` — the identifier, the name, and how far it has
-// got. The name is read from here rather than kept in this repo: a milestone
-// renamed upstream used to keep its old name on this page indefinitely.
-const HEADING = /^##\s+(M[\d.]+)\s*—\s*(.+)$/;
+const ID = /^M[\d.]+$/;
+const NAMED = " — ";
+const MARKED = " · ";
+
+/**
+ * `## M4 — Seed & backup · ◐` read as its three parts.
+ *
+ * The name comes from here rather than from a constant in this repo: a
+ * milestone renamed upstream used to keep its old name on this page
+ * indefinitely. Split rather than matched, so no pattern has to describe a
+ * heading whose title may itself contain either separator.
+ */
+function headingOf(line: string): { id: string; title: string } | null {
+  if (!line.startsWith("## ")) return null;
+  const at = line.indexOf(NAMED);
+  if (at === -1) return null;
+  const id = line.slice(3, at);
+  if (!ID.test(id)) return null;
+  const named = line.slice(at + NAMED.length);
+  const marked = named.lastIndexOf(MARKED);
+  return { id, title: cleanCell(marked === -1 ? named : named.slice(0, marked)) };
+}
 
 function parseStatus(md: string): Section[] {
   const out: Section[] = [];
   for (const section of md.split(/\n(?=##\s+M\d)/)) {
     const line = section.split("\n")[0];
-    const head = HEADING.exec(line);
-    if (!head) continue;
+    const heading = headingOf(line);
+    if (!heading) continue;
     const deliverables: Deliverable[] = [];
     for (const row of section.split("\n")) {
       const parsed = parseRow(row.trim());
       if (parsed) deliverables.push(parsed);
     }
-    out.push({
-      id: head[1],
-      title: cleanCell(head[2].replace(/\s*·\s*\S+\s*$/, "")),
-      declared: markOf(line),
-      deliverables,
-    });
+    out.push({ ...heading, declared: markOf(line), deliverables });
   }
   return out;
-}
-
-function counted(raw: RawMilestone): Milestone {
-  const r = rollup(raw.deliverables);
-  return { ...raw, done: r.done, total: r.total, pct: r.pct };
 }
 
 /**
  * Every milestone, from the status file when it was reachable.
  *
- * The file names them, orders them and marks them, so nothing about a milestone
- * is kept here — this repo used to carry their names and used to carry eight of
- * them, and both fell behind. The committed snapshot is the offline fallback it
- * was always meant to be, and nothing more.
+ * The file names them, orders them, marks them and holds their rows, so nothing
+ * about a milestone is kept here — this repo used to carry their names and used
+ * to carry eight of them, and both fell behind. The committed snapshot is the
+ * offline fallback it was always meant to be, and nothing more.
  */
 function buildMilestones(statusMd: string | null): Milestone[] {
   const parsed = statusMd ? parseStatus(statusMd) : [];
-  if (parsed.length === 0) return seedMilestonesRaw.map(counted);
-  return parsed.map((section) =>
-    counted({
+  if (parsed.length === 0) return seedMilestones;
+  return parsed.map((section) => {
+    const r = rollup(section.deliverables);
+    return {
       id: section.id,
       title: section.title,
-      deliverables: section.deliverables,
-      status: section.declared ?? rollup(section.deliverables).status,
-    }),
-  );
+      status: section.declared ?? r.status,
+      done: r.done,
+      total: r.total,
+      pct: r.pct,
+    };
+  });
 }
 
 // ── GitHub API ────────────────────────────────────────────────────
@@ -468,14 +474,6 @@ export async function getSiteData(): Promise<SiteData> {
 
   const totalDeliverables = milestones.reduce((n, m) => n + m.total, 0);
   const doneDeliverables = milestones.reduce((n, m) => n + m.done, 0);
-  const doneUnits = milestones.reduce(
-    (n, m) =>
-      n +
-      m.deliverables
-        .filter((d) => !d.group)
-        .reduce((k, d) => k + creditOf(d.status), 0),
-    0,
-  );
 
   cached = {
     generatedAt: new Date().toISOString(),
@@ -491,7 +489,7 @@ export async function getSiteData(): Promise<SiteData> {
       totalMilestones: milestones.length,
       doneDeliverables,
       totalDeliverables,
-      pct: Math.round((doneUnits / (totalDeliverables || 1)) * 100),
+      pct: Math.round((doneDeliverables / (totalDeliverables || 1)) * 100),
     },
   };
   return cached;

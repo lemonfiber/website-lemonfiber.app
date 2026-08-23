@@ -8,10 +8,10 @@ import type { Repo } from "../lib/types";
 // unreachable, so a build (and local dev without a token) never fails.
 //
 // The milestone snapshot moved to seed-milestones.ts and the release snapshot
-// to seed-releases.ts. Both are re-exported here so existing imports of
-// `seedMilestonesRaw` from this module keep resolving.
+// to seed-releases.ts. Both are re-exported here so an import of either from
+// this module keeps resolving.
 
-export { seedMilestonesRaw, type RawMilestone } from "./seed-milestones";
+export { seedMilestones } from "./seed-milestones";
 export { seedReleases } from "./seed-releases";
 
 // name, role, language, description — and whatever else that repository has.

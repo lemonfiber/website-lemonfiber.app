@@ -37,7 +37,8 @@ const exists = async (path) => {
 
 /** Whether the build produced something at a route a page asks for. */
 async function resolves(route) {
-  const path = decodeURIComponent(route.replace(/[#?].*$/, ""));
+  const at = route.search(/[#?]/);
+  const path = decodeURIComponent(at === -1 ? route : route.slice(0, at));
   if (path === "/") return exists(join(DIST, "index.html"));
   const target = join(DIST, path);
   return (
@@ -63,7 +64,8 @@ for (const page of html) {
 
 if (broken.length > 0) {
   console.error(`links: ${broken.length} internal link(s) resolve to nothing\n`);
-  for (const one of [...new Set(broken)].sort()) console.error(`  ${one}`);
+  const named = [...new Set(broken)].sort((a, b) => a.localeCompare(b));
+  for (const one of named) console.error(`  ${one}`);
   process.exit(1);
 }
 console.log(
