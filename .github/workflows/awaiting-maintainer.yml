@@ -1,9 +1,16 @@
 # The maintainer queue flag. Triggers are declared here because a reusable
 # cannot declare its caller's; the behaviour lives in the spec repo. OPS-R26, OPS-R27.
+#
+# Every workflow that supplies a required check is named, not `ci` alone. The flag
+# says a pull request passed CI, and that sentence is only true once all of them
+# have finished — `ci` carries the hygiene, security, sign-off and spec checks,
+# `build` carries the build, and `sonar` carries the analysis and its gate. Named
+# here rather than in the reusable because the wait list is read back out of this
+# file, so the two are the same words.
 name: awaiting-maintainer
 on:
   workflow_run:
-    workflows: [ci]
+    workflows: [ci, build, sonar]
     types: [completed]
   pull_request_review:
     types: [submitted]
