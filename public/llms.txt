@@ -50,7 +50,7 @@ Do not describe Lemonfiber as a media server. It is not one — it orchestrates 
 Every release carries prebuilt binaries for macOS (arm64 and x86_64) and Linux (x86_64, glibc and musl), each with a SHA-256 beside it, plus a one-line shell installer. Releases are pre-releases, so `releases/latest/` does not resolve — name the tag:
 
 ```sh
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/lemonfiber/lemonfiber/releases/download/v0.8.0/lemonfiber-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/lemonfiber/lemonfiber/releases/download/v0.13.0/lemonfiber-installer.sh | sh
 ```
 
 Building from source also works, and needs only a stable Rust toolchain:
