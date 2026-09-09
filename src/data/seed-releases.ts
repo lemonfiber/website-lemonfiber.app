@@ -19,10 +19,10 @@ import type { Release } from "../lib/types";
 export const seedReleases: Release[] = [
   {
     repo: "lemonfiber",
-    tag: "v0.8.0",
-    name: "v0.8.0",
-    url: "https://github.com/lemonfiber/lemonfiber/releases/tag/v0.8.0",
-    publishedAt: "2026-08-22T13:44:21Z",
+    tag: "v0.13.0",
+    name: "v0.13.0",
+    url: "https://github.com/lemonfiber/lemonfiber/releases/tag/v0.13.0",
+    publishedAt: "2026-09-09T18:48:07Z",
     prerelease: true,
   },
 ];
