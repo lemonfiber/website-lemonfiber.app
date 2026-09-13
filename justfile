@@ -10,6 +10,10 @@ install:
 dev:
     npm run dev
 
+# Rewrite every file in the shape prettier says. What `just ci` checks for.
+format:
+    npm run format
+
 # Type-check every .astro / .ts file.
 check:
     npm run check
@@ -26,8 +30,10 @@ preview:
 links:
     npm run links
 
-# Everything CI runs: types, spelling, a real build, and its internal links.
-ci: check
+# Everything CI runs: formatting, types, spelling, a real build, and its links.
+ci:
+    npm run format:check
+    just check
     typos
     npm run build
     npm run links
