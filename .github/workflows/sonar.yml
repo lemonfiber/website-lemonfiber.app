@@ -24,5 +24,15 @@ jobs:
       contents: read
       pull-requests: write
     uses: lemonfiber/spec/.github/workflows/sonar-gate.yml@d972aee34a685b3d1fa763c9ea9753191ebe87d0 # main
+    # The gate defaults the key to `<owner>_<repo>`, which every other project
+    # in the org is called. This one is `lemonfiber_website` — the project was
+    # made before the repository was renamed — so the default resolved to
+    # nothing, and a key that resolves to nothing answers every count with zero.
+    # The gate said so on every run, in a warning beside a passing tick:
+    #
+    #   Could not read the open-issue count for lemonfiber_website-lemonfiber.app
+    #   (HTTP 404), so the number Q-R64 names is not being enforced on this run.
+    with:
+      project: lemonfiber_website
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}

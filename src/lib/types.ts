@@ -3,17 +3,11 @@
 
 export type DeliverableStatus = "done" | "partial" | "todo";
 
-// `?: T | undefined` rather than `?: T` throughout, under
-// `exactOptionalPropertyTypes`. These shapes are built field by field from a
-// table and an API, and a field that was looked for and not found is written as
-// `undefined` rather than left off the object. The two are the same thing to
-// every reader here, and saying so is cheaper than building each object twice.
-
 export interface Deliverable {
   title: string;
   status: DeliverableStatus;
-  spec?: string | undefined;
-  note?: string | undefined;
+  spec?: string;
+  note?: string;
   // True for a section heading that groups the rows beneath it rather than
   // being a work item in its own right. Excluded from every count — including
   // headings in the total would quietly inflate progress.
@@ -38,11 +32,11 @@ export interface Repo {
   description: string;
   language: string;
   url: string;
-  homepage?: string | undefined;
+  homepage?: string;
   stars: number;
   openIssues: number;
-  latestRelease?: string | undefined; // tag name, e.g. "v0.1.0"
-  pushedAt?: string | undefined; // ISO
+  latestRelease?: string; // tag name, e.g. "v0.1.0"
+  pushedAt?: string; // ISO
   role: string; // human label: "canonical", "binary", "stack"…
   primary?: boolean;
 }
@@ -77,7 +71,7 @@ export interface SiteData {
   releases: Release[];
   // Newest published release across the org, for the version the front page
   // names. Optional because a fresh org genuinely has none.
-  latestRelease?: Release | undefined;
+  latestRelease?: Release;
   progress: {
     doneMilestones: number;
     totalMilestones: number;

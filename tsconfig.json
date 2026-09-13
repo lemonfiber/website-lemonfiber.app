@@ -4,6 +4,16 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "strictNullChecks": true,
-    "allowJs": true
+    "allowJs": true,
+
+    // Off, alone out of everything `strictest` turns on. It found no defect
+    // here — all fifteen real findings came from `noUncheckedIndexedAccess` —
+    // and what it costs is `?: T | undefined` on six fields built from a table
+    // and an API. SonarCloud's `typescript:S4782` reports each of those as a
+    // redundant `undefined`, which is true for a compiler without this option
+    // and is the only reading Sonar has. `Q-R64` requires zero new issues, so
+    // the six would have to be argued with the analyser on every pull request
+    // for a strictness that has not caught anything.
+    "exactOptionalPropertyTypes": false
   }
 }
