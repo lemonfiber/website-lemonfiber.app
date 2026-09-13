@@ -49,6 +49,18 @@ async function resolves(route) {
 }
 
 const html = await pages(DIST);
+
+// A build that produced no page has no broken link, and a build that produced
+// every page and broke none has no broken link either. The two say the same
+// sentence, and only the count in it tells them apart — a number nobody reads on
+// a green run. So the first is refused before the check that cannot see it.
+if (html.length === 0) {
+  console.error(`links: no page under ${DIST}, so nothing was checked\n`);
+  console.error("  A build that produced nothing passes a link check. Run the");
+  console.error("  build before this, and look at what it wrote.");
+  process.exit(1);
+}
+
 const broken = [];
 const checked = new Map();
 
@@ -63,7 +75,9 @@ for (const page of html) {
 }
 
 if (broken.length > 0) {
-  console.error(`links: ${broken.length} internal link(s) resolve to nothing\n`);
+  console.error(
+    `links: ${broken.length} internal link(s) resolve to nothing\n`,
+  );
   const named = [...new Set(broken)].sort((a, b) => a.localeCompare(b));
   for (const one of named) console.error(`  ${one}`);
   process.exit(1);
