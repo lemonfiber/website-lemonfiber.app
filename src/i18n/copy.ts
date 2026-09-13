@@ -55,7 +55,8 @@ export const copy = {
     license: "Hippocratic License 3.0",
     sourceAvailable: "ethical, source-available",
     colophon: "Colophon",
-    builtInOpen: "Built in the open — this page is generated from the org's repos.",
+    builtInOpen:
+      "Built in the open — this page is generated from the org's repos.",
     // Blurbs for the sibling projects listed in data/site.ts.
     beatrax: "Local-first personal finance, on your own machine",
     happklaar: "Dinner sorted, without the weeknight scramble",
@@ -67,7 +68,8 @@ export const copy = {
     // build time. The distinction matters: a stale number presented as live
     // is the one thing this page must never do.
     liveNote: "Generated from the org at build time.",
-    snapshotNote: "GitHub was unreachable at build time — showing the last committed snapshot.",
+    snapshotNote:
+      "GitHub was unreachable at build time — showing the last committed snapshot.",
   },
 
   notFound: {

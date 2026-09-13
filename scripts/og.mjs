@@ -7,7 +7,13 @@
 // not justify adding one.
 //
 // Usage: npm run build && node scripts/og.mjs
-import { readFileSync, writeFileSync, readdirSync, rmSync, mkdtempSync } from "node:fs";
+import {
+  readFileSync,
+  writeFileSync,
+  readdirSync,
+  rmSync,
+  mkdtempSync,
+} from "node:fs";
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -27,12 +33,21 @@ const token = (name) => {
 const font = readdirSync("dist/_astro").find((f) =>
   /^bricolage-grotesque-latin-wght-normal.*\.woff2$/.test(f),
 );
-if (!font) throw new Error("run `npm run build` first — the font is taken from dist/");
+if (!font)
+  throw new Error("run `npm run build` first — the font is taken from dist/");
 
 const mark = readFileSync("public/brand/mark-small.svg", "utf8");
-const [ink, lemon, fiber, paper] = ["--lf-ink", "--lf-lemon", "--lf-fiber", "--lf-paper"].map(token);
+const [ink, lemon, fiber, paper] = [
+  "--lf-ink",
+  "--lf-lemon",
+  "--lf-fiber",
+  "--lf-paper",
+].map(token);
 
-const card = ({ head, foot }) => `<!doctype html><html><head><meta charset="utf-8"><style>
+const card = ({
+  head,
+  foot,
+}) => `<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face{font-family:"Bricolage";src:url("/_astro/${font}") format("woff2");font-weight:200 800;font-display:block}
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:1200px;height:630px;overflow:hidden}
@@ -76,17 +91,29 @@ const SIPS = "/usr/bin/sips";
 for (const [out, copy] of Object.entries(CARDS)) {
   const tmp = `dist/_og-tmp.html`;
   writeFileSync(tmp, card(copy));
-  execFileSync(CHROME, [
-    "--headless", "--disable-gpu", "--hide-scrollbars",
-    "--force-device-scale-factor=2", "--window-size=1200,630",
-    "--virtual-time-budget=3000", `--screenshot=${join(work, "raw.png")}`,
-    `file://${process.cwd()}/${tmp}`,
-  ], { stdio: "ignore" });
+  execFileSync(
+    CHROME,
+    [
+      "--headless",
+      "--disable-gpu",
+      "--hide-scrollbars",
+      "--force-device-scale-factor=2",
+      "--window-size=1200,630",
+      "--virtual-time-budget=3000",
+      `--screenshot=${join(work, "raw.png")}`,
+      `file://${process.cwd()}/${tmp}`,
+    ],
+    { stdio: "ignore" },
+  );
   rmSync(tmp);
   // Chrome renders at 2× for crispness; the published card is exactly 1200×630.
-  execFileSync(SIPS, ["-z", "630", "1200", join(work, "raw.png"), "--out", `public/${out}`], {
-    stdio: "ignore",
-  });
+  execFileSync(
+    SIPS,
+    ["-z", "630", "1200", join(work, "raw.png"), "--out", `public/${out}`],
+    {
+      stdio: "ignore",
+    },
+  );
   console.log(`wrote public/${out}`);
 }
 

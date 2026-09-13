@@ -12,21 +12,33 @@ const gfi = data.goodFirstIssues;
   active="contribute"
   stars={data.stars}
   title="Contribute"
-  description="You don't need to write code — or even be especially technical — to help Lemonfiber.">
+  description="You don't need to write code — or even be especially technical — to help Lemonfiber."
+>
   <section class="section head">
     <div class="container">
       <p class="eyebrow">Want to help?</p>
       <h1 class="head__h">You don't need to write code.</h1>
       <p class="lead head__lead">
-        Lemonfiber is young and built in the open. There are real, useful ways to
-        help whatever your background — and the specification is complete, so the
-        path from “interested” to “merged” is unusually clear.
+        Lemonfiber is young and built in the open. There are real, useful ways
+        to help whatever your background — and the specification is complete, so
+        the path from “interested” to “merged” is unusually clear.
       </p>
       <div class="head__cta">
-        <a class="btn btn--primary" href={site.discord} target="_blank" rel="noopener">Join the Discord</a>
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}>Contributing guide</a>
-        <a class="btn btn--ghost" href={`${site.docsUrl}/spec/`}>Browse the spec</a>
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/rfcs/`}>Open an RFC</a>
+        <a
+          class="btn btn--primary"
+          href={site.discord}
+          target="_blank"
+          rel="noopener">Join the Discord</a
+        >
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}
+          >Contributing guide</a
+        >
+        <a class="btn btn--ghost" href={`${site.docsUrl}/spec/`}
+          >Browse the spec</a
+        >
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/rfcs/`}
+          >Open an RFC</a
+        >
       </div>
     </div>
   </section>
@@ -37,7 +49,9 @@ const gfi = data.goodFirstIssues;
         {
           helpWays.map((w) => (
             <article class="way card">
-              <span class="way__emoji" aria-hidden="true">{w.emoji}</span>
+              <span class="way__emoji" aria-hidden="true">
+                {w.emoji}
+              </span>
               <div>
                 <h3 class="way__title">{w.title}</h3>
                 <p class="way__body">{w.body}</p>
@@ -56,7 +70,12 @@ const gfi = data.goodFirstIssues;
           <p class="eyebrow">Prefer to write code?</p>
           <h2 class="sec__h">Good first issues, live from the org.</h2>
         </div>
-        <a class="gfi__all" href="https://github.com/search?q=org%3Alemonfiber+label%3A%22good+first+issue%22+state%3Aopen&type=issues" target="_blank" rel="noopener">
+        <a
+          class="gfi__all"
+          href="https://github.com/search?q=org%3Alemonfiber+label%3A%22good+first+issue%22+state%3Aopen&type=issues"
+          target="_blank"
+          rel="noopener"
+        >
           View all on GitHub →
         </a>
       </div>
@@ -66,7 +85,12 @@ const gfi = data.goodFirstIssues;
           <ul class="gfi">
             {gfi.map((i) => (
               <li>
-                <a class="gfi__item" href={i.url} target="_blank" rel="noopener">
+                <a
+                  class="gfi__item"
+                  href={i.url}
+                  target="_blank"
+                  rel="noopener"
+                >
                   <div class="gfi__main">
                     <span class="gfi__repo mono">{i.repo}</span>
                     <span class="gfi__title">{i.title}</span>
@@ -82,11 +106,20 @@ const gfi = data.goodFirstIssues;
         ) : (
           <div class="gfi__empty card">
             <p>
-              <b>No open “good first issue” right now</b> — either they've all been
-              claimed, or the build couldn't reach GitHub. Hop into the{" "}
-              <a href={site.discord} target="_blank" rel="noopener">Discord</a> and
-              we'll point you at something, or browse{" "}
-              <a href={`${site.githubOrg}/lemonfiber/issues`} target="_blank" rel="noopener">all open issues</a>.
+              <b>No open “good first issue” right now</b> — either they've all
+              been claimed, or the build couldn't reach GitHub. Hop into the{" "}
+              <a href={site.discord} target="_blank" rel="noopener">
+                Discord
+              </a>{" "}
+              and we'll point you at something, or browse{" "}
+              <a
+                href={`${site.githubOrg}/lemonfiber/issues`}
+                target="_blank"
+                rel="noopener"
+              >
+                all open issues
+              </a>
+              .
             </p>
           </div>
         )
@@ -101,15 +134,22 @@ const gfi = data.goodFirstIssues;
         <p class="start__p">
           There is one rule, and it is the one that keeps eleven repositories
           coherent: every change cites a specification identifier that already
-          exists. What that means in practice — where the citation goes, what
-          to do when nothing covers your change, how sign-off works — is
-          written up on the documentation site.
+          exists. What that means in practice — where the citation goes, what to
+          do when nothing covers your change, how sign-off works — is written up
+          on the documentation site.
         </p>
       </div>
       <div class="start__links">
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}>How change gets in</a>
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/cite-the-spec/`}>The one rule</a>
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/conduct/`}>Code of Conduct</a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}
+          >How change gets in</a
+        >
+        <a
+          class="btn btn--ghost"
+          href={`${site.docsUrl}/contributing/cite-the-spec/`}>The one rule</a
+        >
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/conduct/`}
+          >Code of Conduct</a
+        >
       </div>
     </div>
   </section>
@@ -143,7 +183,9 @@ const gfi = data.goodFirstIssues;
     gap: var(--space-4);
     padding: var(--space-5);
     align-items: start;
-    transition: transform 0.16s ease, box-shadow 0.16s ease;
+    transition:
+      transform 0.16s ease,
+      box-shadow 0.16s ease;
   }
   .way:hover {
     transform: translateY(-2px);
@@ -196,7 +238,9 @@ const gfi = data.goodFirstIssues;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    transition: border-color 0.14s ease, transform 0.14s ease;
+    transition:
+      border-color 0.14s ease,
+      transform 0.14s ease;
   }
   .gfi__item:hover {
     border-color: var(--accent);

@@ -14,15 +14,24 @@ const cols = [
       { label: t.nav.contribute, href: "/contribute" },
       { label: t.nav.docs, href: site.docsUrl },
       { label: t.nav.faq, href: `${site.docsUrl}/spec/90-appendix/faq/` },
-      { label: t.nav.colophon, href: `${site.docsUrl}/spec/90-appendix/colophon/` },
+      {
+        label: t.nav.colophon,
+        href: `${site.docsUrl}/spec/90-appendix/colophon/`,
+      },
     ],
   },
   {
     title: t.footer.source,
     links: [
       { label: t.cta.spec, href: site.specUrl },
-      { label: "lemonfiber (binary)", href: "https://github.com/lemonfiber/lemonfiber" },
-      { label: "lemonfiber-media-stack", href: "https://github.com/lemonfiber/lemonfiber-media-stack" },
+      {
+        label: "lemonfiber (binary)",
+        href: "https://github.com/lemonfiber/lemonfiber",
+      },
+      {
+        label: "lemonfiber-media-stack",
+        href: "https://github.com/lemonfiber/lemonfiber-media-stack",
+      },
       { label: t.footer.org, href: site.githubOrg },
     ],
   },
@@ -46,9 +55,18 @@ const cols = [
     title: t.footer.community,
     links: [
       { label: "Discord", href: site.discord },
-      { label: t.cta.goodFirstIssues, href: "https://github.com/lemonfiber/lemonfiber/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22" },
-      { label: "Code of Conduct", href: "https://github.com/lemonfiber/.github/blob/main/CODE_OF_CONDUCT.md" },
-      { label: "Security", href: "https://github.com/lemonfiber/.github/blob/main/SECURITY.md" },
+      {
+        label: t.cta.goodFirstIssues,
+        href: "https://github.com/lemonfiber/lemonfiber/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22",
+      },
+      {
+        label: "Code of Conduct",
+        href: "https://github.com/lemonfiber/.github/blob/main/CODE_OF_CONDUCT.md",
+      },
+      {
+        label: "Security",
+        href: "https://github.com/lemonfiber/.github/blob/main/SECURITY.md",
+      },
     ],
   },
 ];
@@ -63,8 +81,11 @@ const cols = [
       </a>
       <p class="ft__tag">{t.meta.tagline}.</p>
       <p class="ft__lic">
-        <a href={site.licenseUrl} target="_blank" rel="noopener">{t.footer.license}</a> —
-        {t.footer.sourceAvailable}. © {new Date().getFullYear()} {site.by.name}.
+        <a href={site.licenseUrl} target="_blank" rel="noopener"
+          >{t.footer.license}</a
+        > —
+        {t.footer.sourceAvailable}. © {new Date().getFullYear()}
+        {site.by.name}.
       </p>
     </div>
 
@@ -76,7 +97,11 @@ const cols = [
             <ul>
               {col.links.map((l) => (
                 <li>
-                  <a href={l.href} target={l.href.startsWith("http") ? "_blank" : undefined} rel="noopener">
+                  <a
+                    href={l.href}
+                    target={l.href.startsWith("http") ? "_blank" : undefined}
+                    rel="noopener"
+                  >
                     {l.label}
                   </a>
                 </li>
@@ -106,9 +131,25 @@ const cols = [
 
   <div class="container ft__base">
     <span class="ft__built">{t.footer.builtInOpen}</span>
-    <a class="ft__nw" href={site.by.url} target="_blank" rel="noopener" aria-label="NightWorks.io">
-      <img class="nw-dark" src="/brand/nightworks-dark.png" alt="NightWorks.io" height="18" />
-      <img class="nw-white" src="/brand/nightworks-white.png" alt="NightWorks.io" height="18" />
+    <a
+      class="ft__nw"
+      href={site.by.url}
+      target="_blank"
+      rel="noopener"
+      aria-label="NightWorks.io"
+    >
+      <img
+        class="nw-dark"
+        src="/brand/nightworks-dark.png"
+        alt="NightWorks.io"
+        height="18"
+      />
+      <img
+        class="nw-white"
+        src="/brand/nightworks-white.png"
+        alt="NightWorks.io"
+        height="18"
+      />
     </a>
   </div>
 </footer>

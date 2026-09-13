@@ -267,7 +267,10 @@ function headingOf(line: string): { id: string; title: string } | null {
   if (!ID.test(id)) return null;
   const named = line.slice(at + NAMED.length);
   const marked = named.lastIndexOf(MARKED);
-  return { id, title: cleanCell(marked === -1 ? named : named.slice(0, marked)) };
+  return {
+    id,
+    title: cleanCell(marked === -1 ? named : named.slice(0, marked)),
+  };
 }
 
 function parseStatus(md: string): Section[] {

@@ -56,9 +56,18 @@ const tf = homeCopy.forms;
           <p class="fs__blurb">{tf[p.key] ?? p.blurb}</p>
           <ul class="fs__chips">
             {p.services.map((s) => (
-              <li class:list={["fs__chip", { "is-vpn": s.vpn, "is-house": s.household }]}>
+              <li
+                class:list={[
+                  "fs__chip",
+                  { "is-vpn": s.vpn, "is-house": s.household },
+                ]}
+              >
                 {s.name}
-                {s.vpn && <span class="fs__lock" title="VPN-isolated">🔒</span>}
+                {s.vpn && (
+                  <span class="fs__lock" title="VPN-isolated">
+                    🔒
+                  </span>
+                )}
               </li>
             ))}
           </ul>

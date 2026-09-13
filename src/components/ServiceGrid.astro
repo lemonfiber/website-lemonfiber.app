@@ -19,7 +19,12 @@ const groups = order.map((g) => ({
         </div>
         <ul class="sg__list">
           {g.items.map((s) => (
-            <li class:list={["sg__item", { "is-vpn": s.vpn, "is-house": s.household }]}>
+            <li
+              class:list={[
+                "sg__item",
+                { "is-vpn": s.vpn, "is-house": s.household },
+              ]}
+            >
               <span class="sg__name">{s.name}</span>
               <span class="sg__role">{t.services[s.name] ?? s.role}</span>
               {s.vpn && <span class="sg__tag">VPN</span>}

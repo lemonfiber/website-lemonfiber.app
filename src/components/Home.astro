@@ -55,247 +55,296 @@ const application = {
   license: site.licenseUrl,
   isAccessibleForFree: true,
   offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
-  ...(latest ? { softwareVersion: latest.tag, datePublished: latest.publishedAt } : {}),
+  ...(latest
+    ? { softwareVersion: latest.tag, datePublished: latest.publishedAt }
+    : {}),
 };
 ---
 
-  <script type="application/ld+json" is:inline set:html={JSON.stringify(application)} />
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(application)}
+/>
 
-  {/* ── Hero ─────────────────────────────────────────────── */}
-  <section class="hero section">
-    <div class="container hero__grid">
-      <div class="hero__copy">
-        <p class="eyebrow">Spec-first · built in the open</p>
-        <h1 class="hero__title">
-          {t.hero.titleLead} <span class="hero__accent">{t.hero.titleAccent}</span>
-        </h1>
-        <p class="lead hero__lead">
-          {siteDescription}
-        </p>
-        <div class="hero__cta">
-          <a class="btn btn--primary" href={site.discord} target="_blank" rel="noopener">
-            {t.hero.ctaPrimary}
-          </a>
-          <a class="btn btn--ghost" href={`${site.docsUrl}/project/roadmap/`}>
-            {t.hero.ctaSecondary}
-          </a>
-        </div>
-        <div class="hero__proof">
-          <StatusPill status="partial" text={t.hero.statusPill} />
-          <span class="hero__proof-sep">·</span>
-          <span class="mono hero__proof-txt">
-            {data.progress.doneMilestones}/{data.progress.totalMilestones} {t.hero.milestones} ·
-            {data.progress.pct}% {t.hero.ofDeliverables}
-          </span>
-        </div>
+{/* ── Hero ─────────────────────────────────────────────── */}
+<section class="hero section">
+  <div class="container hero__grid">
+    <div class="hero__copy">
+      <p class="eyebrow">Spec-first · built in the open</p>
+      <h1 class="hero__title">
+        {t.hero.titleLead}
+        <span class="hero__accent">{t.hero.titleAccent}</span>
+      </h1>
+      <p class="lead hero__lead">
+        {siteDescription}
+      </p>
+      <div class="hero__cta">
+        <a
+          class="btn btn--primary"
+          href={site.discord}
+          target="_blank"
+          rel="noopener"
+        >
+          {t.hero.ctaPrimary}
+        </a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/project/roadmap/`}>
+          {t.hero.ctaSecondary}
+        </a>
       </div>
+      <div class="hero__proof">
+        <StatusPill status="partial" text={t.hero.statusPill} />
+        <span class="hero__proof-sep">·</span>
+        <span class="mono hero__proof-txt">
+          {data.progress.doneMilestones}/{data.progress.totalMilestones}
+          {t.hero.milestones} ·
+          {data.progress.pct}% {t.hero.ofDeliverables}
+        </span>
+      </div>
+    </div>
 
-      <div class="hero__demo">
-        <Console
-          title={t.hero.consoleTitle}
-          lines={[
-            `<span class="c-prompt">$</span> <span class="c-cmd">lemonfiber</span>`,
-            `<span class="c-box">  ┌─ lemonfiber ───────────────────────────────┐</span>`,
-            `<span class="c-box">  │</span>  No configuration found.                   <span class="c-box">│</span>`,
-            `<span class="c-box">  │</span>  Run first-time setup?             <span class="c-warn">[Y/n]</span>   <span class="c-box">│</span>`,
-            `<span class="c-box">  └────────────────────────────────────────────┘</span>`,
-            ``,
-            `<span class="c-prompt">$</span> <span class="c-cmd">lemonfiber up tv</span>  <span class="c-dim"># search → download → organise → subtitle</span>`,
-            `<span class="c-ok">  ✓</span> <span class="c-dim">8 services healthy · VPN isolating · hardlinks verified</span>`,
-          ]}
+    <div class="hero__demo">
+      <Console
+        title={t.hero.consoleTitle}
+        lines={[
+          `<span class="c-prompt">$</span> <span class="c-cmd">lemonfiber</span>`,
+          `<span class="c-box">  ┌─ lemonfiber ───────────────────────────────┐</span>`,
+          `<span class="c-box">  │</span>  No configuration found.                   <span class="c-box">│</span>`,
+          `<span class="c-box">  │</span>  Run first-time setup?             <span class="c-warn">[Y/n]</span>   <span class="c-box">│</span>`,
+          `<span class="c-box">  └────────────────────────────────────────────┘</span>`,
+          ``,
+          `<span class="c-prompt">$</span> <span class="c-cmd">lemonfiber up tv</span>  <span class="c-dim"># search → download → organise → subtitle</span>`,
+          `<span class="c-ok">  ✓</span> <span class="c-dim">8 services healthy · VPN isolating · hardlinks verified</span>`,
+        ]}
+      />
+    </div>
+  </div>
+</section>
+
+{/* ── Live status strip ────────────────────────────────── */}
+<section class="strip">
+  <div class="container strip__grid">
+    <div class="strip__lead">
+      <p class="eyebrow">{t.strip.eyebrow}</p>
+      <h2 class="strip__h">{t.strip.title}</h2>
+      <p class="strip__sub">
+        {t.strip.sub}
+        {data.live ? t.strip.fresh : t.strip.snapshot}
+      </p>
+    </div>
+    <div class="strip__stats">
+      <div class="strip__bar">
+        <ProgressBar
+          pct={data.progress.pct}
+          status="partial"
+          label={`${data.progress.doneDeliverables} ${t.strip.of} ${data.progress.totalDeliverables} ${t.strip.barLabel}`}
         />
       </div>
-    </div>
-  </section>
-
-  {/* ── Live status strip ────────────────────────────────── */}
-  <section class="strip">
-    <div class="container strip__grid">
-      <div class="strip__lead">
-        <p class="eyebrow">{t.strip.eyebrow}</p>
-        <h2 class="strip__h">{t.strip.title}</h2>
-        <p class="strip__sub">
-          {t.strip.sub} {data.live ? t.strip.fresh : t.strip.snapshot}
-        </p>
-      </div>
-      <div class="strip__stats">
-        <div class="strip__bar">
-          <ProgressBar pct={data.progress.pct} status="partial" label={`${data.progress.doneDeliverables} ${t.strip.of} ${data.progress.totalDeliverables} ${t.strip.barLabel}`} />
+      <div class="strip__cells">
+        <div class="cell">
+          <span class="cell__n"
+            >{data.progress.doneMilestones}/{
+              data.progress.totalMilestones
+            }</span
+          >
+          <span class="cell__l">{t.strip.milestonesDone}</span>
         </div>
-        <div class="strip__cells">
-          <div class="cell">
-            <span class="cell__n">{data.progress.doneMilestones}/{data.progress.totalMilestones}</span>
-            <span class="cell__l">{t.strip.milestonesDone}</span>
-          </div>
-          <div class="cell">
-            <span class="cell__n">{services.length}</span>
-            <span class="cell__l">{t.strip.servicesWired}</span>
-          </div>
-          <div class="cell">
-            <span class="cell__n">{data.repos.length}</span>
-            <span class="cell__l">{t.strip.publicRepos}</span>
-          </div>
-          <div class="cell">
-            <span class="cell__n">{latest ? latest.tag : "0.1.0"}</span>
-            <span class="cell__l">{latest ? `${relativeTime(latest.publishedAt)}` : t.strip.inDev}</span>
-          </div>
+        <div class="cell">
+          <span class="cell__n">{services.length}</span>
+          <span class="cell__l">{t.strip.servicesWired}</span>
+        </div>
+        <div class="cell">
+          <span class="cell__n">{data.repos.length}</span>
+          <span class="cell__l">{t.strip.publicRepos}</span>
+        </div>
+        <div class="cell">
+          <span class="cell__n">{latest ? latest.tag : "0.1.0"}</span>
+          <span class="cell__l"
+            >{
+              latest ? `${relativeTime(latest.publishedAt)}` : t.strip.inDev
+            }</span
+          >
         </div>
       </div>
     </div>
-    {
-      inProgress.length > 0 && (
-        <div class="container strip__now">
-          <span class="strip__now-label">{t.strip.inProgressNow}</span>
-          {inProgress.map((m) => (
-            <a class="strip__now-item" href={`${site.docsUrl}/project/roadmap/#${m.id}`}>
-              <b>{m.id}</b> {m.title}{" "}
-              <span class="mono">
-                {m.done}/{m.total}
-              </span>
-            </a>
-          ))}
-        </div>
-      )
-    }
-  </section>
+  </div>
+  {
+    inProgress.length > 0 && (
+      <div class="container strip__now">
+        <span class="strip__now-label">{t.strip.inProgressNow}</span>
+        {inProgress.map((m) => (
+          <a
+            class="strip__now-item"
+            href={`${site.docsUrl}/project/roadmap/#${m.id}`}
+          >
+            <b>{m.id}</b> {m.title}{" "}
+            <span class="mono">
+              {m.done}/{m.total}
+            </span>
+          </a>
+        ))}
+      </div>
+    )
+  }
+</section>
 
-  {/* ── Promises ─────────────────────────────────────────── */}
-  <section class="section">
-    <div class="container">
-      <p class="eyebrow">{t.promises.eyebrow}</p>
-      <h2 class="sec__h">{t.promises.title}</h2>
-      <div class="promises">
+{/* ── Promises ─────────────────────────────────────────── */}
+<section class="section">
+  <div class="container">
+    <p class="eyebrow">{t.promises.eyebrow}</p>
+    <h2 class="sec__h">{t.promises.title}</h2>
+    <div class="promises">
+      {
+        promises.map((p) => (
+          <article class="promise card">
+            <span class="promise__icon" aria-hidden="true">
+              {promiseIcon[p.icon]}
+            </span>
+            <h3 class="promise__title">
+              {t.promiseCards[p.icon]?.title ?? p.title}
+            </h3>
+            <p class="promise__body">
+              {t.promiseCards[p.icon]?.body ?? p.body}
+            </p>
+          </article>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+{/* ── The problem ──────────────────────────────────────── */}
+<section class="section problem">
+  <div class="container problem__grid">
+    <div>
+      <p class="eyebrow">{t.problem.eyebrow}</p>
+      <h2 class="sec__h">{t.problem.title}</h2>
+      <p class="problem__p">{t.problem.body}</p>
+      <p class="problem__lead">{t.problem.lead}</p>
+      <ul class="problem__list">
         {
-          promises.map((p) => (
-            <article class="promise card">
-              <span class="promise__icon" aria-hidden="true">{promiseIcon[p.icon]}</span>
-              <h3 class="promise__title">{t.promiseCards[p.icon]?.title ?? p.title}</h3>
-              <p class="promise__body">{t.promiseCards[p.icon]?.body ?? p.body}</p>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  {/* ── The problem ──────────────────────────────────────── */}
-  <section class="section problem">
-    <div class="container problem__grid">
-      <div>
-        <p class="eyebrow">{t.problem.eyebrow}</p>
-        <h2 class="sec__h">{t.problem.title}</h2>
-        <p class="problem__p">{t.problem.body}</p>
-        <p class="problem__lead">{t.problem.lead}</p>
-        <ul class="problem__list">
-          {t.problem.points.map((pt) => (
+          t.problem.points.map((pt) => (
             <li>
               <b>{pt.strong}</b>
               {pt.rest}
             </li>
-          ))}
-        </ul>
-      </div>
-      <div class="problem__demo">
-        <Console
-          title={t.problem.consoleTitle}
-          lines={[
-            `<span class="c-prompt">$</span> <span class="c-cmd">lemonfiber doctor</span>`,
-            `<span class="c-ok">  ✓</span> ${t.problem.consoleDocker} <span class="c-dim">· Compose v2.29</span>`,
-            `<span class="c-ok">  ✓</span> ${t.problem.consoleHardlinks} <span class="c-dim">(inode reused)</span>`,
-            `<span class="c-ok">  ✓</span> ${t.problem.consoleVpn} <span class="c-dim">— gluetun 149.x ≠ host 84.x</span>`,
-            `<span class="c-ok">  ✓</span> ${t.problem.consoleBound}`,
-            ``,
-            `<span class="c-dim">  ${t.problem.consoleNone}</span>`,
-          ]}
-        />
-      </div>
+          ))
+        }
+      </ul>
     </div>
-  </section>
+    <div class="problem__demo">
+      <Console
+        title={t.problem.consoleTitle}
+        lines={[
+          `<span class="c-prompt">$</span> <span class="c-cmd">lemonfiber doctor</span>`,
+          `<span class="c-ok">  ✓</span> ${t.problem.consoleDocker} <span class="c-dim">· Compose v2.29</span>`,
+          `<span class="c-ok">  ✓</span> ${t.problem.consoleHardlinks} <span class="c-dim">(inode reused)</span>`,
+          `<span class="c-ok">  ✓</span> ${t.problem.consoleVpn} <span class="c-dim">— gluetun 149.x ≠ host 84.x</span>`,
+          `<span class="c-ok">  ✓</span> ${t.problem.consoleBound}`,
+          ``,
+          `<span class="c-dim">  ${t.problem.consoleNone}</span>`,
+        ]}
+      />
+    </div>
+  </div>
+</section>
 
-  {/* ── Runs in slices ───────────────────────────────────── */}
-  <section class="section slices">
-    <div class="container">
-      <p class="eyebrow">{t.slices.eyebrow}</p>
-      <h2 class="sec__h">{t.slices.title}</h2>
-      <p class="sec__lead">{t.slices.lead}</p>
-      <div class="slices__body">
-        <FormsSwitcher />
-      </div>
+{/* ── Runs in slices ───────────────────────────────────── */}
+<section class="section slices">
+  <div class="container">
+    <p class="eyebrow">{t.slices.eyebrow}</p>
+    <h2 class="sec__h">{t.slices.title}</h2>
+    <p class="sec__lead">{t.slices.lead}</p>
+    <div class="slices__body">
+      <FormsSwitcher />
     </div>
-  </section>
+  </div>
+</section>
 
-  {/* ── The pipeline ─────────────────────────────────────── */}
-  <section class="section">
-    <div class="container">
-      <p class="eyebrow">{t.pipeline.eyebrow}</p>
-      <h2 class="sec__h">{t.pipeline.title}</h2>
-      <p class="sec__lead">{t.pipeline.lead}</p>
-      <div class="pipeline__body">
-        <Pipeline />
-      </div>
+{/* ── The pipeline ─────────────────────────────────────── */}
+<section class="section">
+  <div class="container">
+    <p class="eyebrow">{t.pipeline.eyebrow}</p>
+    <h2 class="sec__h">{t.pipeline.title}</h2>
+    <p class="sec__lead">{t.pipeline.lead}</p>
+    <div class="pipeline__body">
+      <Pipeline />
     </div>
-  </section>
+  </div>
+</section>
 
-  {/* ── What's inside ────────────────────────────────────── */}
-  <section class="section">
-    <div class="container">
-      <div class="inside__head">
-        <div>
-          <p class="eyebrow">{t.inside.eyebrow}</p>
-          <h2 class="sec__h">{t.inside.title}</h2>
-        </div>
-        <p class="inside__sub">{t.inside.sub}</p>
+{/* ── What's inside ────────────────────────────────────── */}
+<section class="section">
+  <div class="container">
+    <div class="inside__head">
+      <div>
+        <p class="eyebrow">{t.inside.eyebrow}</p>
+        <h2 class="sec__h">{t.inside.title}</h2>
       </div>
-      <ServiceGrid />
+      <p class="inside__sub">{t.inside.sub}</p>
     </div>
-  </section>
+    <ServiceGrid />
+  </div>
+</section>
 
-  {/* ── Household ────────────────────────────────────────── */}
-  <section class="section household">
-    <div class="container household__inner">
-      <p class="eyebrow">{t.household.eyebrow}</p>
-      <h2 class="sec__h">{t.household.title}</h2>
-      <p class="household__p">
-        {t.household.bodyLead}
-        <b>{t.household.bodyStrong}</b>{t.household.bodyRest}
-      </p>
-    </div>
-  </section>
+{/* ── Household ────────────────────────────────────────── */}
+<section class="section household">
+  <div class="container household__inner">
+    <p class="eyebrow">{t.household.eyebrow}</p>
+    <h2 class="sec__h">{t.household.title}</h2>
+    <p class="household__p">
+      {t.household.bodyLead}
+      <b>{t.household.bodyStrong}</b>{t.household.bodyRest}
+    </p>
+  </div>
+</section>
 
-  {/* ── Spec portal ────────────────────────────────────── */}
-  <section class="section spec-hl">
-    <div class="container">
-      <h2 class="sec__h">Built in the open, spec-first.</h2>
-      <p class="spec-hl__p">
-        Every capability is written down before it's built — and the whole
-        specification is browsable on-site. See what's proposed, follow the
-        release train, and read any requirement with a link back to its source.
-      </p>
-      {scale && <p class="spec-hl__scale mono">{scale}</p>}
-      <div class="spec-hl__row">
-        <a class="btn btn--ghost" href={`${site.docsUrl}/spec/`}>Browse the spec</a>
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/rfcs/`}>
-          RFCs &amp; Drafts
-        </a>
-        <a class="btn btn--ghost" href={`${site.docsUrl}/project/roadmap/`}>
-          The version train
-        </a>
-      </div>
+{/* ── Spec portal ────────────────────────────────────── */}
+<section class="section spec-hl">
+  <div class="container">
+    <h2 class="sec__h">Built in the open, spec-first.</h2>
+    <p class="spec-hl__p">
+      Every capability is written down before it's built — and the whole
+      specification is browsable on-site. See what's proposed, follow the
+      release train, and read any requirement with a link back to its source.
+    </p>
+    {scale && <p class="spec-hl__scale mono">{scale}</p>}
+    <div class="spec-hl__row">
+      <a class="btn btn--ghost" href={`${site.docsUrl}/spec/`}
+        >Browse the spec</a
+      >
+      <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/rfcs/`}>
+        RFCs &amp; Drafts
+      </a>
+      <a class="btn btn--ghost" href={`${site.docsUrl}/project/roadmap/`}>
+        The version train
+      </a>
     </div>
-  </section>
+  </div>
+</section>
 
-  {/* ── CTA ──────────────────────────────────────────────── */}
-  <section class="section">
-    <div class="container cta">
-      <h2 class="cta__h">{t.cta.title}</h2>
-      <p class="cta__p">{t.cta.body}</p>
-      <div class="cta__row">
-        <a class="btn btn--primary" href={site.discord} target="_blank" rel="noopener">{t.cta.discord}</a>
-        <a class="btn btn--ghost" href={site.specUrl} target="_blank" rel="noopener">{t.cta.spec}</a>
-        <a class="btn btn--ghost" href="/contribute">{t.cta.contribute}</a>
-      </div>
+{/* ── CTA ──────────────────────────────────────────────── */}
+<section class="section">
+  <div class="container cta">
+    <h2 class="cta__h">{t.cta.title}</h2>
+    <p class="cta__p">{t.cta.body}</p>
+    <div class="cta__row">
+      <a
+        class="btn btn--primary"
+        href={site.discord}
+        target="_blank"
+        rel="noopener">{t.cta.discord}</a
+      >
+      <a
+        class="btn btn--ghost"
+        href={site.specUrl}
+        target="_blank"
+        rel="noopener">{t.cta.spec}</a
+      >
+      <a class="btn btn--ghost" href="/contribute">{t.cta.contribute}</a>
     </div>
-  </section>
+  </div>
+</section>
 
 <style>
   .spec-hl__scale {
@@ -332,8 +381,16 @@ const application = {
   .hero {
     padding-top: var(--space-8);
     background:
-      radial-gradient(120% 80% at 85% -10%, color-mix(in srgb, var(--lf-lemon) 22%, transparent), transparent 60%),
-      radial-gradient(90% 60% at 0% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 55%);
+      radial-gradient(
+        120% 80% at 85% -10%,
+        color-mix(in srgb, var(--lf-lemon) 22%, transparent),
+        transparent 60%
+      ),
+      radial-gradient(
+        90% 60% at 0% 0%,
+        color-mix(in srgb, var(--accent) 12%, transparent),
+        transparent 55%
+      );
   }
   .hero__grid {
     display: grid;
@@ -453,7 +510,9 @@ const application = {
     border: 1px solid var(--border);
     border-radius: var(--radius-pill);
     padding: 0.3em 0.9em;
-    transition: border-color 0.14s ease, color 0.14s ease;
+    transition:
+      border-color 0.14s ease,
+      color 0.14s ease;
   }
   .strip__now-item:hover {
     border-color: var(--accent);
@@ -474,7 +533,9 @@ const application = {
   }
   .promise {
     padding: var(--space-6);
-    transition: transform 0.16s ease, box-shadow 0.16s ease;
+    transition:
+      transform 0.16s ease,
+      box-shadow 0.16s ease;
   }
   .promise:hover {
     transform: translateY(-3px);
@@ -572,7 +633,11 @@ const application = {
     background: var(--lf-ink);
     color: var(--lf-paper);
     border-radius: var(--radius-lg);
-    background-image: radial-gradient(80% 120% at 50% 0%, color-mix(in srgb, var(--lf-fiber) 30%, transparent), transparent 60%);
+    background-image: radial-gradient(
+      80% 120% at 50% 0%,
+      color-mix(in srgb, var(--lf-fiber) 30%, transparent),
+      transparent 60%
+    );
   }
   .cta__h {
     font-size: var(--size-display-l);

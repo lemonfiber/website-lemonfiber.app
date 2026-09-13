@@ -11,7 +11,14 @@ const clamped = Math.max(0, Math.min(100, pct));
 
 <div class:list={["pb", `pb--${size}`, `pb--${status}`]}>
   {label && <span class="pb__label">{label}</span>}
-  <div class="pb__track" role="progressbar" aria-valuenow={clamped} aria-valuemin="0" aria-valuemax="100" aria-label={label ?? "progress"}>
+  <div
+    class="pb__track"
+    role="progressbar"
+    aria-valuenow={clamped}
+    aria-valuemin="0"
+    aria-valuemax="100"
+    aria-label={label ?? "progress"}
+  >
     <span class="pb__fill" style={`width:${clamped}%`}></span>
   </div>
   <span class="pb__pct">{clamped}%</span>

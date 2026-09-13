@@ -46,7 +46,10 @@ const alongside = ["Tune", "Access"].map((name) => ({
                 <li class:list={["pl__svc", { "is-vpn": x.vpn }]}>
                   {x.name}
                   {x.vpn && (
-                    <span class="pl__vpn" title="Routed through the VPN gateway">
+                    <span
+                      class="pl__vpn"
+                      title="Routed through the VPN gateway"
+                    >
                       VPN
                     </span>
                   )}
