@@ -26,6 +26,13 @@ jobs:
       # optionalDependencies, so the build does not need it — verified by
       # building from a clean --ignore-scripts install.
       - run: npm ci --ignore-scripts
+      # First because it is the cheapest, and because a diff that is half
+      # reformatting is a diff nobody reads the other half of. The sibling docs
+      # site has had this since it was built; this one had an `.editorconfig`
+      # describing a shape nothing measured, and twenty-two files that did not
+      # match it.
+      - name: Formatted
+        run: npm run format:check
       - name: Type-check
         run: npm run check
       - name: Build

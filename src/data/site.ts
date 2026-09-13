@@ -53,7 +53,10 @@ export const promises = [
 
 // profile key → the services it starts. Mirrors stack.toml [[service]].profile.
 export const profiles: Record<string, { label: string; services: string[] }> = {
-  search: { label: "Indexers", services: ["Prowlarr", "FlareSolverr", "NZBHydra2"] },
+  search: {
+    label: "Indexers",
+    services: ["Prowlarr", "FlareSolverr", "NZBHydra2"],
+  },
   usenet: { label: "Usenet", services: ["SABnzbd"] },
   torrent: { label: "Torrents", services: ["Gluetun", "qBittorrent"] },
   tv: { label: "Television", services: ["Sonarr"] },
@@ -78,9 +81,24 @@ export const forms: {
   profiles: string[];
   featured?: boolean;
 }[] = [
-  { key: "search", label: "search", blurb: "Just find things.", profiles: ["search"] },
-  { key: "dl", label: "dl", blurb: "Just download a link you have.", profiles: ["usenet", "torrent"] },
-  { key: "hunt", label: "hunt", blurb: "Find and grab, no library.", profiles: ["search", "usenet", "torrent"] },
+  {
+    key: "search",
+    label: "search",
+    blurb: "Just find things.",
+    profiles: ["search"],
+  },
+  {
+    key: "dl",
+    label: "dl",
+    blurb: "Just download a link you have.",
+    profiles: ["usenet", "torrent"],
+  },
+  {
+    key: "hunt",
+    label: "hunt",
+    blurb: "Find and grab, no library.",
+    profiles: ["search", "usenet", "torrent"],
+  },
   {
     key: "tv",
     label: "tv",
@@ -88,9 +106,24 @@ export const forms: {
     profiles: ["search", "usenet", "torrent", "tv", "subs"],
     featured: true,
   },
-  { key: "movies", label: "movies", blurb: "The movie pipeline, end to end.", profiles: ["search", "usenet", "torrent", "movies", "subs"] },
-  { key: "music", label: "music", blurb: "Track down and file your music.", profiles: ["search", "usenet", "torrent", "music"] },
-  { key: "books", label: "books", blurb: "Ebooks, fetched and shelved.", profiles: ["search", "usenet", "torrent", "books"] },
+  {
+    key: "movies",
+    label: "movies",
+    blurb: "The movie pipeline, end to end.",
+    profiles: ["search", "usenet", "torrent", "movies", "subs"],
+  },
+  {
+    key: "music",
+    label: "music",
+    blurb: "Track down and file your music.",
+    profiles: ["search", "usenet", "torrent", "music"],
+  },
+  {
+    key: "books",
+    label: "books",
+    blurb: "Ebooks, fetched and shelved.",
+    profiles: ["search", "usenet", "torrent", "books"],
+  },
   {
     key: "library",
     label: "library",
@@ -101,7 +134,19 @@ export const forms: {
     key: "full",
     label: "full",
     blurb: "The lot — everything but the optional proxy.",
-    profiles: ["search", "usenet", "torrent", "tv", "movies", "music", "books", "subs", "media", "tuning", "dash"],
+    profiles: [
+      "search",
+      "usenet",
+      "torrent",
+      "tv",
+      "movies",
+      "music",
+      "books",
+      "subs",
+      "media",
+      "tuning",
+      "dash",
+    ],
     featured: true,
   },
 ];
@@ -117,23 +162,99 @@ export interface Service {
 
 // The 19 services, in the order the pipeline flows.
 export const services: Service[] = [
-  { name: "Prowlarr", role: "Indexer manager", profile: "search", group: "Find" },
-  { name: "FlareSolverr", role: "Cloudflare solver", profile: "search", group: "Find" },
+  {
+    name: "Prowlarr",
+    role: "Indexer manager",
+    profile: "search",
+    group: "Find",
+  },
+  {
+    name: "FlareSolverr",
+    role: "Cloudflare solver",
+    profile: "search",
+    group: "Find",
+  },
   { name: "NZBHydra2", role: "Meta-indexer", profile: "search", group: "Find" },
-  { name: "SABnzbd", role: "Usenet downloader", profile: "usenet", group: "Download" },
-  { name: "Gluetun", role: "VPN gateway", profile: "torrent", group: "Download", vpn: true },
-  { name: "qBittorrent", role: "Torrent client", profile: "torrent", group: "Download", vpn: true },
+  {
+    name: "SABnzbd",
+    role: "Usenet downloader",
+    profile: "usenet",
+    group: "Download",
+  },
+  {
+    name: "Gluetun",
+    role: "VPN gateway",
+    profile: "torrent",
+    group: "Download",
+    vpn: true,
+  },
+  {
+    name: "qBittorrent",
+    role: "Torrent client",
+    profile: "torrent",
+    group: "Download",
+    vpn: true,
+  },
   { name: "Sonarr", role: "TV automation", profile: "tv", group: "Organise" },
-  { name: "Radarr", role: "Movie automation", profile: "movies", group: "Organise" },
-  { name: "Lidarr", role: "Music automation", profile: "music", group: "Organise" },
-  { name: "Bindery", role: "Book automation", profile: "books", group: "Organise" },
+  {
+    name: "Radarr",
+    role: "Movie automation",
+    profile: "movies",
+    group: "Organise",
+  },
+  {
+    name: "Lidarr",
+    role: "Music automation",
+    profile: "music",
+    group: "Organise",
+  },
+  {
+    name: "Bindery",
+    role: "Book automation",
+    profile: "books",
+    group: "Organise",
+  },
   { name: "Bazarr", role: "Subtitles", profile: "subs", group: "Organise" },
-  { name: "Jellyfin", role: "Media server", profile: "media", group: "Enjoy", household: true },
-  { name: "Seerr", role: "Request portal", profile: "media", group: "Enjoy", household: true },
-  { name: "Calibre-Web-Automated", role: "Ebook library", profile: "media", group: "Enjoy", household: true },
-  { name: "Audiobookshelf", role: "Audiobooks & podcasts", profile: "media", group: "Enjoy", household: true },
-  { name: "Recyclarr", role: "Quality profiles", profile: "tuning", group: "Tune" },
-  { name: "Unpackerr", role: "Archive extraction", profile: "tuning", group: "Tune" },
+  {
+    name: "Jellyfin",
+    role: "Media server",
+    profile: "media",
+    group: "Enjoy",
+    household: true,
+  },
+  {
+    name: "Seerr",
+    role: "Request portal",
+    profile: "media",
+    group: "Enjoy",
+    household: true,
+  },
+  {
+    name: "Calibre-Web-Automated",
+    role: "Ebook library",
+    profile: "media",
+    group: "Enjoy",
+    household: true,
+  },
+  {
+    name: "Audiobookshelf",
+    role: "Audiobooks & podcasts",
+    profile: "media",
+    group: "Enjoy",
+    household: true,
+  },
+  {
+    name: "Recyclarr",
+    role: "Quality profiles",
+    profile: "tuning",
+    group: "Tune",
+  },
+  {
+    name: "Unpackerr",
+    role: "Archive extraction",
+    profile: "tuning",
+    group: "Tune",
+  },
   { name: "Homepage", role: "Dashboard", profile: "dash", group: "Access" },
   { name: "Caddy", role: "Reverse proxy", profile: "proxy", group: "Access" },
 ];
@@ -146,9 +267,29 @@ export function servicesForForm(profileKeys: string[]): Service[] {
 }
 
 export const helpWays = [
-  { emoji: "🧪", title: "Try it and tell us what broke", body: "Install it, run it against your own stack, and file what breaks — bug reports and rough edges are gold." },
-  { emoji: "📝", title: "Improve the docs", body: "Something unclear? Fix it — every repo's docs are open, and a docs PR is a real contribution." },
-  { emoji: "🎨", title: "Design & UX", body: "The web UI and the brand welcome a good eye." },
-  { emoji: "💬", title: "Hang out on Discord", body: "Answer a question, share your setup, help shape the roadmap." },
-  { emoji: "⭐", title: "Spread the word", body: "A star or a mention genuinely helps a young project find people." },
+  {
+    emoji: "🧪",
+    title: "Try it and tell us what broke",
+    body: "Install it, run it against your own stack, and file what breaks — bug reports and rough edges are gold.",
+  },
+  {
+    emoji: "📝",
+    title: "Improve the docs",
+    body: "Something unclear? Fix it — every repo's docs are open, and a docs PR is a real contribution.",
+  },
+  {
+    emoji: "🎨",
+    title: "Design & UX",
+    body: "The web UI and the brand welcome a good eye.",
+  },
+  {
+    emoji: "💬",
+    title: "Hang out on Discord",
+    body: "Answer a question, share your setup, help shape the roadmap.",
+  },
+  {
+    emoji: "⭐",
+    title: "Spread the word",
+    body: "A star or a mention genuinely helps a young project find people.",
+  },
 ];

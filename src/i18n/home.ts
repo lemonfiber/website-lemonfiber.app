@@ -100,9 +100,11 @@ export const homeCopy = {
   household: {
     eyebrow: "Set up once",
     title: "Everyone else just watches.",
-    bodyLead: "You run the setup. Your household never sees Lemonfiber at all — they get",
+    bodyLead:
+      "You run the setup. Your household never sees Lemonfiber at all — they get",
     bodyStrong: " one link, one account",
-    bodyRest: ": ask for something in Seerr, and it turns up in Jellyfin on the TV. That's the whole experience.",
+    bodyRest:
+      ": ask for something in Seerr, and it turns up in Jellyfin on the TV. That's the whole experience.",
   },
 
   cta: {

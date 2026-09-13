@@ -15,15 +15,16 @@ const secondary = data.repos.filter((r) => !r.primary);
   active="transparency"
   stars={data.stars}
   title="Transparency"
-  description="Every repo, release and open issue in the Lemonfiber org — read live from GitHub, never edited by hand.">
+  description="Every repo, release and open issue in the Lemonfiber org — read live from GitHub, never edited by hand."
+>
   <section class="section head">
     <div class="container">
       <p class="eyebrow">Build in the open</p>
       <h1 class="head__h">Nothing here is written by a human.</h1>
       <p class="lead head__lead">
         This whole page is generated from the {site.name} org at build time — repos,
-        releases, open issues, deliverable counts. If the repos change, so does
-        this page, with zero maintenance.
+        releases, open issues, deliverable counts. If the repos change, so does this
+        page, with zero maintenance.
         <span class:list={["freshness", { "is-stale": !data.live }]}>
           {data.live ? "● Live at last build" : "○ Last known snapshot"}
         </span>
@@ -33,7 +34,9 @@ const secondary = data.repos.filter((r) => !r.primary);
         <div class="kpi card">
           <span class="kpi__n">{data.progress.pct}%</span>
           <span class="kpi__l">deliverables shipped</span>
-          <div class="kpi__bar"><ProgressBar pct={data.progress.pct} status="partial" size="sm" /></div>
+          <div class="kpi__bar">
+            <ProgressBar pct={data.progress.pct} status="partial" size="sm" />
+          </div>
         </div>
         <div class="kpi card">
           <span class="kpi__n">{data.repos.length}</span>
@@ -44,7 +47,11 @@ const secondary = data.repos.filter((r) => !r.primary);
           <span class="kpi__l">GitHub stars</span>
         </div>
         <div class="kpi card">
-          <span class="kpi__n">{data.progress.doneMilestones}/{data.progress.totalMilestones}</span>
+          <span class="kpi__n"
+            >{data.progress.doneMilestones}/{
+              data.progress.totalMilestones
+            }</span
+          >
           <span class="kpi__l">milestones complete</span>
         </div>
       </div>
@@ -54,7 +61,10 @@ const secondary = data.repos.filter((r) => !r.primary);
   <section class="section repos-sec">
     <div class="container">
       <h2 class="sec__h">The repositories</h2>
-      <p class="sec__sub">Each one governed by the spec — no change lands without citing an identifier.</p>
+      <p class="sec__sub">
+        Each one governed by the spec — no change lands without citing an
+        identifier.
+      </p>
       <div class="repos repos--primary">
         {primary.map((r) => <RepoCard repo={r} />)}
       </div>
@@ -94,12 +104,28 @@ const secondary = data.repos.filter((r) => !r.primary);
       <div>
         <h2 class="sec__h">How this stays honest</h2>
         <ul class="honest">
-          <li><b>Spec-first.</b> Every commit cites a spec identifier; CI rejects the ones that don't.</li>
-          <li><b>Governed change.</b> Reusable workflows enforce DCO, hygiene and security across all repos.</li>
-          <li><b>Proven, not claimed.</b> The binary tests hardlinks and VPN isolation instead of assuming them.</li>
-          <li><b>This page.</b> Built from the org, so it can't quietly drift from reality.</li>
+          <li>
+            <b>Spec-first.</b> Every commit cites a spec identifier; CI rejects the
+            ones that don't.
+          </li>
+          <li>
+            <b>Governed change.</b> Reusable workflows enforce DCO, hygiene and security
+            across all repos.
+          </li>
+          <li>
+            <b>Proven, not claimed.</b> The binary tests hardlinks and VPN isolation
+            instead of assuming them.
+          </li>
+          <li>
+            <b>This page.</b> Built from the org, so it can't quietly drift from reality.
+          </li>
         </ul>
-        <a class="btn btn--ghost" href={site.githubOrg} target="_blank" rel="noopener">Browse the org on GitHub →</a>
+        <a
+          class="btn btn--ghost"
+          href={site.githubOrg}
+          target="_blank"
+          rel="noopener">Browse the org on GitHub →</a
+        >
       </div>
     </div>
   </section>

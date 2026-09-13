@@ -1,0 +1,11 @@
+dist/
+node_modules/
+.astro/
+
+# Shared verbatim with the other lemonfiber repos. Byte-identity is the point —
+# reformatting them here would fork a file that is meant to have one home.
+.markdownlint.jsonc
+.github/labeler.yml
+
+# Written by npm, and rewritten wholesale every time it changes.
+package-lock.json

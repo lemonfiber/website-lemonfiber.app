@@ -18,7 +18,12 @@ const langColor: Record<string, string> = {
 };
 ---
 
-<a class:list={["rc", { "rc--primary": repo.primary }]} href={repo.url} target="_blank" rel="noopener">
+<a
+  class:list={["rc", { "rc--primary": repo.primary }]}
+  href={repo.url}
+  target="_blank"
+  rel="noopener"
+>
   <div class="rc__top">
     <h4 class="rc__name">{repo.name}</h4>
     <span class="rc__role">{repo.role}</span>
@@ -28,15 +33,26 @@ const langColor: Record<string, string> = {
     {
       repo.language && (
         <span class="rc__lang">
-          <span class="rc__dot" style={`background:${langColor[repo.language] ?? "#999"}`}></span>
+          <span
+            class="rc__dot"
+            style={`background:${langColor[repo.language] ?? "#999"}`}
+          />
           {repo.language}
         </span>
       )
     }
     {repo.latestRelease && <span class="rc__chip">{repo.latestRelease}</span>}
     {repo.stars > 0 && <span class="rc__chip">★ {compact(repo.stars)}</span>}
-    {repo.openIssues > 0 && <span class="rc__chip">{repo.openIssues} open</span>}
-    {repo.pushedAt && <span class="rc__push">{relativeTime(repo.pushedAt)}</span>}
+    {
+      repo.openIssues > 0 && (
+        <span class="rc__chip">{repo.openIssues} open</span>
+      )
+    }
+    {
+      repo.pushedAt && (
+        <span class="rc__push">{relativeTime(repo.pushedAt)}</span>
+      )
+    }
   </div>
 </a>
 
@@ -50,7 +66,10 @@ const langColor: Record<string, string> = {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
-    transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    transition:
+      transform 0.16s ease,
+      box-shadow 0.16s ease,
+      border-color 0.16s ease;
   }
   .rc:hover {
     transform: translateY(-3px);
