@@ -5,11 +5,15 @@ interface Props {
   label?: string;
   size?: "sm" | "md";
 }
-const { pct, status = "partial", label, size = "md" } = Astro.props;
+// `status` stays the prop's name — it is what every caller writes — but it is
+// read under another one here. A bare `status` in the template below is also a
+// deprecated property of `window`, and inside an `.astro` template that is the
+// one the tooling resolves it to.
+const { pct, status: mark = "partial", label, size = "md" } = Astro.props;
 const clamped = Math.max(0, Math.min(100, pct));
 ---
 
-<div class:list={["pb", `pb--${size}`, `pb--${status}`]}>
+<div class:list={["pb", `pb--${size}`, `pb--${mark}`]}>
   {label && <span class="pb__label">{label}</span>}
   <div
     class="pb__track"
