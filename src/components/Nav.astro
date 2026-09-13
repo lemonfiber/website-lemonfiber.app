@@ -4,8 +4,11 @@ import { compact } from "../lib/format";
 import { copy as t } from "../i18n";
 
 interface Props {
-  stars?: number;
-  active?: string;
+  // `| undefined` because `Base` passes these straight through from its own
+  // props, and under `exactOptionalPropertyTypes` handing on an absent value is
+  // a different thing from not handing the prop on at all.
+  stars?: number | undefined;
+  active?: string | undefined;
 }
 const { stars, active } = Astro.props;
 

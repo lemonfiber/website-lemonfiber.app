@@ -29,12 +29,18 @@ export function statusGlyph(s: string): string {
   return STATUS_GLYPH[s] ?? "○";
 }
 
+const PLANNED = "Planned";
+
 const STATUS_LABEL: Record<string, string> = {
   done: "Done",
   partial: "In progress",
-  todo: "Planned",
+  todo: PLANNED,
 };
 
 export function statusLabel(s: string): string {
-  return STATUS_LABEL[s] ?? STATUS_LABEL.todo;
+  // The fallback is the constant, not another lookup. A lookup used as a
+  // default can itself be absent, so the `string` this function promises was
+  // resting on a key being in the table above — and it names the same word the
+  // `todo` row does, so the two cannot drift apart.
+  return STATUS_LABEL[s] ?? PLANNED;
 }

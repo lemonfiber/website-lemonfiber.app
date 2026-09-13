@@ -184,31 +184,34 @@ function cleanCell(s: string): string {
 // varies between milestone tables, so we locate cells by shape, not position.
 /** One table row as a deliverable, or nothing where the row is not one. */
 function rowToDeliverable(row: string): Deliverable | null {
-  const cells = row
+  // The first cell is what every test below asks about, so it is taken out by
+  // name rather than by index. `cells.length < 2` said the same thing and said
+  // it somewhere the compiler could not follow, which is how a row with one
+  // cell reached three `cells[0]` in a row.
+  const [title, ...others] = row
     .split("|")
     .slice(1, -1)
     .map((c) => c.trim());
-  if (cells.length < 2) return null;
+  if (title === undefined || others.length === 0) return null;
   // header and separator rows
-  if (/^-+$/.test(cells[0].replace(/[:\s]/g, "")) || cells[0] === "")
-    return null;
-  if (/^deliverable$/i.test(cells[0])) return null;
+  if (/^-+$/.test(title.replace(/[:\s]/g, "")) || title === "") return null;
+  if (/^deliverable$/i.test(title)) return null;
 
   let status: DeliverableStatus | null = null;
   let spec: string | undefined;
   const rest: string[] = [];
-  for (const c of cells.slice(1)) {
+  for (const c of others) {
     const emoji = Object.keys(EMOJI).find((e) => c.includes(e));
     if (emoji && !status) {
-      status = EMOJI[emoji];
+      status = EMOJI[emoji] ?? null;
     } else if (!spec && /^[A-Z][A-Z\d]*-[A-Za-z]*\d/.test(cleanCell(c))) {
-      spec = cleanCell(c).split(/[,·]/)[0].trim();
+      spec = cleanCell(c).split(/[,·]/)[0]?.trim();
     } else {
       rest.push(cleanCell(c));
     }
   }
   const note = rest.findLast(Boolean);
-  return { title: cleanCell(cells[0]), status: status ?? "todo", spec, note };
+  return { title: cleanCell(title), status: status ?? "todo", spec, note };
 }
 
 /** A `###` heading inside a milestone, which groups the rows beneath it. */
@@ -244,7 +247,7 @@ interface Section {
 
 function markOf(line: string): DeliverableStatus | null {
   const emoji = Object.keys(EMOJI).find((e) => line.includes(e));
-  return emoji ? EMOJI[emoji] : null;
+  return emoji === undefined ? null : (EMOJI[emoji] ?? null);
 }
 
 const ID = /^M[\d.]+$/;
@@ -276,7 +279,10 @@ function headingOf(line: string): { id: string; title: string } | null {
 function parseStatus(md: string): Section[] {
   const out: Section[] = [];
   for (const section of md.split(/\n(?=##\s+M\d)/)) {
-    const line = section.split("\n")[0];
+    // `split` always yields at least one piece, and the compiler does not know
+    // that. An empty first line is answered by `headingOf` with null, which is
+    // the same `continue` below, so the default costs nothing.
+    const line = section.split("\n")[0] ?? "";
     const heading = headingOf(line);
     if (!heading) continue;
     const deliverables: Deliverable[] = [];
@@ -400,13 +406,28 @@ interface ApiRelease {
   draft: boolean;
 }
 
-function toRelease(repo: string, r: ApiRelease): Release {
+/**
+ * A release that is public and dated — the only kind this site shows.
+ *
+ * A predicate rather than the truthiness test it replaces, because the test was
+ * already there and the compiler could not see through it: `toRelease` had to
+ * assert a date it had in fact been guaranteed. Saying it here says it once,
+ * where the guarantee is actually made.
+ */
+function published(r: ApiRelease): r is ApiRelease & { published_at: string } {
+  return !r.draft && r.published_at !== null;
+}
+
+function toRelease(
+  repo: string,
+  r: ApiRelease & { published_at: string },
+): Release {
   return {
     repo,
     tag: r.tag_name,
     name: r.name || r.tag_name,
     url: r.html_url,
-    publishedAt: r.published_at as string,
+    publishedAt: r.published_at,
     prerelease: r.prerelease,
   };
 }
@@ -426,9 +447,7 @@ async function fetchReleases(repos: Repo[]): Promise<Release[]> {
         `${API}/repos/${ORG}/${repo.name}/releases?per_page=20`,
       );
       if (!api) return [];
-      return api
-        .filter((r) => !r.draft && r.published_at)
-        .map((r) => toRelease(repo.name, r));
+      return api.filter(published).map((r) => toRelease(repo.name, r));
     }),
   );
   return perRepo
