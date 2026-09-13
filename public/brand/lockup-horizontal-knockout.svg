@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="588" height="220" viewBox="0 0 588 220" role="img" aria-label="lemonfiber knockout horizontal lockup">
   <title>lemonfiber knockout horizontal lockup</title>
-  <rect width="588" height="220" fill="#A85A12"></rect>
+  <rect width="588" height="220" fill="#9C5411"></rect>
   <g transform="translate(10 10)">
     <circle cx="100" cy="100" r="97" fill="#FBF7EA"></circle>
-    <circle cx="100" cy="100" r="86" fill="#A85A12"></circle>
-    <circle cx="100" cy="100" r="91.5" fill="none" stroke="#A85A12" stroke-width="3" stroke-dasharray="1.6 6.2"></circle>
+    <circle cx="100" cy="100" r="86" fill="#9C5411"></circle>
+    <circle cx="100" cy="100" r="91.5" fill="none" stroke="#9C5411" stroke-width="3" stroke-dasharray="1.6 6.2"></circle>
     <g fill="#FBF7EA">
       <path d="M100,99 C112,84 118,63 114,42 C108,35 92,35 86,42 C82,63 88,84 100,99 Z" transform="rotate(0 100 100)"></path>
       <path d="M100,99 C112,84 118,63 114,42 C108,35 92,35 86,42 C82,63 88,84 100,99 Z" transform="rotate(45 100 100)"></path>
@@ -15,7 +15,7 @@
       <path d="M100,99 C112,84 118,63 114,42 C108,35 92,35 86,42 C82,63 88,84 100,99 Z" transform="rotate(270 100 100)"></path>
       <path d="M100,99 C112,84 118,63 114,42 C108,35 92,35 86,42 C82,63 88,84 100,99 Z" transform="rotate(315 100 100)"></path>
     </g>
-    <g stroke="#A85A12" stroke-width="15" fill="none">
+    <g stroke="#9C5411" stroke-width="15" fill="none">
       <path d="M100,100 L100,20" transform="rotate(22.5 100 100)"></path>
       <path d="M100,100 L100,20" transform="rotate(67.5 100 100)"></path>
       <path d="M100,100 L100,20" transform="rotate(112.5 100 100)"></path>
@@ -46,7 +46,7 @@
       <rect x="91.5" y="13" width="17" height="15" rx="2" transform="rotate(337.5 100 100)"></rect>
     </g>
     <circle cx="100" cy="100" r="21" fill="#FBF7EA"></circle>
-    <circle cx="100" cy="100" r="13" fill="#A85A12"></circle>
+    <circle cx="100" cy="100" r="13" fill="#9C5411"></circle>
     <circle cx="100" cy="100" r="6" fill="#FBF7EA"></circle>
   </g>
   <g fill-rule="evenodd">
