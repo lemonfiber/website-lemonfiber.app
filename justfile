@@ -18,6 +18,10 @@ format:
 check:
     npm run check
 
+# Lint every source file, with the type-aware rules on.
+lint:
+    npm run lint
+
 # Full production build — fetches live org data from the GitHub API.
 build:
     npm run build
@@ -34,6 +38,7 @@ links:
 ci:
     npm run format:check
     just check
+    just lint
     typos
     npm run build
     npm run links

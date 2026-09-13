@@ -35,6 +35,12 @@ jobs:
         run: npm run format:check
       - name: Type-check
         run: npm run check
+      # After the type-check, because the rules that matter most here are the
+      # type-aware ones and a file that does not compile gives them nothing to
+      # read. The sibling docs site has had this since it was built; this one
+      # had `.editorconfig`, `astro check`, and nothing that reads a type twice.
+      - name: Lint
+        run: npm run lint
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

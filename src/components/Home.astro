@@ -160,9 +160,7 @@ const application = {
         <div class="cell">
           <span class="cell__n">{latest ? latest.tag : "0.1.0"}</span>
           <span class="cell__l"
-            >{
-              latest ? `${relativeTime(latest.publishedAt)}` : t.strip.inDev
-            }</span
+            >{latest ? relativeTime(latest.publishedAt) : t.strip.inDev}</span
           >
         </div>
       </div>

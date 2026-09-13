@@ -18,6 +18,13 @@ import { fileURLToPath } from "node:url";
 const DIST = fileURLToPath(new URL("../dist", import.meta.url));
 const ATTRIBUTE = /(?:href|src)="(\/[^"]*)"/g;
 
+/**
+ * Every `.html` file under a directory, recursively.
+ *
+ * @param {string} directory
+ * @param {string[]} found
+ * @returns {Promise<string[]>}
+ */
 async function pages(directory, found = []) {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
     const path = join(directory, entry.name);
@@ -27,6 +34,7 @@ async function pages(directory, found = []) {
   return found;
 }
 
+/** @type {(path: string) => Promise<boolean>} */
 const exists = async (path) => {
   try {
     return (await stat(path)).isFile();
@@ -35,7 +43,12 @@ const exists = async (path) => {
   }
 };
 
-/** Whether the build produced something at a route a page asks for. */
+/**
+ * Whether the build produced something at a route a page asks for.
+ *
+ * @param {string} route
+ * @returns {Promise<boolean>}
+ */
 async function resolves(route) {
   const at = route.search(/[#?]/);
   const path = decodeURIComponent(at === -1 ? route : route.slice(0, at));
@@ -61,7 +74,9 @@ if (html.length === 0) {
   process.exit(1);
 }
 
+/** @type {string[]} */
 const broken = [];
+/** @type {Map<string, boolean>} */
 const checked = new Map();
 
 for (const page of html) {
