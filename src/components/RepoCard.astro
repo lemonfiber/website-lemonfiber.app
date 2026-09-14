@@ -30,29 +30,23 @@ const langColor: Record<string, string> = {
   </div>
   <p class="rc__desc">{repo.description}</p>
   <div class="rc__meta">
-    {
-      repo.language && (
-        <span class="rc__lang">
-          <span
-            class="rc__dot"
-            style={`background:${langColor[repo.language] ?? "#999"}`}
-          />
-          {repo.language}
-        </span>
-      )
-    }
+    {repo.language && (
+      <span class="rc__lang">
+        <span
+          class="rc__dot"
+          style={`background:${langColor[repo.language] ?? "#999"}`}
+        />
+        {repo.language}
+      </span>
+    )}
     {repo.latestRelease && <span class="rc__chip">{repo.latestRelease}</span>}
     {repo.stars > 0 && <span class="rc__chip">★ {compact(repo.stars)}</span>}
-    {
-      repo.openIssues > 0 && (
-        <span class="rc__chip">{repo.openIssues} open</span>
-      )
-    }
-    {
-      repo.pushedAt && (
-        <span class="rc__push">{relativeTime(repo.pushedAt)}</span>
-      )
-    }
+    {repo.openIssues > 0 && (
+      <span class="rc__chip">{repo.openIssues} open</span>
+    )}
+    {repo.pushedAt && (
+      <span class="rc__push">{relativeTime(repo.pushedAt)}</span>
+    )}
   </div>
 </a>
 

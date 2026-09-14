@@ -18,65 +18,62 @@ const tf = homeCopy.forms;
 
 <div class="fs">
   <div class="fs__tabs" role="tablist" aria-label="Forms">
-    {
-      panels.map((p) => (
-        <button
-          class:list={["fs__tab", { "is-active": p.key === defaultKey }]}
-          role="tab"
-          type="button"
-          id={`tab-${p.key}`}
-          aria-selected={p.key === defaultKey ? "true" : "false"}
-          aria-controls={`panel-${p.key}`}
-          data-form={p.key}
-        >
-          {p.label}
-        </button>
-      ))
-    }
+    {panels.map((p) => (
+      <button
+        class:list={["fs__tab", { "is-active": p.key === defaultKey }]}
+        role="tab"
+        type="button"
+        id={`tab-${p.key}`}
+        aria-selected={p.key === defaultKey ? "true" : "false"}
+        aria-controls={`panel-${p.key}`}
+        data-form={p.key}
+      >
+        {p.label}
+      </button>
+    ))}
   </div>
 
   <div class="fs__stage">
-    {
-      panels.map((p) => (
-        <div
-          class="fs__panel"
-          role="tabpanel"
-          id={`panel-${p.key}`}
-          aria-labelledby={`tab-${p.key}`}
-          hidden={p.key !== defaultKey}
-        >
-          <div class="fs__cmd">
-            <code>
-              <span class="fs__dollar">$</span> lemonfiber up <b>{p.label}</b>
-            </code>
-            <span class="fs__count">
-              {p.count} container{p.count === 1 ? "" : "s"}
-            </span>
-          </div>
-          <p class="fs__blurb">{tf[p.key] ?? p.blurb}</p>
-          <ul class="fs__chips">
-            {p.services.map((s) => (
-              <li
-                class:list={[
-                  "fs__chip",
-                  { "is-vpn": s.vpn, "is-house": s.household },
-                ]}
-              >
-                {s.name}
-                {s.vpn && (
-                  <span class="fs__lock" title="VPN-isolated">
-                    🔒
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
+    {panels.map((p) => (
+      <div
+        class="fs__panel"
+        role="tabpanel"
+        id={`panel-${p.key}`}
+        aria-labelledby={`tab-${p.key}`}
+        hidden={p.key !== defaultKey}
+      >
+        <div class="fs__cmd">
+          <code>
+            <span class="fs__dollar">$</span> lemonfiber up <b>{p.label}</b>
+          </code>
+          <span class="fs__count">
+            {p.count} container{p.count === 1 ? "" : "s"}
+          </span>
         </div>
-      ))
-    }
+        <p class="fs__blurb">{tf[p.key] ?? p.blurb}</p>
+        <ul class="fs__chips">
+          {p.services.map((s) => (
+            <li
+              class:list={[
+                "fs__chip",
+                { "is-vpn": s.vpn, "is-house": s.household },
+              ]}
+            >
+              {s.name}
+              {s.vpn && (
+                <span class="fs__lock" title="VPN-isolated">
+                  🔒
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+    ))}
   </div>
   <p class="fs__foot">
-    Every form is a set of Compose profiles — <code>full</code> composes them all.
+    Every form is a set of Compose profiles — <code>full</code> composes them
+    all.
     <code>lemonfiber up full proxy</code> layers friendly hostnames on top.
   </p>
 </div>

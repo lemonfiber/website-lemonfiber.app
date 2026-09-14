@@ -81,49 +81,45 @@ const cols = [
       </a>
       <p class="ft__tag">{t.meta.tagline}.</p>
       <p class="ft__lic">
-        <a href={site.licenseUrl} target="_blank" rel="noopener"
-          >{t.footer.license}</a
-        > —
-        {t.footer.sourceAvailable}. © {new Date().getFullYear()}
+        <a href={site.licenseUrl} target="_blank" rel="noopener">
+          {t.footer.license}
+        </a>{" "}
+        —{t.footer.sourceAvailable}. © {new Date().getFullYear()}
         {site.by.name}.
       </p>
     </div>
 
     <nav class="ft__cols" aria-label="Footer">
-      {
-        cols.map((col) => (
-          <div class="ft__col">
-            <h5>{col.title}</h5>
-            <ul>
-              {col.links.map((l) => (
-                <li>
-                  <a
-                    href={l.href}
-                    target={l.href.startsWith("http") ? "_blank" : undefined}
-                    rel="noopener"
-                  >
-                    {l.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))
-      }
+      {cols.map((col) => (
+        <div class="ft__col">
+          <h5>{col.title}</h5>
+          <ul>
+            {col.links.map((l) => (
+              <li>
+                <a
+                  href={l.href}
+                  target={l.href.startsWith("http") ? "_blank" : undefined}
+                  rel="noopener"
+                >
+                  {l.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
 
       <div class="ft__col">
         <h5>{t.footer.alsoFrom}</h5>
         <ul>
-          {
-            siblings.map((s) => (
-              <li>
-                <a class="sib" href={s.url} target="_blank" rel="noopener">
-                  <b>{s.label}</b>
-                  <span>{t.footer[s.key as "beatrax" | "happklaar"]}</span>
-                </a>
-              </li>
-            ))
-          }
+          {siblings.map((s) => (
+            <li>
+              <a class="sib" href={s.url} target="_blank" rel="noopener">
+                <b>{s.label}</b>
+                <span>{t.footer[s.key as "beatrax" | "happklaar"]}</span>
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </nav>
