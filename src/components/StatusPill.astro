@@ -9,7 +9,9 @@ const { status, text } = Astro.props;
 ---
 
 <span class:list={["pill", `pill--${status}`]}>
-  <span class="pill__glyph" aria-hidden="true">{statusGlyph(status)}</span>
+  <span class="pill__glyph" aria-hidden="true">
+    {statusGlyph(status)}
+  </span>
   {text ?? statusLabel(status)}
 </span>
 

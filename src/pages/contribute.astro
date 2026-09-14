@@ -28,17 +28,19 @@ const gfi = data.goodFirstIssues;
           class="btn btn--primary"
           href={site.discord}
           target="_blank"
-          rel="noopener">Join the Discord</a
+          rel="noopener"
         >
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}
-          >Contributing guide</a
-        >
-        <a class="btn btn--ghost" href={`${site.docsUrl}/spec/`}
-          >Browse the spec</a
-        >
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/rfcs/`}
-          >Open an RFC</a
-        >
+          Join the Discord
+        </a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}>
+          Contributing guide
+        </a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/spec/`}>
+          Browse the spec
+        </a>
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/rfcs/`}>
+          Open an RFC
+        </a>
       </div>
     </div>
   </section>
@@ -46,19 +48,17 @@ const gfi = data.goodFirstIssues;
   <section class="section">
     <div class="container">
       <div class="ways">
-        {
-          helpWays.map((w) => (
-            <article class="way card">
-              <span class="way__emoji" aria-hidden="true">
-                {w.emoji}
-              </span>
-              <div>
-                <h3 class="way__title">{w.title}</h3>
-                <p class="way__body">{w.body}</p>
-              </div>
-            </article>
-          ))
-        }
+        {helpWays.map((w) => (
+          <article class="way card">
+            <span class="way__emoji" aria-hidden="true">
+              {w.emoji}
+            </span>
+            <div>
+              <h3 class="way__title">{w.title}</h3>
+              <p class="way__body">{w.body}</p>
+            </div>
+          </article>
+        ))}
       </div>
     </div>
   </section>
@@ -80,50 +80,43 @@ const gfi = data.goodFirstIssues;
         </a>
       </div>
 
-      {
-        gfi.length > 0 ? (
-          <ul class="gfi">
-            {gfi.map((i) => (
-              <li>
-                <a
-                  class="gfi__item"
-                  href={i.url}
-                  target="_blank"
-                  rel="noopener"
-                >
-                  <div class="gfi__main">
-                    <span class="gfi__repo mono">{i.repo}</span>
-                    <span class="gfi__title">{i.title}</span>
-                  </div>
-                  <div class="gfi__meta">
-                    <span class="gfi__num mono">#{i.number}</span>
-                    <span class="gfi__when">{relativeTime(i.createdAt)}</span>
-                  </div>
-                </a>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <div class="gfi__empty card">
-            <p>
-              <b>No open “good first issue” right now</b> — either they've all
-              been claimed, or the build couldn't reach GitHub. Hop into the{" "}
-              <a href={site.discord} target="_blank" rel="noopener">
-                Discord
-              </a>{" "}
-              and we'll point you at something, or browse{" "}
-              <a
-                href={`${site.githubOrg}/lemonfiber/issues`}
-                target="_blank"
-                rel="noopener"
-              >
-                all open issues
+      {gfi.length > 0 ? (
+        <ul class="gfi">
+          {gfi.map((i) => (
+            <li>
+              <a class="gfi__item" href={i.url} target="_blank" rel="noopener">
+                <div class="gfi__main">
+                  <span class="gfi__repo mono">{i.repo}</span>
+                  <span class="gfi__title">{i.title}</span>
+                </div>
+                <div class="gfi__meta">
+                  <span class="gfi__num mono">#{i.number}</span>
+                  <span class="gfi__when">{relativeTime(i.createdAt)}</span>
+                </div>
               </a>
-              .
-            </p>
-          </div>
-        )
-      }
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div class="gfi__empty card">
+          <p>
+            <b>No open “good first issue” right now</b> — either they've all
+            been claimed, or the build couldn't reach GitHub. Hop into the{" "}
+            <a href={site.discord} target="_blank" rel="noopener">
+              Discord
+            </a>{" "}
+            and we'll point you at something, or browse{" "}
+            <a
+              href={`${site.githubOrg}/lemonfiber/issues`}
+              target="_blank"
+              rel="noopener"
+            >
+              all open issues
+            </a>
+            .
+          </p>
+        </div>
+      )}
     </div>
   </section>
 
@@ -140,16 +133,21 @@ const gfi = data.goodFirstIssues;
         </p>
       </div>
       <div class="start__links">
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}
-          >How change gets in</a
-        >
+        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}>
+          How change gets in
+        </a>
         <a
           class="btn btn--ghost"
-          href={`${site.docsUrl}/contributing/cite-the-spec/`}>The one rule</a
+          href={`${site.docsUrl}/contributing/cite-the-spec/`}
         >
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/conduct/`}
-          >Code of Conduct</a
+          The one rule
+        </a>
+        <a
+          class="btn btn--ghost"
+          href={`${site.docsUrl}/contributing/conduct/`}
         >
+          Code of Conduct
+        </a>
       </div>
     </div>
   </section>

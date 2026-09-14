@@ -32,52 +32,45 @@ const alongside = ["Tune", "Access"].map((name) => ({
 
 <div class="pl">
   <ol class="pl__flow">
-    {
-      stages.map((s, i) => (
-        <li class="pl__stage">
-          <div class="pl__card card">
-            <div class="pl__head">
-              <span class="pl__n mono">{String(i + 1).padStart(2, "0")}</span>
-              <h3 class="pl__name">{s.name}</h3>
-            </div>
-            <p class="pl__blurb">{s.blurb}</p>
-            <ul class="pl__svcs">
-              {s.items.map((x) => (
-                <li class:list={["pl__svc", { "is-vpn": x.vpn }]}>
-                  {x.name}
-                  {x.vpn && (
-                    <span
-                      class="pl__vpn"
-                      title="Routed through the VPN gateway"
-                    >
-                      VPN
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
+    {stages.map((s, i) => (
+      <li class="pl__stage">
+        <div class="pl__card card">
+          <div class="pl__head">
+            <span class="pl__n mono">{String(i + 1).padStart(2, "0")}</span>
+            <h3 class="pl__name">{s.name}</h3>
           </div>
-          {i < stages.length - 1 && (
-            <span class="pl__arrow" aria-hidden="true">
-              →
-            </span>
-          )}
-        </li>
-      ))
-    }
+          <p class="pl__blurb">{s.blurb}</p>
+          <ul class="pl__svcs">
+            {s.items.map((x) => (
+              <li class:list={["pl__svc", { "is-vpn": x.vpn }]}>
+                {x.name}
+                {x.vpn && (
+                  <span class="pl__vpn" title="Routed through the VPN gateway">
+                    VPN
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {i < stages.length - 1 && (
+          <span class="pl__arrow" aria-hidden="true">
+            →
+          </span>
+        )}
+      </li>
+    ))}
   </ol>
 
   <div class="pl__rail">
     <span class="pl__rail-label">{t.alongside}</span>
     <div class="pl__rail-groups">
-      {
-        alongside.map((g) => (
-          <div class="pl__rail-group">
-            <b>{g.name}</b>
-            <span>{g.items.map((x) => x.name).join(" · ")}</span>
-          </div>
-        ))
-      }
+      {alongside.map((g) => (
+        <div class="pl__rail-group">
+          <b>{g.name}</b>
+          <span>{g.items.map((x) => x.name).join(" · ")}</span>
+        </div>
+      ))}
     </div>
   </div>
 </div>

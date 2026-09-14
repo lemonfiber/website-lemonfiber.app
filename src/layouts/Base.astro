@@ -93,8 +93,7 @@ const identity = {
       type="application/ld+json"
       is:inline
       set:html={JSON.stringify(identity)}
-    />
-
+    ></script>
     {/* Apply the saved theme before paint to avoid a flash. */}
     <script is:inline>
       (() => {
@@ -108,7 +107,9 @@ const identity = {
     </script>
   </head>
   <body>
-    <a class="skip-link" href="#main">{t.nav.skip}</a>
+    <a class="skip-link" href="#main">
+      {t.nav.skip}
+    </a>
     <Nav stars={stars} active={active} />
     <main id="main">
       <slot />

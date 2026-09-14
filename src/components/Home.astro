@@ -65,8 +65,7 @@ const application = {
   type="application/ld+json"
   is:inline
   set:html={JSON.stringify(application)}
-/>
-
+></script>
 {/* ── Hero ─────────────────────────────────────────────── */}
 <section class="hero section">
   <div class="container hero__grid">
@@ -76,9 +75,7 @@ const application = {
         {t.hero.titleLead}
         <span class="hero__accent">{t.hero.titleAccent}</span>
       </h1>
-      <p class="lead hero__lead">
-        {siteDescription}
-      </p>
+      <p class="lead hero__lead">{siteDescription}</p>
       <div class="hero__cta">
         <a
           class="btn btn--primary"
@@ -97,8 +94,7 @@ const application = {
         <span class="hero__proof-sep">·</span>
         <span class="mono hero__proof-txt">
           {data.progress.doneMilestones}/{data.progress.totalMilestones}
-          {t.hero.milestones} ·
-          {data.progress.pct}% {t.hero.ofDeliverables}
+          {t.hero.milestones} ·{data.progress.pct}% {t.hero.ofDeliverables}
         </span>
       </div>
     </div>
@@ -142,11 +138,9 @@ const application = {
       </div>
       <div class="strip__cells">
         <div class="cell">
-          <span class="cell__n"
-            >{data.progress.doneMilestones}/{
-              data.progress.totalMilestones
-            }</span
-          >
+          <span class="cell__n">
+            {data.progress.doneMilestones}/{data.progress.totalMilestones}
+          </span>
           <span class="cell__l">{t.strip.milestonesDone}</span>
         </div>
         <div class="cell">
@@ -159,31 +153,29 @@ const application = {
         </div>
         <div class="cell">
           <span class="cell__n">{latest ? latest.tag : "0.1.0"}</span>
-          <span class="cell__l"
-            >{latest ? relativeTime(latest.publishedAt) : t.strip.inDev}</span
-          >
+          <span class="cell__l">
+            {latest ? relativeTime(latest.publishedAt) : t.strip.inDev}
+          </span>
         </div>
       </div>
     </div>
   </div>
-  {
-    inProgress.length > 0 && (
-      <div class="container strip__now">
-        <span class="strip__now-label">{t.strip.inProgressNow}</span>
-        {inProgress.map((m) => (
-          <a
-            class="strip__now-item"
-            href={`${site.docsUrl}/project/roadmap/#${m.id}`}
-          >
-            <b>{m.id}</b> {m.title}{" "}
-            <span class="mono">
-              {m.done}/{m.total}
-            </span>
-          </a>
-        ))}
-      </div>
-    )
-  }
+  {inProgress.length > 0 && (
+    <div class="container strip__now">
+      <span class="strip__now-label">{t.strip.inProgressNow}</span>
+      {inProgress.map((m) => (
+        <a
+          class="strip__now-item"
+          href={`${site.docsUrl}/project/roadmap/#${m.id}`}
+        >
+          <b>{m.id}</b> {m.title}{" "}
+          <span class="mono">
+            {m.done}/{m.total}
+          </span>
+        </a>
+      ))}
+    </div>
+  )}
 </section>
 
 {/* ── Promises ─────────────────────────────────────────── */}
@@ -192,21 +184,17 @@ const application = {
     <p class="eyebrow">{t.promises.eyebrow}</p>
     <h2 class="sec__h">{t.promises.title}</h2>
     <div class="promises">
-      {
-        promises.map((p) => (
-          <article class="promise card">
-            <span class="promise__icon" aria-hidden="true">
-              {promiseIcon[p.icon]}
-            </span>
-            <h3 class="promise__title">
-              {t.promiseCards[p.icon]?.title ?? p.title}
-            </h3>
-            <p class="promise__body">
-              {t.promiseCards[p.icon]?.body ?? p.body}
-            </p>
-          </article>
-        ))
-      }
+      {promises.map((p) => (
+        <article class="promise card">
+          <span class="promise__icon" aria-hidden="true">
+            {promiseIcon[p.icon]}
+          </span>
+          <h3 class="promise__title">
+            {t.promiseCards[p.icon]?.title ?? p.title}
+          </h3>
+          <p class="promise__body">{t.promiseCards[p.icon]?.body ?? p.body}</p>
+        </article>
+      ))}
     </div>
   </div>
 </section>
@@ -220,14 +208,12 @@ const application = {
       <p class="problem__p">{t.problem.body}</p>
       <p class="problem__lead">{t.problem.lead}</p>
       <ul class="problem__list">
-        {
-          t.problem.points.map((pt) => (
-            <li>
-              <b>{pt.strong}</b>
-              {pt.rest}
-            </li>
-          ))
-        }
+        {t.problem.points.map((pt) => (
+          <li>
+            <b>{pt.strong}</b>
+            {pt.rest}
+          </li>
+        ))}
       </ul>
     </div>
     <div class="problem__demo">
@@ -292,7 +278,8 @@ const application = {
     <h2 class="sec__h">{t.household.title}</h2>
     <p class="household__p">
       {t.household.bodyLead}
-      <b>{t.household.bodyStrong}</b>{t.household.bodyRest}
+      <b>{t.household.bodyStrong}</b>
+      {t.household.bodyRest}
     </p>
   </div>
 </section>
@@ -308,9 +295,9 @@ const application = {
     </p>
     {scale && <p class="spec-hl__scale mono">{scale}</p>}
     <div class="spec-hl__row">
-      <a class="btn btn--ghost" href={`${site.docsUrl}/spec/`}
-        >Browse the spec</a
-      >
+      <a class="btn btn--ghost" href={`${site.docsUrl}/spec/`}>
+        Browse the spec
+      </a>
       <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/rfcs/`}>
         RFCs &amp; Drafts
       </a>
@@ -331,15 +318,21 @@ const application = {
         class="btn btn--primary"
         href={site.discord}
         target="_blank"
-        rel="noopener">{t.cta.discord}</a
+        rel="noopener"
       >
+        {t.cta.discord}
+      </a>
       <a
         class="btn btn--ghost"
         href={site.specUrl}
         target="_blank"
-        rel="noopener">{t.cta.spec}</a
+        rel="noopener"
       >
-      <a class="btn btn--ghost" href="/contribute">{t.cta.contribute}</a>
+        {t.cta.spec}
+      </a>
+      <a class="btn btn--ghost" href="/contribute">
+        {t.cta.contribute}
+      </a>
     </div>
   </div>
 </section>

@@ -10,30 +10,28 @@ const groups = order.map((g) => ({
 ---
 
 <div class="sg">
-  {
-    groups.map((g) => (
-      <div class="sg__group">
-        <div class="sg__head">
-          <span class="sg__flow">{g.name}</span>
-          <span class="sg__n">{g.items.length}</span>
-        </div>
-        <ul class="sg__list">
-          {g.items.map((s) => (
-            <li
-              class:list={[
-                "sg__item",
-                { "is-vpn": s.vpn, "is-house": s.household },
-              ]}
-            >
-              <span class="sg__name">{s.name}</span>
-              <span class="sg__role">{t.services[s.name] ?? s.role}</span>
-              {s.vpn && <span class="sg__tag">VPN</span>}
-            </li>
-          ))}
-        </ul>
+  {groups.map((g) => (
+    <div class="sg__group">
+      <div class="sg__head">
+        <span class="sg__flow">{g.name}</span>
+        <span class="sg__n">{g.items.length}</span>
       </div>
-    ))
-  }
+      <ul class="sg__list">
+        {g.items.map((s) => (
+          <li
+            class:list={[
+              "sg__item",
+              { "is-vpn": s.vpn, "is-house": s.household },
+            ]}
+          >
+            <span class="sg__name">{s.name}</span>
+            <span class="sg__role">{t.services[s.name] ?? s.role}</span>
+            {s.vpn && <span class="sg__tag">VPN</span>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  ))}
 </div>
 
 <style>
