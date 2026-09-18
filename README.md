@@ -65,11 +65,16 @@ $ npm ci          # or: just install
 $ npm run dev     # local dev at http://localhost:4321
 $ npm run build   # production build (fetches live org data)
 $ npm run links   # every internal link in dist/ resolves to a built route
-$ just ci         # type-check + typos + build + links — what CI runs
+$ just ci         # format, types, lint, typos, a real build and its links
 ```
 
 Node — the version in `.nvmrc`, which is what CI installs. `GITHUB_TOKEN` is
 optional locally (raises the API rate limit).
+
+`just ci` is everything the `build` job reads, plus the spelling check `hygiene`
+reads. It is not the whole of CI and the `justfile` says what it leaves out: the
+four commit rules, which the hook answers before the push, and the forge-side
+jobs, which no clone can run.
 
 `npm ci` is also what turns on this repository's pre-push hook, which refuses a
 push that would leave a branch carrying no commit `origin/main` does not — what
