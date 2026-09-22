@@ -23,7 +23,7 @@ jobs:
     permissions:
       contents: read
       pull-requests: write
-    uses: lemonfiber/spec/.github/workflows/sonar-gate.yml@fa446d8dbc63dde506b688511b612f83ef448ac5 # v1.0.8
+    uses: lemonfiber/spec/.github/workflows/sonar-gate.yml@6e2960460cabb90259a5fdd140623954830d96cd # v1.0.10
     # The gate defaults the key to `<owner>_<repo>`, which every other project
     # in the org is called. This one is `lemonfiber_website` — the project was
     # made before the repository was renamed — so the default resolved to
