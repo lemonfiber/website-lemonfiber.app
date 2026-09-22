@@ -78,6 +78,20 @@ updates:
       include: scope
     cooldown:
       default-days: 3
+    # `prettier-plugin-astro@1.0.1` does not converge. Each `--write` over a
+    # multi-line comment inside an `.astro` `<style>` block indents its
+    # continuation lines two spaces further than the last pass did, so the file
+    # never reaches a fixed point and `--check` can never pass. Formatting the
+    # repository and committing the result does not clear it; the next run
+    # reports the same three files again.
+    #
+    # Held at the version by number rather than by a floor, so the release that
+    # fixes it is still offered. `1.0.0` is unaffected, and so is
+    # `prettier@3.9.8` — the two were bumped together and only the plugin is at
+    # fault, which a run of each pairing says plainly.
+    ignore:
+      - dependency-name: prettier-plugin-astro
+        versions: ["1.0.1"]
     groups:
       npm:
         patterns: ["*"]
