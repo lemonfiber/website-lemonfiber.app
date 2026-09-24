@@ -64,7 +64,7 @@ public/brand/         logo + mark, copied from the brand repo
 just check     # astro type-check across .astro / .ts
 just build     # the real build — fetches live org data
 just links     # every internal link in dist/ resolves to a built route
-just ci        # check + typos + build + links, what CI runs
+just ci        # format + check + lint + typos + build + links, what CI runs
 ```
 
 `just links` walks the built output rather than the sources, because an `href`

@@ -18,7 +18,7 @@ export const site = {
   licenseUrl: "https://firstdonoharm.dev",
   by: { name: "NightWorks.io", url: "https://nightworks.io" },
 
-  // The 1200×630 share card. Regenerate with `just og` after changing the
+  // The 1200×630 share card. Regenerate with `npm run og` after changing the
   // design or the wording; scripts/og.mjs renders it from the site's own
   // tokens and font.
   ogImage: "/og.png",
@@ -66,14 +66,34 @@ export const profiles: Record<string, { label: string; services: string[] }> = {
   subs: { label: "Subtitles", services: ["Bazarr"] },
   media: {
     label: "Library",
-    services: ["Jellyfin", "Seerr", "Calibre-Web-Automated", "Audiobookshelf"],
+    services: [
+      "Jellyfin",
+      "Seerr",
+      "Calibre-Web-Automated",
+      "Audiobookshelf",
+      "Navidrome",
+    ],
   },
   tuning: { label: "Tuning", services: ["Recyclarr", "Unpackerr"] },
   dash: { label: "Dashboard", services: ["Homepage"] },
   proxy: { label: "Proxy", services: ["Caddy"] },
 };
 
-// Named forms — the slices you actually type. `lemonfiber up tv`, etc.
+// The profiles every automating form starts from, in manifest order.
+const automated = [
+  "search",
+  "usenet",
+  "torrent",
+  "tv",
+  "movies",
+  "music",
+  "books",
+  "subs",
+];
+
+// Named forms — the slices you actually type. `lemonfiber up tv`, etc. Every
+// form in stack.toml but `proxy`, which layers onto another form and is named
+// in the switcher's footnote instead.
 export const forms: {
   key: string;
   label: string;
@@ -125,6 +145,12 @@ export const forms: {
     profiles: ["search", "usenet", "torrent", "books"],
   },
   {
+    key: "auto",
+    label: "auto",
+    blurb: "Everything automated, nothing served.",
+    profiles: [...automated, "tuning"],
+  },
+  {
     key: "library",
     label: "library",
     blurb: "Just serve what you already have.",
@@ -134,19 +160,7 @@ export const forms: {
     key: "full",
     label: "full",
     blurb: "The lot — everything but the optional proxy.",
-    profiles: [
-      "search",
-      "usenet",
-      "torrent",
-      "tv",
-      "movies",
-      "music",
-      "books",
-      "subs",
-      "media",
-      "tuning",
-      "dash",
-    ],
+    profiles: [...automated, "media", "tuning", "dash"],
     featured: true,
   },
 ];
@@ -160,7 +174,17 @@ export interface Service {
   household?: boolean;
 }
 
-// The 19 services, in the order the pipeline flows.
+// What the household reaches: the `media` profile, every service in it on the
+// LAN.
+const library = (name: string, role: string): Service => ({
+  name,
+  role,
+  profile: "media",
+  group: "Enjoy",
+  household: true,
+});
+
+// The 20 services, in the order the pipeline flows.
 export const services: Service[] = [
   {
     name: "Prowlarr",
@@ -215,34 +239,11 @@ export const services: Service[] = [
     group: "Organise",
   },
   { name: "Bazarr", role: "Subtitles", profile: "subs", group: "Organise" },
-  {
-    name: "Jellyfin",
-    role: "Media server",
-    profile: "media",
-    group: "Enjoy",
-    household: true,
-  },
-  {
-    name: "Seerr",
-    role: "Request portal",
-    profile: "media",
-    group: "Enjoy",
-    household: true,
-  },
-  {
-    name: "Calibre-Web-Automated",
-    role: "Ebook library",
-    profile: "media",
-    group: "Enjoy",
-    household: true,
-  },
-  {
-    name: "Audiobookshelf",
-    role: "Audiobooks & podcasts",
-    profile: "media",
-    group: "Enjoy",
-    household: true,
-  },
+  library("Jellyfin", "Media server"),
+  library("Seerr", "Request portal"),
+  library("Calibre-Web-Automated", "Ebook library"),
+  library("Audiobookshelf", "Audiobooks & podcasts"),
+  library("Navidrome", "Music streaming"),
   {
     name: "Recyclarr",
     role: "Quality profiles",

@@ -53,7 +53,7 @@ links there; it does not keep a second copy.
 
 | Route           | What it shows                                                                  |
 | --------------- | ------------------------------------------------------------------------------ |
-| `/`             | The pitch, a live status strip, the "runs in slices" switcher, the 19 services |
+| `/`             | The pitch, a live status strip, the "runs in slices" switcher, the 20 services |
 | `/transparency` | Every repo, release and open issue — read live from GitHub                     |
 | `/contribute`   | Ways to help + live good-first-issues                                          |
 | `/404`          | The one that says where everything else went                                   |
