@@ -174,6 +174,16 @@ export interface Service {
   household?: boolean;
 }
 
+// What the household reaches: the `media` profile, every service in it on the
+// LAN.
+const library = (name: string, role: string): Service => ({
+  name,
+  role,
+  profile: "media",
+  group: "Enjoy",
+  household: true,
+});
+
 // The 20 services, in the order the pipeline flows.
 export const services: Service[] = [
   {
@@ -229,41 +239,11 @@ export const services: Service[] = [
     group: "Organise",
   },
   { name: "Bazarr", role: "Subtitles", profile: "subs", group: "Organise" },
-  {
-    name: "Jellyfin",
-    role: "Media server",
-    profile: "media",
-    group: "Enjoy",
-    household: true,
-  },
-  {
-    name: "Seerr",
-    role: "Request portal",
-    profile: "media",
-    group: "Enjoy",
-    household: true,
-  },
-  {
-    name: "Calibre-Web-Automated",
-    role: "Ebook library",
-    profile: "media",
-    group: "Enjoy",
-    household: true,
-  },
-  {
-    name: "Audiobookshelf",
-    role: "Audiobooks & podcasts",
-    profile: "media",
-    group: "Enjoy",
-    household: true,
-  },
-  {
-    name: "Navidrome",
-    role: "Music streaming",
-    profile: "media",
-    group: "Enjoy",
-    household: true,
-  },
+  library("Jellyfin", "Media server"),
+  library("Seerr", "Request portal"),
+  library("Calibre-Web-Automated", "Ebook library"),
+  library("Audiobookshelf", "Audiobooks & podcasts"),
+  library("Navidrome", "Music streaming"),
   {
     name: "Recyclarr",
     role: "Quality profiles",
