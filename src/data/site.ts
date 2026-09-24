@@ -79,6 +79,18 @@ export const profiles: Record<string, { label: string; services: string[] }> = {
   proxy: { label: "Proxy", services: ["Caddy"] },
 };
 
+// The profiles every automating form starts from, in manifest order.
+const automated = [
+  "search",
+  "usenet",
+  "torrent",
+  "tv",
+  "movies",
+  "music",
+  "books",
+  "subs",
+];
+
 // Named forms — the slices you actually type. `lemonfiber up tv`, etc. Every
 // form in stack.toml but `proxy`, which layers onto another form and is named
 // in the switcher's footnote instead.
@@ -136,17 +148,7 @@ export const forms: {
     key: "auto",
     label: "auto",
     blurb: "Everything automated, nothing served.",
-    profiles: [
-      "search",
-      "usenet",
-      "torrent",
-      "tv",
-      "movies",
-      "music",
-      "books",
-      "subs",
-      "tuning",
-    ],
+    profiles: [...automated, "tuning"],
   },
   {
     key: "library",
@@ -158,19 +160,7 @@ export const forms: {
     key: "full",
     label: "full",
     blurb: "The lot — everything but the optional proxy.",
-    profiles: [
-      "search",
-      "usenet",
-      "torrent",
-      "tv",
-      "movies",
-      "music",
-      "books",
-      "subs",
-      "media",
-      "tuning",
-      "dash",
-    ],
+    profiles: [...automated, "media", "tuning", "dash"],
     featured: true,
   },
 ];
