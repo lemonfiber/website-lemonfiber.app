@@ -18,7 +18,7 @@ export const site = {
   licenseUrl: "https://firstdonoharm.dev",
   by: { name: "NightWorks.io", url: "https://nightworks.io" },
 
-  // The 1200×630 share card. Regenerate with `just og` after changing the
+  // The 1200×630 share card. Regenerate with `npm run og` after changing the
   // design or the wording; scripts/og.mjs renders it from the site's own
   // tokens and font.
   ogImage: "/og.png",
@@ -66,14 +66,22 @@ export const profiles: Record<string, { label: string; services: string[] }> = {
   subs: { label: "Subtitles", services: ["Bazarr"] },
   media: {
     label: "Library",
-    services: ["Jellyfin", "Seerr", "Calibre-Web-Automated", "Audiobookshelf"],
+    services: [
+      "Jellyfin",
+      "Seerr",
+      "Calibre-Web-Automated",
+      "Audiobookshelf",
+      "Navidrome",
+    ],
   },
   tuning: { label: "Tuning", services: ["Recyclarr", "Unpackerr"] },
   dash: { label: "Dashboard", services: ["Homepage"] },
   proxy: { label: "Proxy", services: ["Caddy"] },
 };
 
-// Named forms — the slices you actually type. `lemonfiber up tv`, etc.
+// Named forms — the slices you actually type. `lemonfiber up tv`, etc. Every
+// form in stack.toml but `proxy`, which layers onto another form and is named
+// in the switcher's footnote instead.
 export const forms: {
   key: string;
   label: string;
@@ -125,6 +133,22 @@ export const forms: {
     profiles: ["search", "usenet", "torrent", "books"],
   },
   {
+    key: "auto",
+    label: "auto",
+    blurb: "Everything automated, nothing served.",
+    profiles: [
+      "search",
+      "usenet",
+      "torrent",
+      "tv",
+      "movies",
+      "music",
+      "books",
+      "subs",
+      "tuning",
+    ],
+  },
+  {
     key: "library",
     label: "library",
     blurb: "Just serve what you already have.",
@@ -160,7 +184,7 @@ export interface Service {
   household?: boolean;
 }
 
-// The 19 services, in the order the pipeline flows.
+// The 20 services, in the order the pipeline flows.
 export const services: Service[] = [
   {
     name: "Prowlarr",
@@ -239,6 +263,13 @@ export const services: Service[] = [
   {
     name: "Audiobookshelf",
     role: "Audiobooks & podcasts",
+    profile: "media",
+    group: "Enjoy",
+    household: true,
+  },
+  {
+    name: "Navidrome",
+    role: "Music streaming",
     profile: "media",
     group: "Enjoy",
     household: true,

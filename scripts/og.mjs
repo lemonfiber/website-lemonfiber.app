@@ -74,7 +74,7 @@ h1 em{font-style:normal;color:${fiber}}
 const CARDS = {
   "og.png": {
     head: "Self-host your media —<br><em>without becoming a sysadmin.</em>",
-    foot: "Nineteen apps, set up for you · open source · lemonfiber.app",
+    foot: "Twenty apps, set up for you · open source · lemonfiber.app",
   },
 };
 

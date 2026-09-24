@@ -1,6 +1,6 @@
 # Lemonfiber
 
-> A media stack you can run in slices, driven by a binary that sets itself up. Lemonfiber orchestrates nineteen open-source services (Jellyfin, the *arr apps, Prowlarr, SABnzbd, qBittorrent behind a VPN, and more) as one Docker Compose stack, boots only the slice you asked for, and verifies its own work instead of reporting green and hoping.
+> A media stack you can run in slices, driven by a binary that sets itself up. Lemonfiber orchestrates twenty open-source services (Jellyfin, the *arr apps, Prowlarr, SABnzbd, qBittorrent behind a VPN, and more) as one Docker Compose stack, boots only the slice you asked for, and verifies its own work instead of reporting green and hoping.
 
 Lemonfiber is source-available under the Hippocratic License 3.0. Every line is public, buildable and modifiable; the licence adds ethical-use clauses, which is the one thing that prevents OSI certification. Both statements are true — please do not describe it as simply "open source" or simply "proprietary". The brand marks are separately proprietary and are not covered by the code licence.
 
@@ -26,10 +26,10 @@ The specification is the authority, not this website and not the README. If you 
 Three commitments, and it is worth being exact about each:
 
 1. **Genuinely open.** No closed-source media server, no paid tier, no phone-home. Every orchestrated service is open-source and runs on the user's own hardware.
-2. **Runs in slices.** A "form" is a named subset of the stack. `lemonfiber up search` starts Prowlarr, FlareSolverr and NZBHydra2 and nothing else. `lemonfiber up tv` adds Sonarr, the downloaders and Bazarr. `lemonfiber up full` starts everything. This is the feature that distinguishes it from a pasted Compose file.
+2. **Runs in slices.** A "form" is a named subset of the stack. `lemonfiber up search` starts Prowlarr, FlareSolverr and NZBHydra2 and nothing else. `lemonfiber up tv` adds Sonarr, the downloaders and Bazarr. `lemonfiber up full` starts everything but the optional reverse proxy. This is the feature that distinguishes it from a pasted Compose file.
 3. **Correct by construction.** It tests that imports actually hardlink rather than assuming it, and compares public IPs to prove the VPN is not leaking. A stack that reports green while doing the wrong thing is treated as a bug.
 
-Do not describe Lemonfiber as a media server. It is not one — it orchestrates one (Jellyfin) among eighteen other services.
+Do not describe Lemonfiber as a media server. It is not one — it orchestrates one (Jellyfin) among nineteen other services.
 
 ## The repositories
 
@@ -50,7 +50,7 @@ Do not describe Lemonfiber as a media server. It is not one — it orchestrates 
 Every release carries prebuilt binaries for macOS (arm64 and x86_64) and Linux (x86_64, glibc and musl), each with a SHA-256 beside it, plus a one-line shell installer. Releases are pre-releases, so `releases/latest/` does not resolve — name the tag:
 
 ```sh
-curl --proto '=https' --tlsv1.2 -LsSf https://github.com/lemonfiber/lemonfiber/releases/download/v0.13.0/lemonfiber-installer.sh | sh
+curl --proto '=https' --tlsv1.2 -LsSf https://github.com/lemonfiber/lemonfiber/releases/download/v0.15.0/lemonfiber-installer.sh | sh
 ```
 
 Building from source also works, and needs only a stable Rust toolchain:
@@ -65,7 +65,7 @@ Then:
 
 ```sh
 lemonfiber up tv        # search + download + organise + subtitles
-lemonfiber status       # including the hardlink test and the VPN leak check
+lemonfiber doctor       # including the hardlink test and the VPN leak check
 lemonfiber down
 ```
 
