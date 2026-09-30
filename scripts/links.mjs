@@ -19,19 +19,25 @@ const DIST = fileURLToPath(new URL("../dist", import.meta.url));
 const ATTRIBUTE = /(?:href|src)="(\/[^"]*)"/g;
 
 /**
- * Every `.html` file under a directory, recursively.
+ * Every `.html` file under a directory, recursively, in the order the listing
+ * gives them.
+ *
+ * The entries are walked side by side and joined in listing order, so what is
+ * found does not depend on which walk finished first.
  *
  * @param {string} directory
- * @param {string[]} found
  * @returns {Promise<string[]>}
  */
-async function pages(directory, found = []) {
-  for (const entry of await readdir(directory, { withFileTypes: true })) {
-    const path = join(directory, entry.name);
-    if (entry.isDirectory()) await pages(path, found);
-    else if (entry.name.endsWith(".html")) found.push(path);
-  }
-  return found;
+async function pages(directory) {
+  const entries = await readdir(directory, { withFileTypes: true });
+  const found = await Promise.all(
+    entries.map(async (entry) => {
+      const path = join(directory, entry.name);
+      if (entry.isDirectory()) return pages(path);
+      return entry.name.endsWith(".html") ? [path] : [];
+    }),
+  );
+  return found.flat();
 }
 
 /** @type {(path: string) => Promise<boolean>} */
@@ -74,20 +80,27 @@ if (html.length === 0) {
   process.exit(1);
 }
 
-/** @type {string[]} */
-const broken = [];
-/** @type {Map<string, boolean>} */
-const checked = new Map();
+// Every page is read, and every route resolved, side by side: none depends on
+// another. A route asked for by several pages is resolved once.
+const asked = await Promise.all(
+  html.map(async (page) => ({
+    page,
+    routes: Array.from(
+      (await readFile(page, "utf8")).matchAll(ATTRIBUTE),
+      ([, route]) => route,
+    ).filter((route) => !route.startsWith("//")),
+  })),
+);
 
-for (const page of html) {
-  const source = await readFile(page, "utf8");
-  for (const [, route] of source.matchAll(ATTRIBUTE)) {
-    if (route.startsWith("//")) continue;
-    if (!checked.has(route)) checked.set(route, await resolves(route));
-    if (!checked.get(route))
-      broken.push(`${page.slice(DIST.length) || "/"} -> ${route}`);
-  }
-}
+const wanted = [...new Set(asked.flatMap((one) => one.routes))];
+const resolved = await Promise.all(wanted.map((route) => resolves(route)));
+const unresolved = new Set(wanted.filter((_, at) => !resolved[at]));
+
+const broken = asked.flatMap(({ page, routes }) =>
+  routes
+    .filter((route) => unresolved.has(route))
+    .map((route) => `${page.slice(DIST.length) || "/"} -> ${route}`),
+);
 
 if (broken.length > 0) {
   console.error(
@@ -98,5 +111,5 @@ if (broken.length > 0) {
   process.exit(1);
 }
 console.log(
-  `links: clean (${html.length} page(s), ${checked.size} internal link(s))`,
+  `links: clean (${html.length} page(s), ${wanted.length} internal link(s))`,
 );
