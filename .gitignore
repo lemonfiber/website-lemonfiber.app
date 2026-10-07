@@ -16,3 +16,5 @@ node_modules/
 
 # GSD planning artifacts (not part of the site)
 .planning/
+test-results/
+playwright-report/

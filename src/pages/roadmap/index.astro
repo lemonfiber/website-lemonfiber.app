@@ -1,0 +1,169 @@
+---
+import Base from "../../layouts/Base.astro";
+import VerdictBar from "../../components/VerdictBar.astro";
+import { loadBoard } from "../../lib/board";
+import {
+  BAR_ORDER,
+  finished,
+  manifestUrl,
+  specFile,
+  verdictCounts,
+} from "../../lib/roadmap";
+import { roadmapCopy as t } from "../../i18n";
+import type { Version } from "../../lib/board";
+
+const board = await loadBoard();
+const onTrain = board.versions.filter((v) => !finished(v));
+const shipped = board.versions.filter((v) => finished(v)).reverse();
+const statusWord = (v: Version) => t.status[v.status] ?? v.status;
+const barLabel = (v: Version) => {
+  const counts = verdictCounts(v);
+  return `${v.version}: ${BAR_ORDER.filter((verdict) => counts[verdict] > 0)
+    .map((verdict) => `${counts[verdict]} ${t.verdict[verdict].word}`)
+    .join(", ")}`;
+};
+---
+
+<Base active="roadmap" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead}</p>
+      <p class="asof mono">
+        {t.asOf}
+        <time datetime={board.generated_at}>{board.generated_at}</time> ·
+        <a href={specFile(board, "70-operations/versions/")}>
+          {`${t.revision} ${(board.sources.spec ?? "").slice(0, 7)}`}
+        </a>{" "}
+        ·
+        <a href={specFile(board, "70-operations/staging.md")}>{t.howItWorks}</a>
+      </p>
+      {board.unread.length > 0 && (
+        <p class="unread">
+          {t.unreadNote} {board.unread.map((u) => u.repo).join(", ")}.
+        </p>
+      )}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="sec__h">{t.inFlight}</h2>
+      <ol class="train">
+        {onTrain.map((v) => (
+          <li class="ver card">
+            <div class="ver__top">
+              <a class="ver__num" href={`/roadmap/${v.version}/`}>
+                {v.version}
+              </a>
+              <span class:list={["ver__status", `is-${v.status}`]}>
+                {statusWord(v)}
+              </span>
+              <span class="ver__meta mono">
+                {v.goals.length} {t.goals}
+                {v.milestone && ` · ${t.serves} ${v.milestone}`}
+              </span>
+            </div>
+            {v.delivers && <p class="ver__delivers">{v.delivers}</p>}
+            <VerdictBar counts={verdictCounts(v)} label={barLabel(v)} />
+            <a class="ver__src mono" href={manifestUrl(board, v.version)}>
+              {t.manifest}
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <details class="shipped">
+        <summary class="sec__h">
+          {t.released} <span class="mono">({shipped.length})</span>
+        </summary>
+        <ol class="train">
+          {shipped.map((v) => (
+            <li class="ver card">
+              <div class="ver__top">
+                <a class="ver__num" href={`/roadmap/${v.version}/`}>
+                  {v.version}
+                </a>
+                <span class:list={["ver__status", `is-${v.status}`]}>
+                  {statusWord(v)}
+                </span>
+                <span class="ver__meta mono">
+                  {v.released_on && `${t.releasedOn} ${v.released_on} · `}
+                  {v.goals.length} {t.goals}
+                </span>
+              </div>
+              {v.delivers && <p class="ver__delivers">{v.delivers}</p>}
+              <VerdictBar counts={verdictCounts(v)} label={barLabel(v)} />
+            </li>
+          ))}
+        </ol>
+      </details>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0;
+  }
+  .asof {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .asof a,
+  .ver__src,
+  .unread {
+    color: var(--text-muted);
+  }
+  .train {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-5) 0 var(--space-7);
+    display: grid;
+    gap: var(--space-4);
+  }
+  .ver {
+    padding: var(--space-4) var(--space-5);
+    display: grid;
+    gap: var(--space-3);
+  }
+  .ver__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+  .ver__num {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: var(--size-display-m);
+    color: var(--text);
+  }
+  .ver__status {
+    font-size: var(--size-caption);
+    font-weight: 700;
+    padding: 0.1em 0.6em;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border-strong);
+  }
+  .ver__status.is-releasable,
+  .ver__status.is-released {
+    border-color: var(--ok);
+  }
+  .ver__meta {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .ver__delivers {
+    margin: 0;
+  }
+  .ver__src {
+    font-size: var(--size-caption);
+    justify-self: start;
+  }
+  .shipped summary {
+    cursor: pointer;
+  }
+</style>

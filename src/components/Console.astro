@@ -20,7 +20,8 @@ const html = lines.join("\n");
     <span class="dot dot--g"></span>
     <span class="console__title">{title}</span>
   </div>
-  <pre class="console__body" set:html={html}></pre>
+  {/* Focusable, so a keyboard can scroll box art wider than a narrow screen. */}
+  <pre class="console__body" tabindex="0" set:html={html}></pre>
 </div>
 
 <style>
@@ -93,6 +94,6 @@ const html = lines.join("\n");
     color: var(--lf-fiber-light);
   }
   :global(.c-box) {
-    color: #57544a;
+    color: var(--term-dim);
   }
 </style>

@@ -42,6 +42,11 @@ preview:
 links:
     npm run links
 
+# Sweep every page of the built site with axe, in both themes — after `just build`.
+# `./node_modules/.bin/playwright install chromium` once per machine first.
+a11y:
+    npm run a11y
+
 # Turn on the repository's own git hooks. Once per clone.
 #
 # `npm ci` does this too, through npm's `prepare` script, and that is the usual
@@ -53,7 +58,7 @@ hooks:
     @echo "hooks on: .githooks/commit-msg, .githooks/pre-push"
 
 # Everything the `build` job reads — formatting, types, lint, the unit tests, a
-# real build and its links — plus spelling, which `hygiene` reads.
+# real build, its links and the axe sweep — plus spelling, which `hygiene` reads.
 #
 # It is not CI and does not say it is. The rest of what a pull request here
 # starts is forge-side, and these are not here:
@@ -78,3 +83,4 @@ ci: hooks
     typos
     npm run build
     npm run links
+    npm run a11y
