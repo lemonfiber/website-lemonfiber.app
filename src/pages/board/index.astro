@@ -1,0 +1,115 @@
+---
+import Base from "../../layouts/Base.astro";
+import BoardColumns from "../../components/BoardColumns.astro";
+import BoardFilters from "../../components/BoardFilters";
+import { loadBoard } from "../../lib/board";
+import { facetValues, featureCards } from "../../lib/features";
+import { featureSources } from "../../lib/roadmap";
+import { boardCopy as t, roadmapCopy } from "../../i18n";
+
+const board = await loadBoard();
+const cards = featureCards(board);
+const facets = facetValues(cards);
+const sourceOf = featureSources(board);
+---
+
+<Base active="board" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead}</p>
+      <p class="asof mono">
+        {roadmapCopy.asOf}
+        <time datetime={board.generated_at}>{board.generated_at}</time>
+      </p>
+    </div>
+  </section>
+  <section class="section board">
+    <div class="container">
+      <BoardFilters
+        client:load
+        cards={cards}
+        facets={facets}
+        labels={t.label}
+        any={t.any}
+        yes={t.yes}
+        no={t.no}
+        clear={t.clear}
+        heading={t.filters}
+        shown={t.shown}
+      />
+      <noscript>
+        <nav class="noscript" aria-label={t.noScript}>
+          <p>{t.noScript}:</p>
+          <p>
+            {t.byArea}:
+            {facets.area.map((a) => (
+              <a href={`/board/area/${a}/`}>{a}</a>
+            ))}
+          </p>
+          <p>
+            {t.byVersion}:
+            {facets.version.map((v) => (
+              <a href={`/board/version/${v}/`}>{v}</a>
+            ))}
+          </p>
+          <p>
+            {t.byRepo}:
+            {facets.repo.map((r) => (
+              <a href={`/board/repo/${r}/`}>{r}</a>
+            ))}
+          </p>
+        </nav>
+      </noscript>
+      <BoardColumns cards={cards} sourceOf={sourceOf} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0;
+  }
+  .asof {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .noscript a {
+    margin-right: var(--space-2);
+  }
+  .board :global(.bf) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: end;
+    margin-bottom: var(--space-6);
+  }
+  .board :global(.bf__field) {
+    display: grid;
+    gap: var(--space-1);
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .board :global(.bf select),
+  .board :global(.bf input) {
+    font: inherit;
+    font-size: var(--size-body);
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: var(--space-1) var(--space-2);
+  }
+  .board :global(.bf__clear) {
+    font-size: var(--size-caption);
+    color: var(--text);
+  }
+  .board :global(.bf__shown) {
+    flex-basis: 100%;
+    margin: 0;
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+</style>

@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
+import preact from "@astrojs/preact";
 
 // The public URL the site is served from.
 //
@@ -20,6 +21,9 @@ export default defineConfig({
     enabled: false,
   },
   integrations: [
+    // The board's filters are one island, bundled with the site and served
+    // from it; every page still renders and reads without script.
+    preact(),
     sitemap({
       // The 404 is not a destination, so it does not belong in a sitemap.
       filter: (page) => !page.includes("/404"),

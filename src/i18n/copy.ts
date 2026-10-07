@@ -16,6 +16,7 @@ export const copy = {
   nav: {
     home: "Home",
     roadmap: "Roadmap",
+    board: "Board",
     transparency: "Transparency",
     contribute: "Contribute",
     install: "Install",

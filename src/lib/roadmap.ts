@@ -89,3 +89,15 @@ export function commitUrl(citation: string): string {
   const [repo = "", sha = ""] = citation.split("@");
   return `${GITHUB}/${repo}/commit/${sha}`;
 }
+
+/** Where each feature is defined in `spec`, by id, at the revision read. */
+export function featureSources(
+  board: Pick<Board, "sources" | "features">,
+): Record<string, string> {
+  return Object.fromEntries(
+    board.features.map((f) => [
+      f.id,
+      specFile(board, `10-functional/features/${f.path}`),
+    ]),
+  );
+}

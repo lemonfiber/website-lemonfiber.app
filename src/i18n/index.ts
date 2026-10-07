@@ -8,3 +8,4 @@
 export { copy } from "./copy";
 export { homeCopy } from "./home";
 export { roadmapCopy } from "./roadmap";
+export { boardCopy } from "./board";
