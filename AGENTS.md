@@ -11,11 +11,9 @@ Guidance for any AI agent working in this repo.
 The public frontpage at the root of the org — a static site built with
 [Astro](https://astro.build). Its defining property: **progress and repo state
 are not written here.** They are read from the org at build time — the GitHub
-API, the Markdown file the maintainers already keep current
-([`lemonfiber/IMPLEMENTATION-STATUS.md`](https://github.com/lemonfiber/lemonfiber/blob/main/IMPLEMENTATION-STATUS.md)),
-and the specification's own generated feature board. A maintainer never edits
-this site to update a milestone; they push to the repo that owns the fact, and
-CI rebuilds. Spec:
+API and the specification's own generated feature board, which lists every
+version on the train with its status. A maintainer never edits this site to
+release a version; they push to the repo that owns the fact, and CI rebuilds. Spec:
 [`30-repos/website-lemonfiber.md`](https://github.com/lemonfiber/spec/blob/main/30-repos/website-lemonfiber.md).
 
 Documentation is not here. The install guide, the FAQ, the colophon, the
@@ -28,12 +26,13 @@ follow as instructions belongs there, and this site links to it.
 
 ```
 src/
-├── lib/github.ts     the motor — build-time fetch + Markdown parse, with fallback
-├── lib/spec.ts       the specification's own scale, from its generated board
+├── lib/github.ts     the motor — build-time fetch from the GitHub API, with fallback
+├── lib/spec.ts       the specification's scale and version train, from its board
+├── lib/train.ts      what the version train adds up to
 ├── lib/format.ts     shared formatting helpers
 ├── lib/types.ts      shapes everything derives from
 ├── data/site.ts      editorial content; the service/profile/form model
-├── data/seed*.ts     offline fallback snapshots — org, milestones, releases
+├── data/seed*.ts     offline fallback snapshots — org, releases, version train
 ├── i18n/             the site's copy — chrome, front page, content pages
 ├── components/       Nav, Footer, Console, FormsSwitcher, RepoCard, …
 ├── layouts/Base.astro
@@ -44,8 +43,8 @@ public/brand/         logo + mark, copied from the brand repo
 
 ## The rules you cannot break
 
-- **No hand-authored roadmap or status.** If a fact lives in a repo (a milestone,
-  a deliverable, a release, an open issue, how many requirements the spec has),
+- **No hand-authored roadmap or status.** If a fact lives in a repo (a version's
+  status, a release, an open issue, how many requirements the spec has),
   read it — never transcribe it here. New dynamic data means a new getter in
   `src/lib/github.ts`, not a new constant.
 - **Every fetch falls back.** A failed or offline build must still produce a
@@ -62,9 +61,10 @@ public/brand/         logo + mark, copied from the brand repo
 
 ```
 just check     # astro type-check across .astro / .ts
+just test      # the unit tests
 just build     # the real build — fetches live org data
 just links     # every internal link in dist/ resolves to a built route
-just ci        # format + check + lint + typos + build + links, what CI runs
+just ci        # format + check + lint + test + typos + build + links
 ```
 
 `just links` walks the built output rather than the sources, because an `href`

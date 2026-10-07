@@ -15,8 +15,8 @@ export const homeCopy = {
     ctaPrimary: "Join the Discord",
     ctaSecondary: "See the roadmap →",
     statusPill: "Before 1.0 · building in the open",
-    milestones: "milestones",
-    ofDeliverables: "of deliverables",
+    versionsReleased: "versions released",
+    ofGoals: "of goals",
     consoleTitle: "zsh — first run",
   },
 
@@ -26,13 +26,20 @@ export const homeCopy = {
     sub: "These numbers are read from the org at build time — nobody updates this page by hand.",
     fresh: "Fresh now.",
     snapshot: "Showing the last known snapshot.",
-    barLabel: "deliverables shipped",
+    barLabel: "goals released",
     of: "of",
-    milestonesDone: "milestones done",
+    versionsReleased: "versions released",
     servicesWired: "services wired",
     publicRepos: "public repos",
     inDev: "in dev",
     inProgressNow: "In progress now",
+    goals: "goals",
+    // A version's lifecycle state, for the versions in flight.
+    versionStatus: {
+      staged: "staged",
+      in_progress: "in progress",
+      releasable: "releasable",
+    } as Record<string, string>,
   },
 
   promises: {

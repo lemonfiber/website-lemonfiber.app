@@ -7,12 +7,8 @@ import type { Repo } from "../lib/types";
 // committed values are the snapshot a build falls back to when GitHub is
 // unreachable, so a build (and local dev without a token) never fails.
 //
-// The milestone snapshot moved to seed-milestones.ts and the release snapshot
-// to seed-releases.ts. Both are re-exported here so an import of either from
-// this module keeps resolving.
-
-export { seedMilestones } from "./seed-milestones";
-export { seedReleases } from "./seed-releases";
+// The release snapshot is in seed-releases.ts and the version-train snapshot in
+// seed-train.ts.
 
 // name, role, language, description — and whatever else that repository has.
 // The address follows from the name; the counts start at zero because GitHub

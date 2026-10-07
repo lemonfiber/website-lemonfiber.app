@@ -3,10 +3,12 @@ import Base from "../layouts/Base.astro";
 import RepoCard from "../components/RepoCard.astro";
 import ProgressBar from "../components/ProgressBar.astro";
 import { getSiteData } from "../lib/github";
+import { specTrain } from "../lib/spec";
 import { site } from "../data/site";
 import { relativeTime, compact } from "../lib/format";
 
 const data = await getSiteData();
+const train = await specTrain();
 const primary = data.repos.filter((r) => r.primary);
 const secondary = data.repos.filter((r) => !r.primary);
 ---
@@ -23,19 +25,23 @@ const secondary = data.repos.filter((r) => !r.primary);
       <h1 class="head__h">Nothing here is written by a human.</h1>
       <p class="lead head__lead">
         This whole page is generated from the {site.name} org at build time —
-        repos, releases, open issues, deliverable counts. If the repos change,
-        so does this page, with zero maintenance.
-        <span class:list={["freshness", { "is-stale": !data.live }]}>
-          {data.live ? "● Live at last build" : "○ Last known snapshot"}
+        repos, releases, open issues, the version train. If the repos change, so
+        does this page, with zero maintenance.
+        <span
+          class:list={["freshness", { "is-stale": !(data.live && train.live) }]}
+        >
+          {data.live && train.live
+            ? "● Live at last build"
+            : "○ Last known snapshot"}
         </span>
       </p>
 
       <div class="kpis">
         <div class="kpi card">
-          <span class="kpi__n">{data.progress.pct}%</span>
-          <span class="kpi__l">deliverables shipped</span>
+          <span class="kpi__n">{train.pct}%</span>
+          <span class="kpi__l">of goals released</span>
           <div class="kpi__bar">
-            <ProgressBar pct={data.progress.pct} status="partial" size="sm" />
+            <ProgressBar pct={train.pct} status="partial" size="sm" />
           </div>
         </div>
         <div class="kpi card">
@@ -48,9 +54,9 @@ const secondary = data.repos.filter((r) => !r.primary);
         </div>
         <div class="kpi card">
           <span class="kpi__n">
-            {data.progress.doneMilestones}/{data.progress.totalMilestones}
+            {train.released}/{train.versions}
           </span>
-          <span class="kpi__l">milestones complete</span>
+          <span class="kpi__l">versions released</span>
         </div>
       </div>
     </div>

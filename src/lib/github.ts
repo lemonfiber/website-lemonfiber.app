@@ -1,31 +1,20 @@
-// The motor. Everything dynamic on the site is assembled here at BUILD TIME,
-// from the GitHub org and the Markdown file the maintainers already keep
-// current (lemonfiber/IMPLEMENTATION-STATUS.md). Nothing here runs in the
-// browser — the output is baked into static HTML.
+// The motor. Everything the site reads from the GitHub API is assembled here at
+// BUILD TIME: the org's repositories, their releases and the open good first
+// issues. How far the version train has got is read from the specification's
+// feature board, in spec.ts. Nothing here runs in the browser — the output is
+// baked into static HTML.
 //
 // Design rule: no single failure may break the build. Every fetch is wrapped,
 // times out fast, and falls back to the committed seed. A maintainer never has
 // to touch this site; when they push, CI rebuilds and the numbers move.
 
-import type {
-  Deliverable,
-  DeliverableStatus,
-  Issue,
-  Milestone,
-  Release,
-  Repo,
-  SiteData,
-} from "./types";
-import { seedMilestones, seedRepos } from "../data/seed";
+import type { Issue, Release, Repo, SiteData } from "./types";
+import { seedRepos } from "../data/seed";
 import { seedReleases } from "../data/seed-releases";
 
 const ORG = "lemonfiber";
 const API = "https://api.github.com";
-const RAW = "https://raw.githubusercontent.com";
 const TIMEOUT_MS = 8000;
-
-// The file the milestone figures are derived from.
-const STATUS_FILE = `${RAW}/${ORG}/lemonfiber/main/IMPLEMENTATION-STATUS.md`;
 
 function headers(): HeadersInit {
   const h: Record<string, string> = {
@@ -90,10 +79,7 @@ function cacheKey(url: string): string {
 // Fetches text, via the cache when it is on. A cached *failure* is stored too —
 // as a null body — so a rate-limited build does not retry every dead call on
 // every subsequent build within the TTL.
-async function fetchText(
-  url: string,
-  withHeaders: boolean,
-): Promise<string | null> {
+async function fetchText(url: string): Promise<string | null> {
   const key = cacheKey(url);
   const hit = await cacheRead(key);
   if (hit !== null) return hit === "\u0000null" ? null : hit;
@@ -101,7 +87,7 @@ async function fetchText(
   let body: string | null = null;
   try {
     const res = await fetch(url, {
-      ...(withHeaders ? { headers: headers() } : {}),
+      headers: headers(),
       signal: AbortSignal.timeout(TIMEOUT_MS),
     });
     if (res.ok) body = await res.text();
@@ -113,210 +99,13 @@ async function fetchText(
 }
 
 export async function getJSON<T>(url: string): Promise<T | null> {
-  const body = await fetchText(url, true);
+  const body = await fetchText(url);
   if (body === null) return null;
   try {
     return JSON.parse(body) as T;
   } catch {
     return null;
   }
-}
-
-export async function getText(url: string): Promise<string | null> {
-  return fetchText(url, false);
-}
-
-/** What a set of parts amounts to: all of them, some of them, or none. */
-function rollupStatus(done: number, total: number): DeliverableStatus {
-  if (total > 0 && done === total) return "done";
-  return done === 0 ? "todo" : "partial";
-}
-
-const EMOJI: Record<string, DeliverableStatus> = {
-  "✅": "done",
-  "◐": "partial",
-  "☐": "todo",
-};
-
-/**
- * What a milestone's rows add up to, counted rather than weighted.
- *
- * A row is done or it is not. A partial row used to count as a quarter of one,
- * which put a figure on this page that the file it came from does not contain
- * — and which the documentation site, reading the same file, does not agree
- * with. Group headings are section titles rather than work items, so they are
- * excluded from every count.
- */
-function rollup(deliverables: Deliverable[]): {
-  done: number;
-  total: number;
-  pct: number;
-  status: DeliverableStatus;
-} {
-  const items = deliverables.filter((d) => !d.group);
-  const done = items.filter((d) => d.status === "done").length;
-  const total = items.length;
-  return {
-    done,
-    total,
-    pct: total === 0 ? 0 : Math.round((done / total) * 100),
-    status: rollupStatus(done, total),
-  };
-}
-
-// ── Markdown parsing ──────────────────────────────────────────────
-
-function cleanCell(s: string): string {
-  return (
-    s
-      .replace(/`([^`]*)`/g, "$1") // strip inline code
-      .replaceAll(/\[([^\]]{1,200})\]\([^)]{0,500}\)/g, "$1") // link → text
-      .replaceAll("**", "")
-      // Markdown escapes are for the Markdown renderer, not for us. `\*arr`
-      // means a literal asterisk; carrying the backslash through would print it.
-      .replace(/\\([\\`*_{}[\]()#+\-.!|])/g, "$1")
-      .replace(/\s+/g, " ") // collapse runs, so joined prose lines read cleanly
-      .trim()
-  );
-}
-
-// Parse IMPLEMENTATION-STATUS.md into per-milestone deliverables. Column order
-// varies between milestone tables, so we locate cells by shape, not position.
-/** One table row as a deliverable, or nothing where the row is not one. */
-function rowToDeliverable(row: string): Deliverable | null {
-  // The first cell is what every test below asks about, so it is taken out by
-  // name rather than by index. `cells.length < 2` said the same thing and said
-  // it somewhere the compiler could not follow, which is how a row with one
-  // cell reached three `cells[0]` in a row.
-  const [title, ...others] = row
-    .split("|")
-    .slice(1, -1)
-    .map((c) => c.trim());
-  if (title === undefined || others.length === 0) return null;
-  // header and separator rows
-  if (/^-+$/.test(title.replace(/[:\s]/g, "")) || title === "") return null;
-  if (/^deliverable$/i.test(title)) return null;
-
-  let status: DeliverableStatus | null = null;
-  let spec: string | undefined;
-  const rest: string[] = [];
-  for (const c of others) {
-    const emoji = Object.keys(EMOJI).find((e) => c.includes(e));
-    if (emoji && !status) {
-      status = EMOJI[emoji] ?? null;
-    } else if (!spec && /^[A-Z][A-Z\d]*-[A-Za-z]*\d/.test(cleanCell(c))) {
-      spec = cleanCell(c).split(/[,·]/)[0]?.trim();
-    } else {
-      rest.push(cleanCell(c));
-    }
-  }
-  const note = rest.findLast(Boolean);
-  return { title: cleanCell(title), status: status ?? "todo", spec, note };
-}
-
-/** A `###` heading inside a milestone, which groups the rows beneath it. */
-function rowToGroup(row: string): Deliverable | null {
-  const title = cleanCell(row.slice(4)).replace(/^\d+\s*—\s*/, "");
-  return title ? { title, status: "todo", group: true } : null;
-}
-
-/** One line of a milestone section, whichever of the two shapes it is.
- *
- * A `###` heading is kept as a deliverable so the roadmap can render the
- * structure the status file actually has, flagged so it never counts toward
- * progress. Anything that is not a heading or a table row is neither.
- */
-function parseRow(row: string): Deliverable | null {
-  if (row.startsWith("### ")) return rowToGroup(row);
-  if (row.startsWith("|")) return rowToDeliverable(row);
-  return null;
-}
-
-/** What one milestone section of the status file says about itself. */
-interface Section {
-  id: string;
-  title: string;
-  // The mark on the heading itself. A heading and the table under it answer
-  // different questions: the rows say what has been recorded here, the heading
-  // says where the milestone stands including work recorded in another
-  // milestone's table. The heading is the milestone's status, and it is what
-  // the documentation site shows, so the two cannot disagree.
-  declared: DeliverableStatus | null;
-  deliverables: Deliverable[];
-}
-
-function markOf(line: string): DeliverableStatus | null {
-  const emoji = Object.keys(EMOJI).find((e) => line.includes(e));
-  return emoji === undefined ? null : (EMOJI[emoji] ?? null);
-}
-
-const ID = /^M[\d.]+$/;
-const NAMED = " — ";
-const MARKED = " · ";
-
-/**
- * `## M4 — Seed & backup · ◐` read as its three parts.
- *
- * The name comes from here rather than from a constant in this repo: a
- * milestone renamed upstream used to keep its old name on this page
- * indefinitely. Split rather than matched, so no pattern has to describe a
- * heading whose title may itself contain either separator.
- */
-function headingOf(line: string): { id: string; title: string } | null {
-  if (!line.startsWith("## ")) return null;
-  const at = line.indexOf(NAMED);
-  if (at === -1) return null;
-  const id = line.slice(3, at);
-  if (!ID.test(id)) return null;
-  const named = line.slice(at + NAMED.length);
-  const marked = named.lastIndexOf(MARKED);
-  return {
-    id,
-    title: cleanCell(marked === -1 ? named : named.slice(0, marked)),
-  };
-}
-
-function parseStatus(md: string): Section[] {
-  const out: Section[] = [];
-  for (const section of md.split(/\n(?=##\s+M\d)/)) {
-    // `split` always yields at least one piece, and the compiler does not know
-    // that. An empty first line is answered by `headingOf` with null, which is
-    // the same `continue` below, so the default costs nothing.
-    const line = section.split("\n")[0] ?? "";
-    const heading = headingOf(line);
-    if (!heading) continue;
-    const deliverables: Deliverable[] = [];
-    for (const row of section.split("\n")) {
-      const parsed = parseRow(row.trim());
-      if (parsed) deliverables.push(parsed);
-    }
-    out.push({ ...heading, declared: markOf(line), deliverables });
-  }
-  return out;
-}
-
-/**
- * Every milestone, from the status file when it was reachable.
- *
- * The file names them, orders them, marks them and holds their rows, so nothing
- * about a milestone is kept here — this repo used to carry their names and used
- * to carry eight of them, and both fell behind. The committed snapshot is the
- * offline fallback it was always meant to be, and nothing more.
- */
-function buildMilestones(statusMd: string | null): Milestone[] {
-  const parsed = statusMd ? parseStatus(statusMd) : [];
-  if (parsed.length === 0) return seedMilestones;
-  return parsed.map((section) => {
-    const r = rollup(section.deliverables);
-    return {
-      id: section.id,
-      title: section.title,
-      status: section.declared ?? r.status,
-      done: r.done,
-      total: r.total,
-      pct: r.pct,
-    };
-  });
 }
 
 // ── GitHub API ────────────────────────────────────────────────────
@@ -462,16 +251,11 @@ let cached: SiteData | null = null;
 export async function getSiteData(): Promise<SiteData> {
   if (cached) return cached;
 
-  const [repoResult, statusMd] = await Promise.all([
-    fetchRepos(),
-    getText(STATUS_FILE),
-  ]);
+  const repoResult = await fetchRepos();
 
   const live = repoResult !== null;
   const baseRepos = repoResult?.repos ?? seedRepos;
   const stars = repoResult?.stars ?? 0;
-
-  const milestones = buildMilestones(statusMd);
 
   // Only hit the search + releases APIs when the org was reachable at all.
   const [goodFirstIssues, liveReleases] = live
@@ -494,25 +278,14 @@ export async function getSiteData(): Promise<SiteData> {
     latestRelease: newestTag.get(r.name) ?? r.latestRelease,
   }));
 
-  const totalDeliverables = milestones.reduce((n, m) => n + m.total, 0);
-  const doneDeliverables = milestones.reduce((n, m) => n + m.done, 0);
-
   cached = {
     generatedAt: new Date().toISOString(),
     live,
     stars,
     repos,
-    milestones,
     goodFirstIssues,
     releases,
     latestRelease: releases[0],
-    progress: {
-      doneMilestones: milestones.filter((m) => m.status === "done").length,
-      totalMilestones: milestones.length,
-      doneDeliverables,
-      totalDeliverables,
-      pct: Math.round((doneDeliverables / (totalDeliverables || 1)) * 100),
-    },
   };
   return cached;
 }

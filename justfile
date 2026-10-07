@@ -22,6 +22,10 @@ check:
 lint:
     npm run lint
 
+# The unit tests.
+test:
+    npm test
+
 # Full production build — fetches live org data from the GitHub API.
 build:
     npm run build
@@ -44,8 +48,8 @@ hooks:
     git config core.hooksPath .githooks
     @echo "hooks on: .githooks/commit-msg, .githooks/pre-push"
 
-# Everything the `build` job reads — formatting, types, lint, a real build and
-# its links — plus spelling, which `hygiene` reads.
+# Everything the `build` job reads — formatting, types, lint, the unit tests, a
+# real build and its links — plus spelling, which `hygiene` reads.
 #
 # It is not CI and does not say it is. The rest of what a pull request here
 # starts is forge-side, and these are not here:
@@ -66,6 +70,7 @@ ci: hooks
     npm run format:check
     just check
     just lint
+    just test
     typos
     npm run build
     npm run links
