@@ -3,6 +3,7 @@ import Base from "../../layouts/Base.astro";
 import VerdictBar from "../../components/VerdictBar.astro";
 import { loadBoard } from "../../lib/board";
 import type { Version } from "../../lib/board";
+import { requirementPage } from "../../lib/feature-page";
 import {
   commitUrl,
   goalsByVerdict,
@@ -79,7 +80,9 @@ const repoUrl = (repo: string) => `https://github.com/lemonfiber/${repo}`;
           </h2>
           <ul class="goals">
             {group.goals.map((goal) => {
-              const source = requirementUrl(board, goal.id);
+              const source =
+                requirementPage(board, goal.id) ??
+                requirementUrl(board, goal.id);
               return (
                 <li class="goal" id={goal.id}>
                   {source ? (

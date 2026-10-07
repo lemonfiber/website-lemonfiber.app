@@ -12,7 +12,6 @@ import {
   type Filters,
   type PagedFacet,
 } from "../../../lib/features";
-import { featureSources } from "../../../lib/roadmap";
 import { boardCopy as t } from "../../../i18n";
 
 export async function getStaticPaths() {
@@ -29,7 +28,6 @@ const { facet, value } = Astro.params as {
 const board = await loadBoard();
 const filters: Filters = { [facet]: value };
 const cards = featureCards(board).filter((c) => matches(c, filters));
-const sourceOf = featureSources(board);
 const named = `${t.label[facet] ?? facet} ${value}`;
 ---
 
@@ -55,7 +53,7 @@ const named = `${t.label[facet] ?? facet} ${value}`;
   </section>
   <section class="section">
     <div class="container">
-      <BoardColumns cards={cards} sourceOf={sourceOf} />
+      <BoardColumns cards={cards} />
     </div>
   </section>
 </Base>

@@ -14,6 +14,8 @@ const routes = [
   "/roadmap/0.1.0/",
   "/board/",
   "/board/area/A/",
+  "/features/A1/",
+  "/features/F8/",
 ];
 const themes = { light: "paper", dark: "ink" } as const;
 
