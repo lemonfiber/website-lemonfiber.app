@@ -32,13 +32,17 @@ them from GitHub.
   repository with the role it plays, and the build adds each one's description,
   language, stars, open issues and last push from GitHub.
 - **Releases and good first issues**, from GitHub.
-- **The specification's size and the version train**: how many features and
-  requirements its generated feature board holds, and every version on the
-  train with its status and the goals it locks.
+- **The specification's size and the version train**, from the board snapshot
+  the specification publishes at
+  `https://github.com/lemonfiber/spec/releases/download/board/board.json`: how
+  many features and requirements it holds, and every version on the train with
+  its status and the goals it locks.
 
-A push to any of those repositories triggers a rebuild. If GitHub cannot be
-reached, the build uses the committed snapshot in `src/data/seed.ts`,
-`seed-releases.ts` and `seed-train.ts`, so it never fails for that reason.
+The specification asks for a rebuild whenever the snapshot changes. If the
+snapshot cannot be read, or is in a format this site does not know, the build
+fails and the published site stays as it was; `BOARD_SNAPSHOT` names a local
+file or another address to build from. If GitHub's API cannot be reached, the
+build uses the committed snapshot in `src/data/seed.ts` and `seed-releases.ts`.
 
 User documentation is not here. Installing, the FAQ, the specification, the
 roadmap and the changelog are on
@@ -79,11 +83,12 @@ jobs, which no clone can run.
 
 ```
 src/lib/github.ts      the motor — fetch from the GitHub API, with a resilient fallback
-src/lib/spec.ts        the specification's scale and version train, from its board
+src/lib/board.ts       reads the board snapshot, refusing a format it does not know
+src/lib/spec.ts        the specification's scale, counted from the snapshot
 src/lib/train.ts       what the version train adds up to
 src/lib/format.ts      shared formatting; src/lib/types.ts the shared shapes
 src/data/site.ts       editorial copy; the service / profile / form model
-src/data/seed*.ts      offline snapshots — org, releases, version train
+src/data/seed*.ts      offline snapshots — org, releases
 src/i18n/              the site's copy — chrome, front page, content pages
 src/layouts/Base.astro the shell every page renders into
 src/components/        Nav · Footer · Console · FormsSwitcher · RepoCard · …

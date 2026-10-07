@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { IN_FLIGHT, RELEASED, parseTrain, progressOf } from "./train";
-import { seedTrain } from "../data/seed-train";
+import { IN_FLIGHT, RELEASED, progressOf, trainOf } from "./train";
+import { fixtureBoard } from "../test/board.fixture";
 
 const row = (version: string, status: string, goals: number) => ({
   version,
@@ -9,58 +9,13 @@ const row = (version: string, status: string, goals: number) => ({
   goals,
 });
 
-describe("parseTrain", () => {
-  it("reads the board's versions in train order", () => {
-    const board = {
-      counts: { features: 1, requirements: 2, areas: "A–A" },
-      versions: [row("0.1.0", "released", 3), row("0.2.0", "planned", 4)],
-    };
-    expect(parseTrain(board)).toEqual([
-      row("0.1.0", "released", 3),
-      row("0.2.0", "planned", 4),
+describe("trainOf", () => {
+  it("is every version of the snapshot, in its order, with its goals counted", () => {
+    expect(trainOf(fixtureBoard())).toEqual([
+      { version: "0.1.0", status: "released", milestone: "M1", goals: 1 },
+      { version: "0.2.0", status: "releasable", milestone: null, goals: 2 },
+      { version: "0.3.0", status: "planned", milestone: "M2", goals: 3 },
     ]);
-  });
-
-  it("reads a version that names no milestone", () => {
-    const board = {
-      versions: [{ ...row("0.1.0", "planned", 1), milestone: null }],
-    };
-    expect(parseTrain(board)?.[0]?.milestone).toBeNull();
-  });
-
-  it("refuses a board that is not an object or carries no versions", () => {
-    expect(parseTrain(null)).toBeNull();
-    expect(parseTrain([])).toBeNull();
-    expect(parseTrain("index")).toBeNull();
-    expect(parseTrain({ counts: {} })).toBeNull();
-    expect(parseTrain({ versions: {} })).toBeNull();
-    expect(parseTrain({ versions: [] })).toBeNull();
-  });
-
-  it.each([
-    ["a row that is not an object", "0.2.0"],
-    [
-      "a version that is not a string",
-      { ...row("x", "planned", 1), version: 2 },
-    ],
-    [
-      "a status that is not a string",
-      { ...row("0.2.0", "planned", 1), status: null },
-    ],
-    [
-      "a milestone that is missing",
-      { version: "0.2.0", status: "planned", goals: 1 },
-    ],
-    [
-      "goals that are not a number",
-      { ...row("0.2.0", "planned", 1), goals: "1" },
-    ],
-    ["goals that are not whole", row("0.2.0", "planned", 1.5)],
-    ["goals below zero", row("0.2.0", "planned", -1)],
-  ])("refuses the whole list for %s", (_why, bad) => {
-    expect(
-      parseTrain({ versions: [row("0.1.0", "released", 3), bad] }),
-    ).toBeNull();
   });
 });
 
@@ -111,11 +66,5 @@ describe("progressOf", () => {
     expect(
       progressOf([row("0.1.0", RELEASED, 1), row("0.2.0", "planned", 2)]).pct,
     ).toBe(33);
-  });
-});
-
-describe("the committed snapshot", () => {
-  it("is a train this site can read", () => {
-    expect(parseTrain({ versions: seedTrain })).toEqual(seedTrain);
   });
 });

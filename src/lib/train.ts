@@ -1,14 +1,14 @@
-// The version train, as the specification's generated feature board lists it.
+// The version train, as the board snapshot carries it.
 //
-// `10-functional/features/index.json` carries one row per version manifest:
-// its number, its lifecycle status, the roadmap milestone it serves and how
-// many goals it locks. The board is written by the spec's own generator and
-// checked by its CI, so how far the train has got is read from the files that
-// decide it rather than counted here.
+// The snapshot holds every version manifest in train order with its lifecycle
+// status, the roadmap milestone it serves and each goal it locks. How far the
+// train has got is counted from that, never kept here.
 //
-// Pure functions over the parsed JSON. Fetching it is `spec.ts`.
+// Pure functions over the snapshot. Reading it is `board.ts`.
 
-/** One version of the train, as the board lists it. */
+import type { Board } from "./board";
+
+/** One version of the train. */
 export interface TrainVersion {
   version: string;
   /** The manifest's lifecycle state, e.g. "staged" or "released". */
@@ -44,41 +44,14 @@ export const IN_FLIGHT: readonly string[] = [
   "releasable",
 ];
 
-function isRecord(v: unknown): v is Record<string, unknown> {
-  return typeof v === "object" && v !== null && !Array.isArray(v);
-}
-
-function toVersion(row: unknown): TrainVersion | null {
-  if (!isRecord(row)) return null;
-  const { version, status, milestone, goals } = row;
-  if (
-    typeof version !== "string" ||
-    typeof status !== "string" ||
-    (typeof milestone !== "string" && milestone !== null) ||
-    typeof goals !== "number" ||
-    !Number.isInteger(goals) ||
-    goals < 0
-  ) {
-    return null;
-  }
-  return { version, status, milestone, goals };
-}
-
-/**
- * The board's `versions` list, or null where the board does not carry one in
- * the shape this site reads.
- *
- * All or nothing: a list with one row this site cannot read is refused whole,
- * because a train missing a version would count progress against the wrong
- * total and say so with confidence.
- */
-export function parseTrain(board: unknown): TrainVersion[] | null {
-  if (!isRecord(board) || !Array.isArray(board.versions)) return null;
-  const rows: unknown[] = board.versions;
-  const train = rows.map(toVersion);
-  if (train.length === 0) return null;
-  const read = train.filter((v): v is TrainVersion => v !== null);
-  return read.length === train.length ? read : null;
+/** Each version of the snapshot as a train row: how many goals it locks. */
+export function trainOf(board: Pick<Board, "versions">): TrainVersion[] {
+  return board.versions.map((v) => ({
+    version: v.version,
+    status: v.status,
+    milestone: v.milestone,
+    goals: v.goals.length,
+  }));
 }
 
 /** What the train adds up to. */

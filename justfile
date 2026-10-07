@@ -26,6 +26,10 @@ lint:
 test:
     npm test
 
+# The unit tests, with src/lib held at 100% coverage. What the `build` job runs.
+coverage:
+    npm run coverage
+
 # Full production build — fetches live org data from the GitHub API.
 build:
     npm run build
@@ -70,7 +74,7 @@ ci: hooks
     npm run format:check
     just check
     just lint
-    just test
+    just coverage
     typos
     npm run build
     npm run links
