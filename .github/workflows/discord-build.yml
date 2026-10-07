@@ -1,4 +1,6 @@
-# Post every workflow run's outcome to the public #build-log channel (OPS-R24).
+# Post each run's outcome that the public #build-log channel carries (OPS-R24):
+# every run for main, a tag, a release, a schedule or a dispatch, and every pull
+# request run that failed. The notifier decides which before a runner starts.
 # workflow_run executes in the base repo with the org secret available and never
 # in fork-PR code; values reach the reusable as inputs, not shell interpolations.
 name: discord-build
@@ -23,11 +25,12 @@ permissions:
   contents: read
 jobs:
   notify:
-    uses: lemonfiber/spec/.github/workflows/discord-notify.yml@44f27cb6e10a5cb38a858436d3b57c40ab63b1b7 # v1.0.30
+    uses: lemonfiber/spec/.github/workflows/discord-notify.yml@23d12ea556d80216ffccc06aa4d589e3e514c9ea # v1.0.36
     with:
       title: "${{ github.event.workflow_run.name }} · ${{ github.event.workflow_run.head_branch }}"
       body: "${{ github.event.repository.name }} — ${{ github.event.workflow_run.conclusion }} · ${{ github.event.workflow_run.head_sha }}"
       url: ${{ github.event.workflow_run.html_url }}
       color: ${{ github.event.workflow_run.conclusion == 'success' && '3066993' || '15158332' }}
+      build-log: true
     secrets:
       webhook: ${{ secrets.DISCORD_BUILD_WEBHOOK }}
