@@ -1,0 +1,105 @@
+---
+// The board's four columns, one card per feature. Each card carries its id so
+// the filter island can hide it in place; without script every card shows.
+import type { FeatureCard } from "../lib/features";
+import { columns } from "../lib/features";
+import { boardCopy as t } from "../i18n";
+
+interface Props {
+  cards: FeatureCard[];
+  sourceOf: Record<string, string>;
+}
+const { cards, sourceOf } = Astro.props;
+---
+
+<div class="cols">
+  {columns(cards).map((column) => (
+    <section class="col" aria-labelledby={`col-${column.maturity}`}>
+      <h2 class="col__h" id={`col-${column.maturity}`}>
+        {t.column[column.maturity]}{" "}
+        <span class="mono col__n" data-count={column.maturity}>
+          {column.cards.length}
+        </span>
+      </h2>
+      <p class="col__note">{t.columnNote[column.maturity]}</p>
+      <ul class="col__cards">
+        {column.cards.map((card) => (
+          <li class="fc card" data-feature={card.id}>
+            <a class="fc__id mono" href={sourceOf[card.id]}>
+              {card.id}
+            </a>
+            <span class="fc__title">{card.title}</span>
+            <span class="fc__meta">
+              {card.audience}
+              {card.versions.length > 0 && ` · ${card.versions.join(", ")}`}
+            </span>
+            {(card.openGoals > 0 || card.claims > 0) && (
+              <span class="fc__meta mono">
+                {card.openGoals > 0 && `${card.openGoals} ${t.openGoals}`}
+                {card.openGoals > 0 && card.claims > 0 && " · "}
+                {card.claims > 0 && `${card.claims} ${t.claims}`}
+              </span>
+            )}
+          </li>
+        ))}
+        {column.cards.length === 0 && <li class="col__none">{t.none}</li>}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  .cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-4);
+    align-items: start;
+  }
+  @media (max-width: 900px) {
+    .cols {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 560px) {
+    .cols {
+      grid-template-columns: 1fr;
+    }
+  }
+  .col__h {
+    font-size: var(--size-display-m);
+    margin: 0;
+  }
+  .col__n {
+    font-size: var(--size-body);
+    color: var(--text-muted);
+  }
+  .col__note {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+    margin: var(--space-1) 0 var(--space-3);
+  }
+  .col__cards {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .fc {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-3);
+  }
+  .fc[hidden] {
+    display: none;
+  }
+  .fc__id {
+    font-weight: 700;
+    color: var(--text);
+  }
+  .fc__meta,
+  .col__none {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+</style>

@@ -1,0 +1,72 @@
+---
+// The board filtered to one area, version or repository, built as a page of
+// its own so the filters that matter most work without script.
+import Base from "../../../layouts/Base.astro";
+import BoardColumns from "../../../components/BoardColumns.astro";
+import { loadBoard } from "../../../lib/board";
+import {
+  PAGED_FACETS,
+  facetValues,
+  featureCards,
+  matches,
+  type Filters,
+  type PagedFacet,
+} from "../../../lib/features";
+import { featureSources } from "../../../lib/roadmap";
+import { boardCopy as t } from "../../../i18n";
+
+export async function getStaticPaths() {
+  const facets = facetValues(featureCards(await loadBoard()));
+  return PAGED_FACETS.flatMap((facet) =>
+    facets[facet].map((value) => ({ params: { facet, value } })),
+  );
+}
+
+const { facet, value } = Astro.params as {
+  facet: PagedFacet;
+  value: string;
+};
+const board = await loadBoard();
+const filters: Filters = { [facet]: value };
+const cards = featureCards(board).filter((c) => matches(c, filters));
+const sourceOf = featureSources(board);
+const named = `${t.label[facet] ?? facet} ${value}`;
+---
+
+<Base
+  active="board"
+  title={`${named} · ${t.title}`}
+  description={t.description}
+>
+  <section class="section head">
+    <div class="container">
+      <a class="back" href="/board/">
+        {t.all}
+      </a>
+      <h1 class="head__h">
+        {t.filteredTo} {named}
+      </h1>
+      <p class="lead">
+        <a href={`/board/?${facet}=${encodeURIComponent(value)}`}>
+          {t.filters}
+        </a>
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <BoardColumns cards={cards} sourceOf={sourceOf} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .back {
+    color: var(--text-muted);
+    font-size: var(--size-caption);
+  }
+  .head__h {
+    font-size: var(--size-display-l);
+    margin: var(--space-3) 0;
+  }
+</style>

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-// Serves the built site, sweeps it with axe in both themes, and stops the
-// server. Run after `npm run build`.
+// Serves the built site, runs the browser suites in a11y/ against it (the axe
+// sweep in both themes, and the board's filters with and without script), and
+// stops the server. Run after `npm run build`.
 import { spawn, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 

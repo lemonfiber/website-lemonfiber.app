@@ -14,6 +14,10 @@
     // and is the only reading Sonar has. `Q-R64` requires zero new issues, so
     // the six would have to be argued with the analyser on every pull request
     // for a strictness that has not caught anything.
-    "exactOptionalPropertyTypes": false
+    "exactOptionalPropertyTypes": false,
+
+    // The board's filter island is Preact.
+    "jsx": "react-jsx",
+    "jsxImportSource": "preact"
   }
 }
