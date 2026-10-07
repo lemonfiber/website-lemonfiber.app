@@ -1,6 +1,6 @@
 # AGENTS.md — website-lemonfiber.app
 
-Guidance for any AI agent working in this repo.
+Guidance for any AI agent working in this repository.
 
 > **Common rules for every lemonfiber repo are canonical in the spec:**
 > [50-governance/ai-contributors.md](https://github.com/lemonfiber/spec/blob/main/50-governance/ai-contributors.md).
