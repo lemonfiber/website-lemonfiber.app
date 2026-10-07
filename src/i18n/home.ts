@@ -14,7 +14,7 @@ export const homeCopy = {
     titleAccent: "without becoming a sysadmin.",
     ctaPrimary: "Join the Discord",
     ctaSecondary: "See the roadmap →",
-    statusPill: "Spec complete · building",
+    statusPill: "Before 1.0 · building in the open",
     milestones: "milestones",
     ofDeliverables: "of deliverables",
     consoleTitle: "zsh — first run",
