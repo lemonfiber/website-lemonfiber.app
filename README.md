@@ -32,14 +32,13 @@ them from GitHub.
   repository with the role it plays, and the build adds each one's description,
   language, stars, open issues and last push from GitHub.
 - **Releases and good first issues**, from GitHub.
-- **What is built**: `lemonfiber/IMPLEMENTATION-STATUS.md`, read per
-  deliverable.
-- **The specification's size**: how many features and requirements its
-  generated feature board holds.
+- **The specification's size and the version train**: how many features and
+  requirements its generated feature board holds, and every version on the
+  train with its status and the goals it locks.
 
 A push to any of those repositories triggers a rebuild. If GitHub cannot be
 reached, the build uses the committed snapshot in `src/data/seed.ts`,
-`seed-milestones.ts` and `seed-releases.ts`, so it never fails for that reason.
+`seed-releases.ts` and `seed-train.ts`, so it never fails for that reason.
 
 User documentation is not here. Installing, the FAQ, the specification, the
 roadmap and the changelog are on
@@ -79,11 +78,12 @@ jobs, which no clone can run.
 ## Layout
 
 ```
-src/lib/github.ts      the motor — fetch + parse, with a resilient fallback
-src/lib/spec.ts        the specification's own scale, from its generated board
+src/lib/github.ts      the motor — fetch from the GitHub API, with a resilient fallback
+src/lib/spec.ts        the specification's scale and version train, from its board
+src/lib/train.ts       what the version train adds up to
 src/lib/format.ts      shared formatting; src/lib/types.ts the shared shapes
 src/data/site.ts       editorial copy; the service / profile / form model
-src/data/seed*.ts      offline snapshots — org, milestones, releases
+src/data/seed*.ts      offline snapshots — org, releases, version train
 src/i18n/              the site's copy — chrome, front page, content pages
 src/layouts/Base.astro the shell every page renders into
 src/components/        Nav · Footer · Console · FormsSwitcher · RepoCard · …

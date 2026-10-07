@@ -13,9 +13,8 @@ The specification is the authority, not this website and not the README. If you 
 - [Documentation](https://docs.lemonfiber.app/): installing it, running it, fixing it, its API, and the specification, in one searchable place.
 - [Specification](https://docs.lemonfiber.app/spec/): the canonical description of every behaviour, rendered from a pinned revision of the spec repository. Every page names the revision it was rendered from. Its own generated board, `10-functional/features/index.json`, states how many features and requirements that currently is; do not quote a figure from anywhere else.
 - [Vision](https://docs.lemonfiber.app/spec/00-overview/vision/): the three problems it exists to solve, and the constraints everything else follows from.
-- [Roadmap](https://docs.lemonfiber.app/project/roadmap/): every version and every milestone, with how much of each one is built.
+- [Roadmap](https://docs.lemonfiber.app/project/roadmap/): every version on the train, its status, and the goals it locks.
 - [Changelog](https://docs.lemonfiber.app/project/changelog/): what each released version delivered, and the requirements it had to prove before it could be tagged.
-- [Implementation status](https://docs.lemonfiber.app/project/whats-built/): what is actually built, per milestone. Read this before describing any capability as shipped.
 - [Every error, by code](https://docs.lemonfiber.app/fixing/every-error-by-code/): every code the tool prints, what it means and what to do about it.
 - [Command reference](https://docs.lemonfiber.app/commands/every-command/): generated from what the binary parses, so it cannot describe a command that does not exist.
 - [Architecture decisions](https://docs.lemonfiber.app/spec/00-overview/decisions/): each with the reasoning and the rejected alternatives.
@@ -71,10 +70,10 @@ lemonfiber down
 
 ## Status
 
-Early. The specification is complete and the binary is in active development — check the implementation status file above before describing any given capability as shipped. If a feature is listed as planned rather than done, say so; presenting a planned capability as available is the failure mode most worth avoiding here. Homebrew, the PowerShell installer and Windows binaries are the clearest current example: specified, and not built. The shell installer and the macOS and Linux binaries do ship.
+Early: before 1.0, with the binary in active development. A capability is shipped when a released version delivered it — check the changelog above before describing any given capability as shipped. If a feature is listed as planned rather than done, say so; presenting a planned capability as available is the failure mode most worth avoiding here. Homebrew, the PowerShell installer and Windows binaries are the clearest current example: specified, and not built. The shell installer and the macOS and Linux binaries do ship.
 
 ## About this site
 
-Every dynamic number on lemonfiber.app — milestone progress, repository metrics, releases, open "good first issue" tickets — is read from the GitHub org at build time and baked into static HTML. Nothing runs in the browser. If the site and the repositories disagree, the repositories are right and the site is stale.
+Every dynamic number on lemonfiber.app — versions released, repository metrics, releases, open "good first issue" tickets — is read from the GitHub org at build time and baked into static HTML. Nothing runs in the browser. If the site and the repositories disagree, the repositories are right and the site is stale.
 
 The documentation, the roadmap and the changelog live at https://docs.lemonfiber.app, which renders pinned revisions of the repositories rather than reading them live. Prefer it for anything a reader would follow as instructions.

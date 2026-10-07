@@ -1,32 +1,6 @@
 // Shapes for everything the site derives from the GitHub org — "the motor".
 // Kept deliberately small: only the fields a page actually renders.
 
-export type DeliverableStatus = "done" | "partial" | "todo";
-
-export interface Deliverable {
-  title: string;
-  status: DeliverableStatus;
-  spec?: string;
-  note?: string;
-  // True for a section heading that groups the rows beneath it rather than
-  // being a work item in its own right. Excluded from every count — including
-  // headings in the total would quietly inflate progress.
-  group?: boolean;
-}
-
-// One milestone as the site shows it. The deliverables behind the counts are
-// parsed and totted up, never carried: nothing on this site renders the list,
-// and holding it here made the committed snapshot a transcription of a file it
-// only ever needed the totals of.
-export interface Milestone {
-  id: string; // "M2"
-  title: string; // "Core: manifest, compose driver, CLI"
-  status: DeliverableStatus; // the mark on the heading upstream
-  done: number;
-  total: number;
-  pct: number; // 0..100
-}
-
 export interface Repo {
   name: string;
   description: string;
@@ -66,17 +40,9 @@ export interface SiteData {
   live: boolean; // true when GitHub was reachable at build time
   stars: number; // org total
   repos: Repo[];
-  milestones: Milestone[];
   goodFirstIssues: Issue[];
   releases: Release[];
   // Newest published release across the org, for the version the front page
   // names. Optional because a fresh org genuinely has none.
   latestRelease?: Release;
-  progress: {
-    doneMilestones: number;
-    totalMilestones: number;
-    doneDeliverables: number;
-    totalDeliverables: number;
-    pct: number;
-  };
 }
