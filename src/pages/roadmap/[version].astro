@@ -1,0 +1,223 @@
+---
+import Base from "../../layouts/Base.astro";
+import VerdictBar from "../../components/VerdictBar.astro";
+import { loadBoard } from "../../lib/board";
+import type { Version } from "../../lib/board";
+import {
+  commitUrl,
+  goalsByVerdict,
+  manifestUrl,
+  requirementUrl,
+  verdictCounts,
+} from "../../lib/roadmap";
+import { roadmapCopy as t } from "../../i18n";
+
+export async function getStaticPaths() {
+  const board = await loadBoard();
+  return board.versions.map((version) => ({
+    params: { version: version.version },
+    props: { version },
+  }));
+}
+
+interface Props {
+  version: Version;
+}
+const { version } = Astro.props;
+const board = await loadBoard();
+const counts = verdictCounts(version);
+const groups = goalsByVerdict(version);
+const label = `${version.version}: ${groups
+  .map((g) => `${g.goals.length} ${t.verdict[g.verdict].word}`)
+  .join(", ")}`;
+const repoUrl = (repo: string) => `https://github.com/lemonfiber/${repo}`;
+---
+
+<Base
+  active="roadmap"
+  title={`${version.version} · ${t.title}`}
+  description={version.delivers ?? t.description}
+>
+  <section class="section head">
+    <div class="container">
+      <a class="back" href="/roadmap/">
+        {t.back}
+      </a>
+      <h1 class="head__h mono">{version.version}</h1>
+      <p class="meta">
+        <strong>{t.status[version.status] ?? version.status}</strong>
+        {[
+          version.milestone && `${t.serves} ${version.milestone}`,
+          version.released_on && `${t.releasedOn} ${version.released_on}`,
+          version.prereleases.length > 0 &&
+            `${t.prereleases} ${version.prereleases.length}`,
+        ]
+          .filter(Boolean)
+          .map((part) => ` · ${part}`)
+          .join("")}
+        {" · "}
+        <a href={manifestUrl(board, version.version)}>{t.manifest}</a>
+      </p>
+      {version.delivers && <p class="lead">{version.delivers}</p>}
+      <VerdictBar counts={counts} label={label} />
+      <p class="asof mono">
+        {t.asOf}
+        <time datetime={board.generated_at}>{board.generated_at}</time>
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {groups.length === 0 && <p>{t.noGoals}</p>}
+      {groups.map((group) => (
+        <section class="group" aria-labelledby={`v-${group.verdict}`}>
+          <h2 class="sec__h" id={`v-${group.verdict}`}>
+            <span aria-hidden="true">{t.verdict[group.verdict].glyph}</span>{" "}
+            {t.verdict[group.verdict].heading}{" "}
+            <span class="mono">({group.goals.length})</span>
+          </h2>
+          <ul class="goals">
+            {group.goals.map((goal) => {
+              const source = requirementUrl(board, goal.id);
+              return (
+                <li class="goal" id={goal.id}>
+                  {source ? (
+                    <a class="goal__id mono" href={source}>
+                      {goal.id}
+                    </a>
+                  ) : (
+                    <span class="goal__id mono">{goal.id}</span>
+                  )}
+                  <dl class="goal__ev">
+                    {goal.done_in.length > 0 && (
+                      <>
+                        <dt>{t.doneIn}</dt>
+                        <dd>
+                          {goal.done_in.map((r) => (
+                            <a href={repoUrl(r)}>{r}</a>
+                          ))}
+                        </dd>
+                      </>
+                    )}
+                    {goal.partial_in.length > 0 && (
+                      <>
+                        <dt>{t.partialIn}</dt>
+                        <dd>
+                          {goal.partial_in.map((r) => (
+                            <a href={repoUrl(r)}>{r}</a>
+                          ))}
+                        </dd>
+                      </>
+                    )}
+                    {goal.cited_in.length > 0 && (
+                      <>
+                        <dt>{t.citedBy}</dt>
+                        <dd class="mono">
+                          {goal.cited_in.map((c) => (
+                            <a href={commitUrl(c)}>{c}</a>
+                          ))}
+                        </dd>
+                      </>
+                    )}
+                    {goal.landed_in.length > 0 && (
+                      <>
+                        <dt>{t.landedIn}</dt>
+                        <dd class="mono">
+                          {goal.landed_in.map((c) => (
+                            <a href={commitUrl(c)}>{c}</a>
+                          ))}
+                        </dd>
+                      </>
+                    )}
+                    {goal.claims.length > 0 && (
+                      <>
+                        <dt>{t.claimedBy}</dt>
+                        <dd>
+                          {goal.claims.map((c) => (
+                            <a href={c.url}>
+                              {c.repo}#{c.number}
+                              {c.draft && ` (${t.draft})`}
+                            </a>
+                          ))}
+                        </dd>
+                      </>
+                    )}
+                  </dl>
+                </li>
+              );
+            })}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .back {
+    color: var(--text-muted);
+    font-size: var(--size-caption);
+  }
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0 var(--space-2);
+  }
+  .meta,
+  .asof {
+    color: var(--text-muted);
+  }
+  .meta a {
+    color: var(--text-muted);
+  }
+  .asof {
+    font-size: var(--size-caption);
+    margin-top: var(--space-3);
+  }
+  .group {
+    margin-bottom: var(--space-7);
+  }
+  .goals {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .goal {
+    display: grid;
+    grid-template-columns: minmax(7rem, max-content) 1fr;
+    gap: var(--space-4);
+    padding: var(--space-2) 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .goal__id {
+    font-weight: 700;
+    color: var(--text);
+  }
+  .goal__ev {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-1) var(--space-3);
+    margin: 0;
+    font-size: var(--size-caption);
+  }
+  .goal__ev dt {
+    color: var(--text-muted);
+  }
+  .goal__ev dd {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+  }
+  .goal__ev a {
+    color: var(--text);
+  }
+  @media (max-width: 560px) {
+    .goal {
+      grid-template-columns: 1fr;
+      gap: var(--space-1);
+    }
+  }
+</style>

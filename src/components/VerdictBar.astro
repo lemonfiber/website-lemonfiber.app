@@ -1,0 +1,101 @@
+---
+// One version's goals as a bar of verdicts, with a legend that names each
+// verdict in a word and a glyph, so the colours are never the only carrier.
+import type { Verdict } from "../lib/board";
+import { BAR_ORDER } from "../lib/roadmap";
+import { roadmapCopy as t } from "../i18n";
+
+interface Props {
+  counts: Record<Verdict, number>;
+  label: string;
+}
+const { counts, label } = Astro.props;
+const total = BAR_ORDER.reduce((n, v) => n + counts[v], 0);
+const shown = BAR_ORDER.filter((v) => counts[v] > 0);
+---
+
+<div class="vb">
+  <div class="vb__track" role="img" aria-label={label}>
+    {shown.map((v) => (
+      <span
+        class:list={["vb__seg", `vb--${v}`]}
+        style={`flex-grow:${counts[v]}`}
+      />
+    ))}
+  </div>
+  <ul class="vb__legend">
+    {shown.map((v) => (
+      <li>
+        <span class:list={["vb__glyph", `vb--${v}-text`]} aria-hidden="true">
+          {t.verdict[v].glyph}
+        </span>
+        <span class="mono">{counts[v]}</span> {t.verdict[v].word}
+      </li>
+    ))}
+    {total === 0 && <li>{t.noGoals}</li>}
+  </ul>
+</div>
+
+<style>
+  .vb__track {
+    display: flex;
+    gap: 2px;
+    height: 10px;
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+    background: var(--surface-2);
+  }
+  .vb__seg {
+    flex-basis: 0;
+    min-width: 3px;
+  }
+  .vb__legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    margin: var(--space-2) 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .vb__glyph {
+    margin-right: 0.3em;
+  }
+  .vb--met {
+    background: var(--ok);
+  }
+  .vb--claimed {
+    background: var(--info);
+  }
+  .vb--unmarked {
+    background: var(--warn);
+  }
+  .vb--uncited {
+    background: var(--accent);
+  }
+  .vb--unknown {
+    background: var(--danger);
+  }
+  .vb--open {
+    background: var(--border-strong);
+  }
+  .vb--met-text {
+    color: var(--ok);
+  }
+  .vb--claimed-text {
+    color: var(--info);
+  }
+  .vb--unmarked-text {
+    color: var(--warn);
+  }
+  .vb--uncited-text {
+    color: var(--accent-strong);
+  }
+  .vb--unknown-text {
+    color: var(--danger);
+  }
+  .vb--open-text {
+    color: var(--text-muted);
+  }
+</style>
