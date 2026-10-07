@@ -1,8 +1,8 @@
 // The motor. Everything the site reads from the GitHub API is assembled here at
 // BUILD TIME: the org's repositories, their releases and the open good first
-// issues. How far the version train has got is read from the specification's
-// feature board, in spec.ts. Nothing here runs in the browser — the output is
-// baked into static HTML.
+// issues. How far the version train has got is read from the board snapshot, in
+// board.ts. Nothing here runs in the browser — the output is baked into static
+// HTML.
 //
 // Design rule: no single failure may break the build. Every fetch is wrapped,
 // times out fast, and falls back to the committed seed. A maintainer never has

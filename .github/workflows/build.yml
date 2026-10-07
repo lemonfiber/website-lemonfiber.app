@@ -41,8 +41,8 @@ jobs:
       # had `.editorconfig`, `astro check`, and nothing that reads a type twice.
       - name: Lint
         run: npm run lint
-      - name: Unit tests
-        run: npm test
+      - name: Unit tests, src/lib at 100% coverage
+        run: npm run coverage
       - name: Build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

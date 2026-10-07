@@ -3,12 +3,13 @@ import Base from "../layouts/Base.astro";
 import RepoCard from "../components/RepoCard.astro";
 import ProgressBar from "../components/ProgressBar.astro";
 import { getSiteData } from "../lib/github";
-import { specTrain } from "../lib/spec";
+import { loadBoard } from "../lib/board";
+import { progressOf, trainOf } from "../lib/train";
 import { site } from "../data/site";
 import { relativeTime, compact } from "../lib/format";
 
 const data = await getSiteData();
-const train = await specTrain();
+const train = progressOf(trainOf(await loadBoard()));
 const primary = data.repos.filter((r) => r.primary);
 const secondary = data.repos.filter((r) => !r.primary);
 ---
@@ -27,12 +28,8 @@ const secondary = data.repos.filter((r) => !r.primary);
         This whole page is generated from the {site.name} org at build time —
         repos, releases, open issues, the version train. If the repos change, so
         does this page, with zero maintenance.
-        <span
-          class:list={["freshness", { "is-stale": !(data.live && train.live) }]}
-        >
-          {data.live && train.live
-            ? "● Live at last build"
-            : "○ Last known snapshot"}
+        <span class:list={["freshness", { "is-stale": !data.live }]}>
+          {data.live ? "● Live at last build" : "○ Last known snapshot"}
         </span>
       </p>
 
