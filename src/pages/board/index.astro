@@ -4,13 +4,11 @@ import BoardColumns from "../../components/BoardColumns.astro";
 import BoardFilters from "../../components/BoardFilters";
 import { loadBoard } from "../../lib/board";
 import { facetValues, featureCards } from "../../lib/features";
-import { featureSources } from "../../lib/roadmap";
 import { boardCopy as t, roadmapCopy } from "../../i18n";
 
 const board = await loadBoard();
 const cards = featureCards(board);
 const facets = facetValues(cards);
-const sourceOf = featureSources(board);
 ---
 
 <Base active="board" title={t.title} description={t.description}>
@@ -62,7 +60,7 @@ const sourceOf = featureSources(board);
           </p>
         </nav>
       </noscript>
-      <BoardColumns cards={cards} sourceOf={sourceOf} />
+      <BoardColumns cards={cards} />
     </div>
   </section>
 </Base>

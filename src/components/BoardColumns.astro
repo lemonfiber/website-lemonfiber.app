@@ -7,9 +7,8 @@ import { boardCopy as t } from "../i18n";
 
 interface Props {
   cards: FeatureCard[];
-  sourceOf: Record<string, string>;
 }
-const { cards, sourceOf } = Astro.props;
+const { cards } = Astro.props;
 ---
 
 <div class="cols">
@@ -25,7 +24,7 @@ const { cards, sourceOf } = Astro.props;
       <ul class="col__cards">
         {column.cards.map((card) => (
           <li class="fc card" data-feature={card.id}>
-            <a class="fc__id mono" href={sourceOf[card.id]}>
+            <a class="fc__id mono" href={`/features/${card.id}/`}>
               {card.id}
             </a>
             <span class="fc__title">{card.title}</span>

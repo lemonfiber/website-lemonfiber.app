@@ -1,0 +1,289 @@
+---
+import Base from "../../layouts/Base.astro";
+import { loadBoard } from "../../lib/board";
+import type { Feature } from "../../lib/board";
+import {
+  featureState,
+  plainText,
+  requirementPage,
+} from "../../lib/feature-page";
+import { commitUrl, featureSources } from "../../lib/roadmap";
+import { featureCopy as t, roadmapCopy } from "../../i18n";
+
+export async function getStaticPaths() {
+  const board = await loadBoard();
+  return board.features.map((feature) => ({
+    params: { id: feature.id },
+    props: { feature },
+  }));
+}
+
+const { feature } = Astro.props as { feature: Feature };
+const board = await loadBoard();
+const states = featureState(board, feature.id);
+const source = featureSources(board)[feature.id];
+const area = board.areas.find((a) => a.id === feature.area);
+const known = new Set(board.features.map((f) => f.id));
+const facts: [string, string][] = [
+  [t.area, area?.name ? `${feature.area} — ${area.name}` : feature.area],
+  [t.audience, feature.audience],
+  [t.kind, feature.kind],
+  [t.status, feature.status],
+  [t.maturity, feature.maturity],
+  ...(feature.shipped
+    ? [[t.shipped, feature.shipped] as [string, string]]
+    : []),
+  ...(feature.labels.length
+    ? [[t.labels, feature.labels.join(", ")] as [string, string]]
+    : []),
+];
+---
+
+<Base
+  active="board"
+  title={`${feature.id} ${feature.title}`}
+  description={t.description(feature.title)}
+>
+  <section class="section head">
+    <div class="container">
+      <a class="back" href="/board/">
+        {t.back}
+      </a>
+      <h1 class="head__h">
+        <span class="mono">{feature.id}</span>
+        {feature.title}
+      </h1>
+      <dl class="facts">
+        {facts.map(([k, v]) => (
+          <div>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+        {[
+          [t.requires, feature.requires],
+          [t.relates, feature.relates],
+        ].map(
+          ([k, ids]) =>
+            Array.isArray(ids) &&
+            ids.length > 0 && (
+              <div>
+                <dt>{k}</dt>
+                <dd class="mono">
+                  {ids.map((id) =>
+                    known.has(id) ? (
+                      <a href={`/features/${id}/`}>{id}</a>
+                    ) : (
+                      <span>{id}</span>
+                    ),
+                  )}
+                </dd>
+              </div>
+            ),
+        )}
+      </dl>
+      <p class="src">
+        <a href={source}>{t.source}</a> ·
+        <span class="mono">
+          {roadmapCopy.asOf}
+          <time datetime={board.generated_at}>{board.generated_at}</time>
+        </span>
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="sec__h">{t.requirements}</h2>
+      {states.length === 0 && <p>{t.none}</p>}
+      <ol class="reqs">
+        {states.map((s) => (
+          <li class="req" id={s.requirement.id}>
+            <div class="req__head">
+              <a class="req__id mono" href={`#${s.requirement.id}`}>
+                {s.requirement.id}
+              </a>
+              <span class:list={["req__status", `is-${s.requirement.status}`]}>
+                {s.requirement.status}
+              </span>
+              {s.requirement.keyword && (
+                <span class="req__kw mono">{s.requirement.keyword}</span>
+              )}
+            </div>
+            <p class="req__text">{plainText(s.requirement.text)}</p>
+            <dl class="req__ev">
+              {s.requirement.replaced_by && (
+                <>
+                  <dt>{t.replacedBy}</dt>
+                  <dd class="mono">
+                    <a
+                      href={
+                        requirementPage(board, s.requirement.replaced_by) ??
+                        source
+                      }
+                    >
+                      {s.requirement.replaced_by}
+                    </a>
+                  </dd>
+                </>
+              )}
+              <dt>{t.lockedBy}</dt>
+              <dd>
+                {s.locked.length === 0 && t.notLocked}
+                {s.locked.map((l) => (
+                  <a href={`/roadmap/${l.version}/#${s.requirement.id}`}>
+                    <span class="mono">{l.version}</span>{" "}
+                    <span aria-hidden="true">
+                      {roadmapCopy.verdict[l.verdict].glyph}
+                    </span>{" "}
+                    {roadmapCopy.verdict[l.verdict].word}
+                  </a>
+                ))}
+              </dd>
+              {s.recorded.map((r) => (
+                <>
+                  <dt>
+                    {t.recorded} {r.state}
+                  </dt>
+                  <dd>
+                    <a href={`https://github.com/lemonfiber/${r.repo}`}>
+                      {r.repo}
+                    </a>
+                    {r.evidence.map((e) => (
+                      <a class="mono ev" href={e.url}>
+                        {e.text}
+                      </a>
+                    ))}
+                    {r.landed && (
+                      <a class="mono" href={commitUrl(`${r.repo}@${r.landed}`)}>
+                        {t.landed} {r.landed.slice(0, 10)}
+                      </a>
+                    )}
+                  </dd>
+                </>
+              ))}
+              {s.citedIn.length > 0 && (
+                <>
+                  <dt>{t.citedBy}</dt>
+                  <dd class="mono">
+                    {s.citedIn.map((c) => (
+                      <a href={commitUrl(c)}>{c}</a>
+                    ))}
+                  </dd>
+                </>
+              )}
+              {s.claims.length > 0 && (
+                <>
+                  <dt>{t.claimedBy}</dt>
+                  <dd>
+                    {s.claims.map((p) => (
+                      <a href={p.url}>
+                        {p.repo}#{p.number}
+                        {p.draft && ` (${t.draft})`}
+                      </a>
+                    ))}
+                  </dd>
+                </>
+              )}
+            </dl>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .back {
+    color: var(--text-muted);
+    font-size: var(--size-caption);
+  }
+  .head__h {
+    font-size: var(--size-display-l);
+    margin: var(--space-3) 0 var(--space-4);
+  }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+    margin: 0;
+  }
+  .facts dt {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .facts dd {
+    margin: 0;
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+  }
+  .src {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+    margin-top: var(--space-4);
+  }
+  .src a {
+    color: var(--text);
+  }
+  .reqs {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+  .req {
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--border-soft);
+    scroll-margin-top: calc(var(--nav-h) + var(--space-4));
+  }
+  .req:target {
+    outline: 2px solid var(--accent);
+    outline-offset: var(--space-2);
+  }
+  .req__head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: baseline;
+  }
+  .req__id {
+    font-weight: 700;
+    color: var(--text);
+  }
+  .req__status,
+  .req__kw {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .req__status.is-withdrawn,
+  .req__status.is-superseded {
+    text-decoration: line-through;
+  }
+  .req__text {
+    margin: var(--space-2) 0;
+  }
+  .req__ev {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-1) var(--space-3);
+    margin: 0;
+    font-size: var(--size-caption);
+  }
+  .req__ev dt {
+    color: var(--text-muted);
+  }
+  .req__ev dd {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+  }
+  .req__ev a {
+    color: var(--text);
+  }
+  .ev {
+    word-break: break-all;
+  }
+</style>
