@@ -8,9 +8,9 @@
 <h1 align="center">website-lemonfiber.app</h1>
 
 <p align="center">
-  The lemonfiber frontpage — a <b>build-in-the-open</b> site whose progress and
-  repo state are read from the org, not written by hand.<br>
-  Astro, static, self-hosted assets. Zero maintenance for maintainers.
+  The source of <a href="https://lemonfiber.app">lemonfiber.app</a>, the
+  project's homepage. A static Astro site that reads its progress figures from
+  GitHub when it is built.
 </p>
 
 <p align="center">
@@ -22,41 +22,39 @@
 
 ---
 
-## The idea
+## What it shows
 
-Most project sites rot: the "in progress" list is months stale, the numbers were
-typed once and never re-counted, and keeping them honest is a chore nobody signs
-up for. This site removes the chore. **The GitHub org is the motor.**
+[lemonfiber.app](https://lemonfiber.app) explains what lemonfiber is and shows
+how far it has got. The figures on it are not typed by hand: each build reads
+them from GitHub.
 
-At build time it reads:
+- **The organisation's repositories**: `src/data/seed.ts` lists every public
+  repository with the role it plays, and the build adds each one's description,
+  language, stars, open issues and last push from GitHub.
+- **Releases and good first issues**, from GitHub.
+- **What is built**: `lemonfiber/IMPLEMENTATION-STATUS.md`, read per
+  deliverable.
+- **The specification's size**: how many features and requirements its
+  generated feature board holds.
 
-- **the org** — repositories, languages, releases, open issues, good-first-issues, stars
-- **`lemonfiber/IMPLEMENTATION-STATUS.md`** — per-deliverable status (✅ / ◐ / ☐)
-- **the specification's generated feature board** — how many features and
-  requirements the spec currently holds
+A push to any of those repositories triggers a rebuild. If GitHub cannot be
+reached, the build uses the committed snapshot in `src/data/seed.ts`,
+`seed-milestones.ts` and `seed-releases.ts`, so it never fails for that reason.
 
-…and renders them. When a maintainer pushes to any of those repos, CI rebuilds
-and the site moves. Nobody edits a page to ship a milestone.
-
-If the network is unreachable at build time, a committed snapshot
-(`src/data/seed.ts`, `seed-milestones.ts`, `seed-releases.ts`) keeps the build
-green — live data always overrides it.
-
-Documentation lives elsewhere. The install guide, the FAQ, the colophon, the
-specification, the roadmap and the changelog are published by
-[`website-docs.lemonfiber.app`](https://github.com/lemonfiber/website-docs.lemonfiber.app),
-which renders pinned revisions instead of live ones — so a reader following
-instructions gets the ones that match the release they installed. This site
-links there; it does not keep a second copy.
+User documentation is not here. Installing, the FAQ, the specification, the
+roadmap and the changelog are on
+[docs.lemonfiber.app](https://docs.lemonfiber.app), built from
+[`website-docs.lemonfiber.app`](https://github.com/lemonfiber/website-docs.lemonfiber.app).
+This site links there rather than keeping a second copy.
 
 ## Pages
 
-| Route           | What it shows                                                                  |
-| --------------- | ------------------------------------------------------------------------------ |
-| `/`             | The pitch, a live status strip, the "runs in slices" switcher, the 20 services |
-| `/transparency` | Every repo, release and open issue — read live from GitHub                     |
-| `/contribute`   | Ways to help + live good-first-issues                                          |
-| `/404`          | The one that says where everything else went                                   |
+| Route           | What it shows                                                           |
+| --------------- | ----------------------------------------------------------------------- |
+| `/`             | The pitch, a live status strip, the forms switcher, the twenty services |
+| `/transparency` | Every repo, release and open issue — read live from GitHub              |
+| `/contribute`   | Ways to help + live good-first-issues                                   |
+| `/404`          | The one that says where everything else went                            |
 
 ## Develop
 
@@ -76,12 +74,7 @@ reads. It is not the whole of CI and the `justfile` says what it leaves out: the
 four commit rules, which the hook answers before the push, and the forge-side
 jobs, which no clone can run.
 
-`npm ci` is also what turns on this repository's pre-push hook, which refuses a
-push that would leave a branch carrying no commit `origin/main` does not — what
-pushing the trunk over a feature branch looks like. npm's `prepare` script does
-it, so `npm install` and `just install` serve too. A clone nobody has installed
-into has no hook: it is `git config core.hooksPath .githooks`, per clone, and git
-cannot read `.githooks/` on its own.
+`npm ci` also turns on the repository's git hooks.
 
 ## Layout
 
@@ -100,9 +93,13 @@ src/styles/tokens.css  design tokens mirrored from lemonfiber/brand
 
 ## Contributing
 
-This project's spec is **canonical**: every change cites a spec identifier that
-already exists. Before your first PR, read [AGENTS.md](AGENTS.md) and the
-[contributing guide](https://github.com/lemonfiber/spec/blob/main/50-governance/contributing.md).
+Every change cites a requirement in the
+[specification](https://github.com/lemonfiber/spec). Read the
+[contributing guide](https://github.com/lemonfiber/spec/blob/main/50-governance/contributing.md)
+and [AGENTS.md](AGENTS.md) before your first pull request. Report a
+vulnerability privately, as
+[SECURITY.md](https://github.com/lemonfiber/.github/blob/main/SECURITY.md)
+describes.
 
 ## Licence
 
