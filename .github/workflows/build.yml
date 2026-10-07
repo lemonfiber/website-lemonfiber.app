@@ -6,6 +6,13 @@ name: build
 on:
   pull_request:
 
+# A pull request pushed again cancels the run on its old head, which nobody
+# will read and which holds runners the org shares (Q-R75). Every other event
+# is grouped by its own run, so it is never cancelled and never cancels.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.ref || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,7 +21,40 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          # Every commit, so the base is here to compare against.
+          fetch-depth: 0
           persist-credentials: false
+      # Whether the change reaches anything but formatting. Of what this job
+      # checks, only Prettier reads the readme, the agent guides and the
+      # licence: nothing under `src/` or `scripts/` reads them and the build
+      # does not render them. A change to those alone, added or modified, is
+      # checked for formatting and nothing else. Any other file runs every step,
+      # and so does a file deleted or renamed, or a base commit that cannot be
+      # read. The job keeps running either way, so the required `build` always
+      # reports.
+      - name: What changed
+        id: scope
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          if [ -z "${BASE}" ] || ! git cat-file -e "${BASE}^{commit}" 2>/dev/null; then
+            echo "code=true" >> "$GITHUB_OUTPUT"
+            echo "No usable base commit, so every step runs."
+            exit 0
+          fi
+          changed="$(git diff --no-renames --name-status "${BASE}" HEAD)"
+          code=false
+          while IFS=$'\t' read -r status path; do
+            case "${status}:${path}" in
+            : | [AM]:README.md | [AM]:AGENTS.md | [AM]:CLAUDE.md | [AM]:LICENSE) ;;
+            *) code=true ;;
+            esac
+          done <<< "${changed}"
+          echo "code=${code}" >> "$GITHUB_OUTPUT"
+          if [ "${code}" = false ]; then
+            echo "Only files Prettier alone reads changed; the rest of the job is skipped."
+          fi
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version-file: .nvmrc
@@ -31,17 +71,26 @@ jobs:
       # site has had this since it was built; this one had an `.editorconfig`
       # describing a shape nothing measured, and twenty-two files that did not
       # match it.
+      - name: The changed files are formatted
+        if: steps.scope.outputs.code != 'true'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: git diff --name-only --diff-filter=AM -z "${BASE}" HEAD | xargs -0 -r ./node_modules/.bin/prettier --check --ignore-unknown
       - name: Formatted
+        if: steps.scope.outputs.code == 'true'
         run: npm run format:check
       - name: Type-check
+        if: steps.scope.outputs.code == 'true'
         run: npm run check
       # After the type-check, because the rules that matter most here are the
       # type-aware ones and a file that does not compile gives them nothing to
       # read. The sibling docs site has had this since it was built; this one
       # had `.editorconfig`, `astro check`, and nothing that reads a type twice.
       - name: Lint
+        if: steps.scope.outputs.code == 'true'
         run: npm run lint
       - name: Build
+        if: steps.scope.outputs.code == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build
@@ -49,4 +98,5 @@ jobs:
       # The shared hygiene gate checks the repository's Markdown; this checks
       # what the build produced, which is where a retired route stays linked.
       - name: Every internal link resolves
+        if: steps.scope.outputs.code == 'true'
         run: npm run links
