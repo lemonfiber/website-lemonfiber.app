@@ -35,14 +35,18 @@ const FEATURE = /^[A-N]\d+$/;
 /** A page of the specification, by path from its root. */
 const PAGE = /^[0-9a-z][\w./-]*\.md$/;
 
+/** `text` without the dashes it starts or ends with, read in one pass. */
+function trimDashes(text: string): string {
+  let start = 0;
+  let end = text.length;
+  while (start < end && text[start] === "-") start++;
+  while (end > start && text[end - 1] === "-") end--;
+  return text.slice(start, end);
+}
+
 /** A proposal's file name, from its title. */
 export function slug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 56)
-    .replace(/-+$/, "");
+  return trimDashes(trimDashes(title.toLowerCase().replace(/[^a-z0-9]+/g, "-")).slice(0, 56));
 }
 
 /** A field as Markdown prose; a line that would open a heading is escaped. */

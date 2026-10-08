@@ -88,6 +88,9 @@ describe("the file", () => {
   it("is named from its title", () => {
     expect(slug("  Scans: on a schedule!  ")).toBe("scans-on-a-schedule");
     expect(slug("x".repeat(55) + " yz")).toBe("x".repeat(55));
+    expect(slug("--- a -- b ---")).toBe("a-b");
+    expect(slug("!!!")).toBe("");
+    expect(slug("-".repeat(50000) + "x")).toBe("x");
     expect(filename(proposal)).toBe(
       "10-functional/proposals/scheduled-scans.md",
     );
