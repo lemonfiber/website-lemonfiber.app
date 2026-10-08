@@ -1,7 +1,9 @@
 // Static, editorial content — the parts of the site that are prose, not motor
-// data. The service/profile/form model mirrors lemonfiber-media-stack/stack.toml
-// exactly, so the "runs in slices" switcher shows what `lemonfiber up <form>`
-// truly boots.
+// data. The service/profile/form model follows lemonfiber-media-stack's
+// manifest: profiles and forms in `stack.toml`, each service in the
+// `services/<id>.toml` its `include` names. It draws the twenty services the
+// stack runs from other projects; lemonfiber's own decline and request-gate
+// services, in the `media` profile, are not drawn.
 
 export const site = {
   name: "Lemonfiber",
@@ -51,7 +53,7 @@ export const promises = [
   },
 ] as const;
 
-// profile key → the services it starts. Mirrors stack.toml [[service]].profile.
+// profile key → the drawn services it starts, as each service file's `profile` says.
 export const profiles: Record<string, { label: string; services: string[] }> = {
   search: {
     label: "Indexers",
