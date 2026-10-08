@@ -1,0 +1,142 @@
+---
+import Base from "../../layouts/Base.astro";
+import FixADoc from "../../components/FixADoc";
+import { fixADocCopy as t } from "../../i18n";
+import { listing, SITES } from "../../lib/fix-a-doc";
+import { readProvenance } from "../../lib/provenance-source";
+
+const tables = await readProvenance();
+const sites = SITES.map((site) => ({
+  site,
+  read: tables[site] !== null,
+  groups: listing(tables[site], site),
+}));
+---
+
+<Base active="contribute" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container fix">
+      <FixADoc client:load t={t} />
+      <noscript>
+        <p class="fix__note">{t.noscript}</p>
+      </noscript>
+      <p class="fix__note">{t.privacy}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container fix">
+      <h2 class="sec__h">{t.listHeading}</h2>
+      <p class="fix__note">{t.listLead}</p>
+      {sites.map(({ site, read, groups }) => (
+        <section class="fix__site" aria-labelledby={`site-${site}`}>
+          <h3 id={`site-${site}`} class="mono">
+            {site}
+          </h3>
+          {!read && <p class="fix__note">{t.unread}</p>}
+          {groups.map((group) => (
+            <details class="fix__group">
+              <summary>
+                <span class="mono">{group.label}</span> ·{" "}
+                {t.pagesOf.replace("{n}", String(group.pages.length))}
+              </summary>
+              <ul class="fix__pages">
+                {group.pages.map((p) => (
+                  <li>
+                    <a href={p.url}>{p.url.replace(`https://${site}`, "")}</a>
+                    <span class="mono">{p.path}</span>
+                    <a href={p.edit}>{t.editShort}</a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          ))}
+        </section>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .fix {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 48rem;
+  }
+  .fix__note {
+    margin: 0;
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .fix__site h3 {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: var(--size-body);
+  }
+  .fix__group summary {
+    cursor: pointer;
+  }
+  .fix__pages {
+    display: grid;
+    gap: var(--space-1);
+    margin: var(--space-2) 0 var(--space-3);
+    padding-left: var(--space-4);
+  }
+  .fix__pages li {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    overflow-wrap: anywhere;
+  }
+  .fix :global(.fad__form) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    align-items: end;
+  }
+  .fix :global(.fad__field) {
+    display: grid;
+    flex: 1 1 20rem;
+    gap: var(--space-1);
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .fix :global(.fad__field input) {
+    font: inherit;
+    font-size: var(--size-body);
+    color: var(--text);
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    padding: var(--space-1) var(--space-2);
+  }
+  .fix :global(.fad__answer) {
+    display: grid;
+    gap: var(--space-3);
+    justify-items: start;
+    margin-top: var(--space-4);
+  }
+  .fix :global(.fad__refused) {
+    margin: 0;
+  }
+  .fix :global(.fad__source) {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: var(--space-1) var(--space-3);
+    margin: 0;
+  }
+  .fix :global(.fad__source dt) {
+    color: var(--text-muted);
+  }
+  .fix :global(.fad__source dd) {
+    margin: 0;
+    overflow-wrap: anywhere;
+  }
+</style>
