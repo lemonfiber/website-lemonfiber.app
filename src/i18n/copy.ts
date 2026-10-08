@@ -18,6 +18,7 @@ export const copy = {
     roadmap: "Roadmap",
     board: "Board",
     releases: "Releases",
+    spec: "Specification",
     repos: "Repositories",
     inFlight: "In flight",
     pick: "Pick something up",

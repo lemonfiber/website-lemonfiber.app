@@ -5,10 +5,16 @@ export default defineConfig({
     include: ["src/**/*.test.ts"],
     coverage: {
       provider: "v8",
-      // The data layer. github.ts reads the GitHub API at build time and has
-      // no suite of its own; everything else in it is held at 100%.
+      // The data layer. github.ts reads the GitHub API and spec-source.ts
+      // runs git, each at build time with no suite of its own; everything
+      // else in it is held at 100%.
       include: ["src/lib/**/*.ts"],
-      exclude: ["src/**/*.test.ts", "src/lib/github.ts", "src/lib/types.ts"],
+      exclude: [
+        "src/**/*.test.ts",
+        "src/lib/github.ts",
+        "src/lib/spec-source.ts",
+        "src/lib/types.ts",
+      ],
       reporter: ["text"],
       thresholds: {
         lines: 100,

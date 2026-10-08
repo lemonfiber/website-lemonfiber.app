@@ -10,20 +10,21 @@ Lemonfiber is source-available under the Hippocratic License 3.0. Every line is 
 
 Licence: https://firstdonoharm.dev`;
 
-/** Pages of the documentation site that answer questions about behaviour. */
+/** The specification's pages and the documentation site's that answer
+ *  questions about behaviour. */
 export const docsPages = [
   {
     url: "https://docs.lemonfiber.app/",
     title: "Documentation",
-    note: "installing it, running it, fixing it, its API, and the specification, in one searchable place.",
+    note: "installing it, running it, fixing it and its API, in one searchable place.",
   },
   {
-    url: "https://docs.lemonfiber.app/spec/",
+    url: "https://lemonfiber.app/spec/",
     title: "Specification",
-    note: "the canonical description of every behaviour, rendered from a pinned revision of the spec repository. Every page names the revision it was rendered from.",
+    note: "the canonical description of every behaviour, rendered at the commit of the spec repository the board snapshot read, with an anchor for every requirement. Every page names the revision it was rendered from.",
   },
   {
-    url: "https://docs.lemonfiber.app/spec/00-overview/vision/",
+    url: "https://lemonfiber.app/spec/00-overview/vision/",
     title: "Vision",
     note: "the three problems it exists to solve, and the constraints everything else follows from.",
   },
@@ -38,12 +39,12 @@ export const docsPages = [
     note: "generated from what the binary parses, so it cannot describe a command that does not exist.",
   },
   {
-    url: "https://docs.lemonfiber.app/spec/00-overview/decisions/",
+    url: "https://lemonfiber.app/spec/00-overview/decisions/",
     title: "Architecture decisions",
     note: "each with the reasoning and the rejected alternatives.",
   },
   {
-    url: "https://docs.lemonfiber.app/spec/00-overview/glossary/",
+    url: "https://lemonfiber.app/spec/00-overview/glossary/",
     title: "Glossary",
     note: 'what "form", "profile" and "slice" mean here specifically.',
   },
