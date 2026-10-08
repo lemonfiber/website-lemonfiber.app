@@ -21,6 +21,9 @@ const routes = [
   "/in-flight/",
   "/pick/",
   "/pick/area/A/",
+  "/releases/",
+  "/releases/0.1.0/",
+  "/proposals/",
 ];
 const themes = { light: "paper", dark: "ink" } as const;
 

@@ -1,0 +1,152 @@
+---
+import Base from "../../layouts/Base.astro";
+import SnapshotNote from "../../components/SnapshotNote.astro";
+import ReqLink from "../../components/ReqLink.astro";
+import { loadBoard } from "../../lib/board";
+import type { BoardRelease } from "../../lib/board";
+import { requirementPage } from "../../lib/feature-page";
+import { changelogUrl, gatedOn, referenceUrl } from "../../lib/releases";
+import { manifestUrl } from "../../lib/roadmap";
+import { releasesCopy as t, roadmapCopy } from "../../i18n";
+
+export async function getStaticPaths() {
+  const board = await loadBoard();
+  return board.releases.map((release) => ({
+    params: { version: release.version },
+    props: { release },
+  }));
+}
+
+const { release } = Astro.props as { release: BoardRelease };
+const board = await loadBoard();
+const page = (id: string) => requirementPage(board, id);
+const groups = release.groups.map((group) => ({
+  title: group.title,
+  entries: group.entries.map((entry) => ({
+    ...entry,
+    url: referenceUrl(entry.reference),
+  })),
+}));
+const goals = gatedOn(board, release.version);
+const hasManifest = board.versions.some((v) => v.version === release.version);
+---
+
+<Base
+  active="releases"
+  title={release.version}
+  description={t.descriptionOf(release.version)}
+>
+  <section class="section head">
+    <div class="container">
+      <a class="back" href="/releases/">
+        {t.back}
+      </a>
+      <h1 class="head__h mono">{release.version}</h1>
+      {release.delivers && <p class="lead">{release.delivers}</p>}
+      <p class="src">
+        {release.released_on && `${t.releasedOn} ${release.released_on} · `}
+        {release.tag && `${t.tag} ${release.tag} · `}
+        <a href={changelogUrl(board, release.version)}>{t.source}</a>
+        {hasManifest && (
+          <>
+            {" · "}
+            <a href={`/roadmap/${release.version}/`}>{t.roadmap}</a>
+            {" · "}
+            <a href={manifestUrl(board, release.version)}>
+              {roadmapCopy.manifest}
+            </a>
+          </>
+        )}
+      </p>
+      <SnapshotNote board={board} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {groups.map((group) => (
+        <section class="grp">
+          {group.title && <h2 class="sec__h">{group.title}</h2>}
+          <ul class="entries">
+            {group.entries.map((entry) => (
+              <li class="entry">
+                <p class="entry__summary">
+                  {entry.summary}
+                  {entry.url && (
+                    <>
+                      {" "}
+                      <a class="mono" href={entry.url}>
+                        {entry.reference}
+                      </a>
+                    </>
+                  )}
+                </p>
+                {entry.requirements.length > 0 && (
+                  <p class="entry__reqs">
+                    <span class="muted">{t.builds} </span>
+                    {entry.requirements.map((id) => (
+                      <ReqLink id={id} page={page(id)} />
+                    ))}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+
+      <h2 class="sec__h">{t.gatedOn}</h2>
+      {goals.length === 0 ? (
+        <p>{t.noGoals}</p>
+      ) : (
+        <p class="goals">
+          {goals.map((g) => (
+            <ReqLink id={g.id} page={page(g.id)} />
+          ))}
+        </p>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .back,
+  .src,
+  .src a,
+  .muted {
+    color: var(--text-muted);
+  }
+  .back,
+  .src {
+    font-size: var(--size-caption);
+  }
+  .head__h {
+    font-size: var(--size-display-l);
+    margin: var(--space-3) 0 var(--space-4);
+  }
+  .grp {
+    margin-bottom: var(--space-6);
+  }
+  .entries {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-3) 0 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .entry {
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .entry__summary {
+    margin: 0;
+  }
+  .entry__reqs,
+  .goals {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    margin: var(--space-2) 0 0;
+    font-size: var(--size-caption);
+  }
+</style>
