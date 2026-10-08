@@ -132,7 +132,7 @@ export function listing(table: unknown, site: string): ListedRepository[] {
   const routes =
     typeof table === "object" && table !== null ? Object.keys(table) : [];
   const groups = new Map<string, ListedRepository>();
-  for (const route of routes.sort()) {
+  for (const route of routes.toSorted((a, b) => a.localeCompare(b))) {
     const source = sourceOf(table, route);
     if (!source) continue;
     const group = groups.get(source.repository) ?? {
