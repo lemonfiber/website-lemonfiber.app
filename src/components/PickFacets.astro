@@ -1,0 +1,69 @@
+---
+// Links to the page of goals to pick up filtered to each version, area and
+// repository, so every filter is an address that works without script.
+import { PICK_FACETS, type PickFacet } from "../lib/pick";
+import { pickCopy as t } from "../i18n";
+
+interface Props {
+  values: Record<PickFacet, string[]>;
+  current?: { facet: PickFacet; value: string };
+}
+
+const { values, current } = Astro.props;
+const heading: Record<PickFacet, string> = {
+  version: t.byVersion,
+  area: t.byArea,
+  repo: t.byRepo,
+};
+---
+
+<nav class="facets" aria-label={t.title}>
+  {PICK_FACETS.map((facet) => (
+    <div class="facet">
+      <h2 class="facet__h">{heading[facet]}</h2>
+      <ul>
+        {values[facet].map((value) => {
+          const here = current?.facet === facet && current.value === value;
+          return (
+            <li>
+              <a
+                class="mono"
+                href={`/pick/${facet}/${value}/`}
+                aria-current={here ? "page" : undefined}
+              >
+                {value}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  ))}
+</nav>
+
+<style>
+  .facets {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    margin-top: var(--space-5);
+  }
+  .facet__h {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+    margin: 0 0 var(--space-2);
+    font-weight: 600;
+  }
+  .facet ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+  }
+  .facet a[aria-current="page"] {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+</style>

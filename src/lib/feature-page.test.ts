@@ -94,7 +94,7 @@ describe("featureState", () => {
           g.id === "B1-R1" ? { ...g, cited_in: ["lemonfiber@abc"] } : g,
         ),
       })),
-      pulls: board.pulls.map((p) => ({ ...p, cites: ["B1-R1"] })),
+      pulls: board.pulls.slice(0, 1).map((p) => ({ ...p, cites: ["B1-R1"] })),
     };
     const [b1] = featureState(cited, "B1");
     expect(b1?.citedIn).toEqual(["lemonfiber@abc"]);

@@ -281,10 +281,12 @@ samp {
   color: var(--accent-strong);
 }
 
+/* The warning colour alone is too light to read on its own tint in the paper
+ * theme, so the text takes some of the body colour; in ink it stays bright. */
 .badge--warn {
   background: var(--warn-bg);
   border-color: color-mix(in srgb, var(--warn) 35%, transparent);
-  color: var(--warn);
+  color: color-mix(in srgb, var(--warn) 60%, var(--text));
 }
 
 .badge--danger {

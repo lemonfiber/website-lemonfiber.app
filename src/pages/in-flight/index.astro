@@ -1,0 +1,216 @@
+---
+import Base from "../../layouts/Base.astro";
+import SnapshotNote from "../../components/SnapshotNote.astro";
+import ReqLink from "../../components/ReqLink.astro";
+import { loadBoard } from "../../lib/board";
+import { pullsByRepo } from "../../lib/in-flight";
+import { requirementPage } from "../../lib/feature-page";
+import { inFlightCopy as t } from "../../i18n";
+
+const board = await loadBoard();
+const groups = pullsByRepo(board);
+const { cap, stale_days: staleDays } = board.claims;
+const over = board.repos.filter((r) => r.over_cap);
+const urlOf = new Map(board.pulls.map((p) => [`${p.repo}#${p.number}`, p.url]));
+const age = (days: number | null) => {
+  if (days === null) return null;
+  return days === 0 ? t.today : t.daysAgo(days);
+};
+const page = (id: string) => requirementPage(board, id);
+const staleNote = t.staleNote.replace("{days}", String(staleDays));
+---
+
+<Base active="in-flight" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead}</p>
+      <SnapshotNote
+        board={board}
+        rule={{
+          path: "50-governance/working-in-the-repositories.md#claiming-work",
+          label: t.claiming,
+        }}
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container flags">
+      <div>
+        <h2 class="sec__h">{t.overCap}</h2>
+        {over.length === 0 ? (
+          <p>{t.overCapNone}</p>
+        ) : (
+          <ul class="list">
+            {over.map((r) => (
+              <li>
+                <a class="mono" href={`#${r.name}`}>
+                  {r.name}
+                </a>{" "}
+                <span class="badge badge--danger">
+                  {`${r.counted_pulls} ${t.counted} ${cap}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+      <div>
+        <h2 class="sec__h">{t.contested}</h2>
+        {board.contested.length === 0 ? (
+          <p>{t.contestedNone}</p>
+        ) : (
+          <ul class="list">
+            {board.contested.map((c) => (
+              <li>
+                <ReqLink id={c.id} page={page(c.id)} />
+                {" — "}
+                {c.pulls.map((key, i) => (
+                  <>
+                    {i > 0 && ", "}
+                    <a class="mono" href={urlOf.get(key)}>
+                      {key}
+                    </a>
+                  </>
+                ))}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {groups.length === 0 && <p>{t.none}</p>}
+      {groups.map((g) => (
+        <section class="repo" id={g.name} aria-labelledby={`h-${g.name}`}>
+          <h2 class="sec__h" id={`h-${g.name}`}>
+            <a class="mono" href={`/repos/${g.name}/`}>
+              {g.name}
+            </a>
+            <span class="repo__count">
+              {`${g.pulls.length} ${t.pullsIn}`}
+              {typeof g.repo?.counted_pulls === "number" &&
+                ` · ${g.repo.counted_pulls} ${t.counted} ${cap}`}
+            </span>
+            {g.repo?.over_cap && (
+              <span class="badge badge--danger">{t.overCapBadge}</span>
+            )}
+          </h2>
+          <ul class="pulls">
+            {g.pulls.map(({ pull, age: days, contested }) => (
+              <li class="pull card">
+                <div class="pull__top">
+                  <a class="pull__title" href={pull.url}>
+                    {`#${pull.number} ${pull.title ?? ""}`}
+                  </a>
+                  <span class="pull__state">
+                    {pull.draft ? t.draft : t.ready}
+                  </span>
+                  {pull.stale && (
+                    <span class="badge badge--warn">{t.stale}</span>
+                  )}
+                </div>
+                <p class="pull__meta">
+                  {pull.author && `${t.by} ${pull.author}`}
+                  {pull.bot && ` (${t.bot})`}
+                  {age(days) && ` · ${t.opened} ${age(days)}`}
+                  {pull.stale && ` · ${staleNote}`}
+                </p>
+                <p class="pull__cites">
+                  {pull.cites.length === 0 ? (
+                    <span class="muted">{t.citesNothing}</span>
+                  ) : (
+                    <>
+                      <span class="muted">{t.cites} </span>
+                      {pull.cites.map((id) => (
+                        <ReqLink id={id} page={page(id)} />
+                      ))}
+                    </>
+                  )}
+                  {contested.length > 0 && (
+                    <span class="badge badge--warn">
+                      {`${t.contests} ${contested.join(", ")}`}
+                    </span>
+                  )}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0;
+  }
+  .flags {
+    display: grid;
+    gap: var(--space-6);
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  }
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-3) 0 0;
+    display: grid;
+    gap: var(--space-2);
+  }
+  .repo {
+    margin-bottom: var(--space-7);
+    scroll-margin-top: calc(var(--nav-h) + var(--space-4));
+  }
+  .repo .sec__h {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+  .repo__count,
+  .pull__meta,
+  .pull__state,
+  .muted {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .pulls {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-4) 0 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .pull {
+    padding: var(--space-3) var(--space-4);
+  }
+  .pull__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+  .pull__title {
+    color: var(--text);
+    font-weight: 600;
+  }
+  .pull__meta,
+  .pull__cites {
+    margin: var(--space-2) 0 0;
+  }
+  .pull__cites {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-2);
+    font-size: var(--size-caption);
+  }
+</style>

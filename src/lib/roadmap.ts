@@ -31,6 +31,14 @@ export const PAGE_ORDER: readonly Verdict[] = [
 /** The lifecycle states of a version that has gone out. */
 export const FINISHED: readonly string[] = ["released", "yanked"];
 
+/** The lifecycle states of a version still taking work: neither out nor
+ *  waiting on its release with every goal met. */
+export const TAKING_WORK: readonly string[] = [
+  "staged",
+  "in_progress",
+  "planned",
+];
+
 /** How many of a version's goals have each verdict. */
 export function verdictCounts(version: Version): Record<Verdict, number> {
   const counts = Object.fromEntries(BAR_ORDER.map((v) => [v, 0])) as Record<
@@ -56,9 +64,37 @@ export function finished(version: Version): boolean {
   return FINISHED.includes(version.status);
 }
 
+/** A file in one of the organisation's repositories, at the revision the
+ *  snapshot read it at. */
+export function repoFile(
+  board: Pick<Board, "sources">,
+  repo: string,
+  path: string,
+): string {
+  return `${GITHUB}/${repo}/blob/${board.sources[repo] ?? "main"}/${path}`;
+}
+
+/** A directory in one of the organisation's repositories, at the revision the
+ *  snapshot read it at. */
+export function repoTree(
+  board: Pick<Board, "sources">,
+  repo: string,
+  path: string,
+): string {
+  return `${GITHUB}/${repo}/tree/${board.sources[repo] ?? "main"}/${path}`;
+}
+
 /** A file in `spec` at the revision the snapshot read. */
 export function specFile(board: Pick<Board, "sources">, path: string): string {
-  return `${GITHUB}/spec/blob/${board.sources.spec ?? "main"}/${path}`;
+  return repoFile(board, "spec", path);
+}
+
+/** The version in flight and the next: the first two on the train, in train
+ *  order, still taking work. */
+export function takingWork(board: Pick<Board, "versions">): Version[] {
+  return board.versions
+    .filter((v) => TAKING_WORK.includes(v.status))
+    .slice(0, 2);
 }
 
 /** The manifest of a version, at the revision the snapshot read. */

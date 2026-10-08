@@ -16,6 +16,11 @@ const routes = [
   "/board/area/A/",
   "/features/A1/",
   "/features/F8/",
+  "/repos/",
+  "/repos/lemonfiber/",
+  "/in-flight/",
+  "/pick/",
+  "/pick/area/A/",
 ];
 const themes = { light: "paper", dark: "ink" } as const;
 

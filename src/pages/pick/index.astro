@@ -1,0 +1,43 @@
+---
+import Base from "../../layouts/Base.astro";
+import SnapshotNote from "../../components/SnapshotNote.astro";
+import PickList from "../../components/PickList.astro";
+import PickFacets from "../../components/PickFacets.astro";
+import { loadBoard } from "../../lib/board";
+import { pickFacetValues, pickable } from "../../lib/pick";
+import { pickCopy as t } from "../../i18n";
+
+const board = await loadBoard();
+const versions = pickable(board);
+const values = pickFacetValues(versions.flatMap((v) => v.goals));
+---
+
+<Base active="pick" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead}</p>
+      <SnapshotNote
+        board={board}
+        rule={{
+          path: "50-governance/working-in-the-repositories.md#claiming-work",
+          label: t.claiming,
+        }}
+      />
+      <PickFacets values={values} />
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <PickList versions={versions} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0;
+  }
+</style>

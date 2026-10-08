@@ -1,0 +1,18 @@
+---
+// A requirement's identifier, linked to where this site shows it, or plain
+// where it belongs to no feature page.
+interface Props {
+  id: string;
+  page: string | null;
+}
+
+const { id, page } = Astro.props;
+---
+
+{page ? (
+  <a class="mono" href={page}>
+    {id}
+  </a>
+) : (
+  <span class="mono">{id}</span>
+)}

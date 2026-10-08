@@ -1,0 +1,141 @@
+---
+import Base from "../../layouts/Base.astro";
+import SnapshotNote from "../../components/SnapshotNote.astro";
+import { loadBoard } from "../../lib/board";
+import {
+  againstCap,
+  repoMapUrl,
+  repoStates,
+  type RepoState,
+} from "../../lib/repos";
+import { reposCopy as t } from "../../i18n";
+
+const board = await loadBoard();
+const states = repoStates(board);
+const cap = board.claims.cap;
+const trackerCell = (s: RepoState) =>
+  s.repo.tracker === null
+    ? { text: t.noTracker, href: null }
+    : { text: t.trackerState[s.repo.tracker], href: s.trackerUrl };
+const rows = states.map((s) => ({
+  s,
+  cell: trackerCell(s),
+  pulls: againstCap(s.repo),
+}));
+---
+
+<Base active="repos" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead.replace("{cap}", String(cap))}</p>
+      <SnapshotNote
+        board={board}
+        rule={{
+          path: "50-governance/working-in-the-repositories.md",
+          label: t.capRule,
+        }}
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="scroll" tabindex="0" role="region" aria-label={t.title}>
+        <table class="repos">
+          <thead>
+            <tr>
+              <th scope="col">{t.name}</th>
+              <th scope="col">{t.group}</th>
+              <th scope="col">{t.tracker}</th>
+              <th scope="col">{t.rows}</th>
+              <th scope="col">{t.pulls}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map(({ s, cell, pulls }) => (
+              <tr>
+                <th scope="row">
+                  <a class="mono" href={`/repos/${s.repo.name}/`}>
+                    {s.repo.name}
+                  </a>
+                </th>
+                <td>{s.repo.group}</td>
+                <td>
+                  {cell.href ? (
+                    <a href={cell.href}>{cell.text}</a>
+                  ) : (
+                    <span class:list={{ muted: s.repo.tracker === null }}>
+                      {cell.text}
+                    </span>
+                  )}
+                </td>
+                <td class="mono">
+                  {s.repo.tracker === "present"
+                    ? `${s.rows.open} · ${s.rows.partial} · ${s.rows.done}`
+                    : "—"}
+                </td>
+                <td>
+                  {pulls ? (
+                    <>
+                      <span class="mono">{`${pulls.counted} ${t.of} ${cap}`}</span>
+                      {pulls.bots > 0 && (
+                        <span class="muted">{` + ${t.bots(pulls.bots)}`}</span>
+                      )}
+                      {s.repo.over_cap && (
+                        <span class="badge badge--danger">{t.overCap}</span>
+                      )}
+                    </>
+                  ) : (
+                    <span class="muted">{t.notRead}</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p class="src">
+        <a href={repoMapUrl(board)}>{t.map}</a>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0;
+  }
+  .scroll {
+    overflow-x: auto;
+  }
+  .repos {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .repos th,
+  .repos td {
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    border-bottom: 1px solid var(--border-soft);
+    vertical-align: baseline;
+  }
+  .repos thead th {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+    font-weight: 600;
+  }
+  .repos td .badge {
+    margin-left: var(--space-2);
+  }
+  .muted,
+  .src a {
+    color: var(--text-muted);
+  }
+  .src {
+    font-size: var(--size-caption);
+    margin-top: var(--space-4);
+  }
+</style>
