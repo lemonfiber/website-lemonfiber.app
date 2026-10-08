@@ -45,18 +45,17 @@ export function pullsByRepo(
     const at = board.repos.findIndex((r) => r.name === name);
     return at === -1 ? board.repos.length : at;
   };
-  return names
-    .sort((a, b) => order(a) - order(b) || a.localeCompare(b))
-    .map((name) => ({
-      repo: board.repos.find((r) => r.name === name) ?? null,
-      name,
-      pulls: board.pulls
-        .filter((p) => p.repo === name)
-        .sort((a, b) => (a.created_at ?? "").localeCompare(b.created_at ?? ""))
-        .map((pull) => ({
-          pull,
-          age: daysBetween(pull.created_at, board.generated_at),
-          contested: contestedBy.get(`${pull.repo}#${pull.number}`) ?? [],
-        })),
-    }));
+  names.sort((a, b) => order(a) - order(b) || a.localeCompare(b));
+  return names.map((name) => ({
+    repo: board.repos.find((r) => r.name === name) ?? null,
+    name,
+    pulls: board.pulls
+      .filter((p) => p.repo === name)
+      .sort((a, b) => (a.created_at ?? "").localeCompare(b.created_at ?? ""))
+      .map((pull) => ({
+        pull,
+        age: daysBetween(pull.created_at, board.generated_at),
+        contested: contestedBy.get(`${pull.repo}#${pull.number}`) ?? [],
+      })),
+  }));
 }
