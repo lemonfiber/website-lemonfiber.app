@@ -179,98 +179,58 @@ export interface Service {
   household?: boolean;
 }
 
+// One service: its stack id, the name and role shown, its profile and the
+// pipeline stage it sits in. `vpn` is a service that reaches out only through
+// Gluetun's tunnel; `household` one the household reaches, on the LAN.
+const service = (
+  id: string,
+  name: string,
+  role: string,
+  profile: string,
+  group: string,
+  reach: { vpn?: boolean; household?: boolean } = {},
+): Service => ({ id, name, role, profile, group, ...reach });
+
 // What the household reaches: a service of the `media` profile on the LAN.
-const library = (id: string, name: string, role: string): Service => ({
-  id,
-  name,
-  role,
-  profile: "media",
-  group: "Enjoy",
-  household: true,
-});
+const library = (id: string, name: string, role: string): Service =>
+  service(id, name, role, "media", "Enjoy", { household: true });
+
+const tunnelled = { vpn: true };
 
 // Every service the stack runs, in the order the pipeline flows. The build
 // refuses a list that differs from the stack manifest's `include`.
 export const services: Service[] = [
-  {
-    id: "prowlarr",
-    name: "Prowlarr",
-    role: "Indexer manager",
-    profile: "search",
-    group: "Find",
-  },
-  {
-    id: "flaresolverr",
-    name: "FlareSolverr",
-    role: "Cloudflare solver",
-    profile: "search",
-    group: "Find",
-  },
-  {
-    id: "nzbhydra2",
-    name: "NZBHydra2",
-    role: "Meta-indexer",
-    profile: "search",
-    group: "Find",
-  },
-  {
-    id: "sabnzbd",
-    name: "SABnzbd",
-    role: "Usenet downloader",
-    profile: "usenet",
-    group: "Download",
-  },
-  {
-    id: "gluetun",
-    name: "Gluetun",
-    role: "VPN gateway",
-    profile: "torrent",
-    group: "Download",
-    vpn: true,
-  },
-  {
-    id: "qbittorrent",
-    name: "qBittorrent",
-    role: "Torrent client",
-    profile: "torrent",
-    group: "Download",
-    vpn: true,
-  },
-  {
-    id: "sonarr",
-    name: "Sonarr",
-    role: "TV automation",
-    profile: "tv",
-    group: "Organise",
-  },
-  {
-    id: "radarr",
-    name: "Radarr",
-    role: "Movie automation",
-    profile: "movies",
-    group: "Organise",
-  },
-  {
-    id: "lidarr",
-    name: "Lidarr",
-    role: "Music automation",
-    profile: "music",
-    group: "Organise",
-  },
-  {
-    id: "bindery",
-    name: "Bindery",
-    role: "Book automation",
-    profile: "books",
-    group: "Organise",
-  },
-  {
-    id: "bazarr",
-    name: "Bazarr",
-    role: "Subtitles",
-    profile: "subs",
-    group: "Organise",
-  },
+  service("prowlarr", "Prowlarr", "Indexer manager", "search", "Find"),
+  service(
+    "flaresolverr",
+    "FlareSolverr",
+    "Cloudflare solver",
+    "search",
+    "Find",
+  ),
+  service("nzbhydra2", "NZBHydra2", "Meta-indexer", "search", "Find"),
+  service("sabnzbd", "SABnzbd", "Usenet downloader", "usenet", "Download"),
+  service(
+    "gluetun",
+    "Gluetun",
+    "VPN gateway",
+    "torrent",
+    "Download",
+    tunnelled,
+  ),
+  service(
+    "qbittorrent",
+    "qBittorrent",
+    "Torrent client",
+    "torrent",
+    "Download",
+    tunnelled,
+  ),
+  service("sonarr", "Sonarr", "TV automation", "tv", "Organise"),
+  service("radarr", "Radarr", "Movie automation", "movies", "Organise"),
+  service("lidarr", "Lidarr", "Music automation", "music", "Organise"),
+  service("bindery", "Bindery", "Book automation", "books", "Organise"),
+  service("bazarr", "Bazarr", "Subtitles", "subs", "Organise"),
   library("jellyfin", "Jellyfin", "Media server"),
   library("seerr", "Seerr", "Request portal"),
   library("calibre-web-automated", "Calibre-Web-Automated", "Ebook library"),
@@ -279,42 +239,18 @@ export const services: Service[] = [
   // lemonfiber's own two. The request gate holds Sonarr's, Radarr's and
   // Jellyfin's keys so Seerr holds none, and answers only inside the stack; the
   // decline service is on the LAN, where somebody invited can turn it down.
-  {
-    id: "request-gate",
-    name: "Request gate",
-    role: "Holds Seerr's keys",
-    profile: "media",
-    group: "Enjoy",
-  },
+  service(
+    "request-gate",
+    "Request gate",
+    "Holds Seerr's keys",
+    "media",
+    "Enjoy",
+  ),
   library("decline", "Decline service", "Turning an invitation down"),
-  {
-    id: "recyclarr",
-    name: "Recyclarr",
-    role: "Quality profiles",
-    profile: "tuning",
-    group: "Tune",
-  },
-  {
-    id: "unpackerr",
-    name: "Unpackerr",
-    role: "Archive extraction",
-    profile: "tuning",
-    group: "Tune",
-  },
-  {
-    id: "homepage",
-    name: "Homepage",
-    role: "Dashboard",
-    profile: "dash",
-    group: "Access",
-  },
-  {
-    id: "caddy",
-    name: "Caddy",
-    role: "Reverse proxy",
-    profile: "proxy",
-    group: "Access",
-  },
+  service("recyclarr", "Recyclarr", "Quality profiles", "tuning", "Tune"),
+  service("unpackerr", "Unpackerr", "Archive extraction", "tuning", "Tune"),
+  service("homepage", "Homepage", "Dashboard", "dash", "Access"),
+  service("caddy", "Caddy", "Reverse proxy", "proxy", "Access"),
 ];
 
 // Compute the container set a form boots, from its profiles. Pure — used by
