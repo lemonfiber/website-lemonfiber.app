@@ -3,9 +3,18 @@ import Base from "../layouts/Base.astro";
 import { getSiteData } from "../lib/github";
 import { site, helpWays } from "../data/site";
 import { relativeTime } from "../lib/format";
+import { assists } from "../data/assists";
+import { parityTable } from "../lib/assists";
+import { loadBoard } from "../lib/board";
 
 const data = await getSiteData();
 const gfi = data.goodFirstIssues;
+const board = await loadBoard();
+const rows = parityTable(assists, board.tools);
+const toolCommit = board.sources["tool-lfdev"];
+const commandsSource = toolCommit
+  ? `${site.githubOrg}/tool-lfdev/blob/${toolCommit}/commands.json`
+  : null;
 ---
 
 <Base
@@ -68,6 +77,61 @@ const gfi = data.goodFirstIssues;
             </div>
           </article>
         ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="parity-h">
+    <div class="container">
+      <p class="eyebrow">Everything here, without the website</p>
+      <h2 class="sec__h" id="parity-h">
+        Every assist, and the command that does the same.
+      </h2>
+      <p class="lead parity__lead">
+        Nothing on this site is the only way to do something. Each command of
+        <code>lfdev</code>, the developer command line, is listed with what it
+        leaves behind and, where there is one, the page here that does the same.
+      </p>
+      <div class="parity__scroll">
+        <table class="parity">
+          <caption class="parity__caption">
+            The commands as<code>lfdev</code>lists them
+            {commandsSource && (
+              <>
+                {" "}
+                in <a href={commandsSource}>commands.json</a>
+              </>
+            )}
+            .
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Command</th>
+              <th scope="col">On this site</th>
+              <th scope="col">What it leaves</th>
+              <th scope="col">What helps after</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r) => (
+              <tr>
+                <th scope="row">
+                  <code class="parity__usage">{r.usage}</code>
+                  <span class="parity__purpose">{r.purpose}</span>
+                </th>
+                <td>
+                  {r.site ? (
+                    <a href={r.site.href}>{r.site.label}</a>
+                  ) : (
+                    "Only the command line"
+                  )}
+                </td>
+                <td>{r.produces}</td>
+                <td>{r.after ?? "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
@@ -214,6 +278,52 @@ const gfi = data.goodFirstIssues;
 
   .sec__h {
     font-size: var(--size-display-l);
+  }
+  .parity__lead {
+    margin-top: var(--space-4);
+    max-width: 62ch;
+  }
+  .parity__scroll {
+    margin-top: var(--space-6);
+    overflow-x: auto;
+  }
+  .parity {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+  }
+  .parity__caption {
+    caption-side: bottom;
+    text-align: left;
+    padding-top: var(--space-3);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+  .parity__caption a,
+  .parity td a {
+    color: var(--accent-strong);
+    text-decoration: underline;
+  }
+  .parity th,
+  .parity td {
+    text-align: left;
+    vertical-align: top;
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--border);
+  }
+  .parity thead th {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+  .parity__usage {
+    display: block;
+    white-space: nowrap;
+  }
+  .parity__purpose {
+    display: block;
+    margin-top: var(--space-1);
+    font-weight: 400;
+    color: var(--text-muted);
   }
   .gfi__head {
     display: flex;
