@@ -1,0 +1,93 @@
+---
+import Base from "../../layouts/Base.astro";
+import SnapshotNote from "../../components/SnapshotNote.astro";
+import { loadBoard } from "../../lib/board";
+import { changelogUrl, entryCount, newestFirst } from "../../lib/releases";
+import { repoTree } from "../../lib/roadmap";
+import { releasesCopy as t } from "../../i18n";
+
+const board = await loadBoard();
+const releases = newestFirst(board);
+---
+
+<Base active="releases" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead}</p>
+      <SnapshotNote board={board} />
+      <p class="src">
+        <a href={repoTree(board, "lemonfiber", "reference/changelog")}>
+          {t.changelog}
+        </a>
+      </p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      {releases.length === 0 && <p>{t.none}</p>}
+      <ol class="rels">
+        {releases.map((r) => (
+          <li class="rel card">
+            <div class="rel__top">
+              <a class="rel__num mono" href={`/releases/${r.version}/`}>
+                {r.version}
+              </a>
+              <span class="rel__meta mono">
+                {r.released_on && `${t.releasedOn} ${r.released_on} · `}
+                {t.entries(entryCount(r))}
+              </span>
+            </div>
+            {r.delivers && <p class="rel__delivers">{r.delivers}</p>}
+            <a class="src" href={changelogUrl(board, r.version)}>
+              {t.source}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0;
+  }
+  .src,
+  .src a,
+  .rel__meta {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .rels {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-4);
+  }
+  .rel {
+    padding: var(--space-4) var(--space-5);
+    display: grid;
+    gap: var(--space-2);
+  }
+  .rel__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3);
+  }
+  .rel__num {
+    font-weight: 700;
+    font-size: var(--size-display-m);
+    color: var(--text);
+  }
+  .rel__delivers {
+    margin: 0;
+  }
+  .rel .src {
+    justify-self: start;
+  }
+</style>

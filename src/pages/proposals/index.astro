@@ -1,0 +1,96 @@
+---
+import Base from "../../layouts/Base.astro";
+import SnapshotNote from "../../components/SnapshotNote.astro";
+import { loadBoard } from "../../lib/board";
+import { feed } from "../../lib/proposals";
+import { proposalsCopy as t } from "../../i18n";
+
+const board = await loadBoard();
+const groups = feed(board);
+---
+
+<Base active="proposals" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead}</p>
+      <SnapshotNote
+        board={board}
+        rule={{ path: "50-governance/rfc-process.md", label: t.process }}
+      />
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      {groups.map((group) => (
+        <section class="grp" aria-labelledby={`k-${group.kind}`}>
+          <h2 class="sec__h" id={`k-${group.kind}`}>
+            {t.kinds[group.kind]}{" "}
+            <span class="count mono">({group.items.length})</span>
+          </h2>
+          {group.items.length === 0 ? (
+            <p>{t.none}</p>
+          ) : (
+            <ul class="items">
+              {group.items.map((item) => (
+                <li class="item">
+                  {item.page ? (
+                    <a class="mono item__id" href={item.page}>
+                      {item.label}
+                    </a>
+                  ) : (
+                    <span class="mono item__id">{item.label}</span>
+                  )}
+                  <span class="item__title">{item.title}</span>
+                  {item.source && (
+                    <a class="item__src" href={item.source}>
+                      {t.source}
+                    </a>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0;
+  }
+  .grp {
+    margin-bottom: var(--space-7);
+  }
+  .count,
+  .item__src {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .items {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-3) 0 0;
+    display: grid;
+    gap: var(--space-3);
+  }
+  .item {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-1) var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .item__id {
+    font-weight: 700;
+  }
+  .item__title {
+    flex: 1 1 20rem;
+  }
+</style>

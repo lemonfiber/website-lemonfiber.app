@@ -11,3 +11,4 @@ export { roadmapCopy } from "./roadmap";
 export { boardCopy } from "./board";
 export { featureCopy } from "./feature";
 export { snapshotCopy, reposCopy, inFlightCopy, pickCopy } from "./work";
+export { releasesCopy, proposalsCopy } from "./releases";
