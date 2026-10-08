@@ -46,7 +46,9 @@ function trimDashes(text: string): string {
 
 /** A proposal's file name, from its title. */
 export function slug(title: string): string {
-  return trimDashes(trimDashes(title.toLowerCase().replace(/[^a-z0-9]+/g, "-")).slice(0, 56));
+  return trimDashes(
+    trimDashes(title.toLowerCase().replace(/[^a-z0-9]+/g, "-")).slice(0, 56),
+  );
 }
 
 /** A field as Markdown prose; a line that would open a heading is escaped. */
