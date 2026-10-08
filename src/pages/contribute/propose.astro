@@ -1,0 +1,136 @@
+---
+import Base from "../../layouts/Base.astro";
+import ProposeForm from "../../components/ProposeForm";
+import { proposeCopy as t } from "../../i18n";
+import { loadBoard } from "../../lib/board";
+import { NEW_FILE, PROPOSALS, proposalText } from "../../lib/propose";
+
+const board = await loadBoard();
+const areas = board.areas.map((a) => ({ id: a.id, name: a.name ?? a.id }));
+const features = board.features.map((f) => f.id);
+// Without script, the file starts as the template and is edited in place.
+const template = proposalText({
+  kind: "proposal",
+  area: "B",
+  title: "A short noun phrase naming the capability",
+  amends: "B3",
+  problem: "What does not work today, and for whom.",
+  statements: [
+    "The dashboard MUST show each service's state within one refresh of it changing.",
+  ],
+  rationale: "Why this, and what was considered instead.",
+  missing: "",
+});
+---
+
+<Base active="contribute" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container propose">
+      <ProposeForm client:load t={t} areas={areas} features={features} />
+      <noscript>
+        <p class="propose__note">{t.noscript}</p>
+        <form class="propose__plain" method="get" action={NEW_FILE}>
+          <label for="plain-filename">{t.plainFilename}</label>
+          <input
+            id="plain-filename"
+            name="filename"
+            type="text"
+            value={`${PROPOSALS}/a-short-name.md`}
+          />
+          <label for="plain-value">{t.plainValue}</label>
+          <textarea
+            id="plain-value"
+            name="value"
+            rows="22"
+          >{template}</textarea>
+          <button class="btn btn--primary" type="submit">
+            {t.open}
+          </button>
+        </form>
+      </noscript>
+      <p class="propose__note">{t.privacy}</p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .propose {
+    display: grid;
+    gap: var(--space-4);
+    max-width: 52rem;
+  }
+  .propose__note {
+    margin: 0;
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .propose__plain,
+  .propose :global(.pf__form),
+  .propose :global(.pf__out) {
+    display: grid;
+    gap: var(--space-3);
+  }
+  .propose :global(.pf) {
+    display: grid;
+    gap: var(--space-6);
+  }
+  .propose :global(.pf__field) {
+    display: grid;
+    gap: var(--space-1);
+  }
+  .propose :global(.pf__field label),
+  .propose :global(.pf__kind legend),
+  .propose__plain label {
+    font-weight: 600;
+  }
+  .propose :global(.pf__kind) {
+    display: grid;
+    gap: var(--space-2);
+    border: 0;
+    padding: 0;
+  }
+  .propose :global(.pf__hint) {
+    margin: 0;
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .propose :global(input[type="text"]),
+  .propose :global(select),
+  .propose :global(textarea) {
+    font: inherit;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--text);
+  }
+  .propose :global(.pf__h) {
+    font-size: var(--size-display-s, 1.1rem);
+    margin: var(--space-2) 0 0;
+  }
+  .propose :global(.pf__preview) {
+    margin: 0;
+    padding: var(--space-3);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    font-size: 0.85rem;
+  }
+  .propose :global(.pf__faults) {
+    margin: 0;
+    padding-left: 1.2rem;
+  }
+  .propose :global(.pf__steps) {
+    margin: 0;
+  }
+</style>

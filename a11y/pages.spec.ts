@@ -10,6 +10,7 @@ const routes = [
   "/transparency/",
   "/contribute/",
   "/contribute/fix-a-doc/",
+  "/contribute/propose/",
   "/404.html",
   "/roadmap/",
   "/roadmap/0.1.0/",

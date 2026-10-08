@@ -12,4 +12,4 @@ export { boardCopy } from "./board";
 export { featureCopy } from "./feature";
 export { snapshotCopy, reposCopy, inFlightCopy, pickCopy } from "./work";
 export { releasesCopy, proposalsCopy, specCopy } from "./releases";
-export { fixADocCopy } from "./assist";
+export { fixADocCopy, proposeCopy } from "./assist";
