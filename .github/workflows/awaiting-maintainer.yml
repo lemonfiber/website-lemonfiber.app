@@ -1,19 +1,30 @@
 # The maintainer queue flag. Triggers are declared here because a reusable
 # cannot declare its caller's; the behaviour lives in the spec repo. OPS-R26, OPS-R27.
 #
-# Every workflow that supplies a required check is named, not `ci` alone. The flag
-# says a pull request passed CI, and that sentence is only true once all of them
-# have finished — `ci` carries the hygiene, security, sign-off and spec checks,
-# `build` carries the build, and `sonar` carries the analysis and its gate. Named
-# here rather than in the reusable because the wait list is read back out of this
-# file, so the two are the same words.
+# The list below is also the wait list. The flag only goes up once every check
+# `main` requires has passed, and the reusable reads this same list back out of
+# this file to know what it must see finish first, so a workflow missing from it
+# is a workflow the flag never waits for. The checks `main` requires come from
+# these workflows:
+#
+#   ci      spec-check / spec-check, dco / dco, commitlint / commitlint,
+#           attribution / attribution, workflow-pins / workflow-pins,
+#           hygiene / {actionlint, invite, lines, links, markdown, pins,
+#           shared-files, typos}, security / {gitleaks, osv-scanner}
+#   build   build
+#   sonar   gate / gate
+#   codeql  analyze (actions), analyze (javascript-typescript), alerts / alerts
+#
+# `SonarCloud Code Analysis` is required too and is posted by the SonarCloud app
+# rather than by a workflow, so it cannot be waited for by name; `sonar`'s
+# `gate / gate` reads that summary and cannot succeed before it exists.
+#
+# Add a workflow to branch protection and it belongs here in the same change.
 name: awaiting-maintainer
 on:
-  # `codeql` is in this list because of what its `alerts` job now does. The list
-  # is what re-asks the question when a workflow finishes; a gating workflow left
-  # out of it can be the last one to go green, with nothing afterwards to notice
-  # that the pull request became mergeable. The flag then never goes up and
-  # nothing says why.
+  # A gating workflow left out of this list can be the last one to finish, with
+  # nothing afterwards to notice the pull request became mergeable — the flag
+  # never goes up and nothing says why.
   workflow_run:
     workflows: [ci, build, sonar, codeql]
     types: [completed]
