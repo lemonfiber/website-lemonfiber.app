@@ -50,7 +50,15 @@ describe("featureCards", () => {
         {
           repo: "sdk-ts",
           present: true,
-          rows: [{ id: "A1-R1", state: "done", evidence: [], landed: null }],
+          rows: [
+            {
+              id: "A1-R1",
+              state: "done",
+              evidence: [],
+              landed: null,
+              path: "status.toml",
+            },
+          ],
         },
         ...board.trackers,
       ],

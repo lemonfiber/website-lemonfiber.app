@@ -94,6 +94,8 @@ export interface TrackerRow {
   state: "done" | "partial" | "open";
   evidence: string[];
   landed: string | null;
+  /** The file in its repository the row is kept in. */
+  path: string;
 }
 
 export interface Tracker {
@@ -113,7 +115,18 @@ export interface Pull {
   created_at: string | null;
   updated_at: string | null;
   head: string | null;
+  /** When its newest commit was made. */
+  last_commit_at: string | null;
+  /** A draft with no commit for longer than the report allows a claim to idle. */
+  stale: boolean;
   cites: string[];
+}
+
+/** A goal more than one open pull request from people or agents cites. */
+export interface Contested {
+  id: string;
+  /** Each as `repo#number`. */
+  pulls: string[];
 }
 
 export interface BoardRepo {
@@ -122,7 +135,11 @@ export interface BoardRepo {
   lang: string | null;
   note: string | null;
   pages: string[];
-  open_pulls: number;
+  /** Null, as are the two below, where its pull requests were not read. */
+  open_pulls: number | null;
+  /** The open pull requests from people and agents, which the cap counts. */
+  counted_pulls: number | null;
+  over_cap: boolean | null;
   tracker: "present" | "absent" | "unread" | null;
 }
 
@@ -159,6 +176,9 @@ export interface Board {
   versions: Version[];
   trackers: Tracker[];
   pulls: Pull[];
+  /** The rules the report flags claims by. */
+  claims: { cap: number; stale_days: number };
+  contested: Contested[];
   repos: BoardRepo[];
   releases: BoardRelease[];
   proposals: Proposal[];
@@ -173,6 +193,7 @@ const LISTS = [
   "versions",
   "trackers",
   "pulls",
+  "contested",
   "repos",
   "releases",
   "proposals",
@@ -209,6 +230,9 @@ export function parseBoard(json: unknown): Board {
   }
   if (typeof json.generated_at !== "string" || !isRecord(json.sources)) {
     throw new Error("board.json names no time or no sources");
+  }
+  if (!isRecord(json.claims)) {
+    throw new Error("board.json names no rules for claims");
   }
   const missing = LISTS.filter((field) => !Array.isArray(json[field]));
   if (missing.length > 0) {

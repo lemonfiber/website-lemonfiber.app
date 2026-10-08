@@ -40,6 +40,12 @@ describe("parseBoard", () => {
     );
   });
 
+  it("refuses a snapshot that names no rules for claims", () => {
+    expect(() => parseBoard({ ...fixtureBoard(), claims: null })).toThrow(
+      "no rules for claims",
+    );
+  });
+
   it("names every list it does not carry", () => {
     const board: Record<string, unknown> = { ...fixtureBoard() };
     delete board.pulls;

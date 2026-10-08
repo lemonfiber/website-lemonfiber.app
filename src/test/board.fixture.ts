@@ -1,7 +1,8 @@
 // A small board snapshot in format 1, for the unit tests: two areas, two
 // features, a requirement of each status, three versions (one released, one
-// releasable, one planned), a tracker, a pull request, a repository of each
-// tracker state, a release and a proposal of each kind.
+// releasable, one planned), a tracker, a draft and a ready pull request
+// contesting a goal and a bot's, a repository of each tracker state, a release
+// and a proposal of each kind.
 
 import type { Board, Goal, Version } from "../lib/board";
 
@@ -101,7 +102,13 @@ export function fixtureBoard(): Board {
         repo: "lemonfiber",
         present: true,
         rows: [
-          { id: "A1-R1", state: "done", evidence: ["src/a.rs"], landed: null },
+          {
+            id: "A1-R1",
+            state: "done",
+            evidence: ["src/a.rs"],
+            landed: null,
+            path: "status/A1.toml",
+          },
         ],
       },
     ],
@@ -117,13 +124,57 @@ export function fixtureBoard(): Board {
         created_at: "2026-10-01T00:00:00Z",
         updated_at: "2026-10-02T00:00:00Z",
         head: "feat/forms",
+        last_commit_at: "2026-09-01T00:00:00Z",
+        stale: true,
         cites: ["GOV-R2"],
       },
+      {
+        repo: "lemonfiber",
+        number: 8,
+        url: "https://github.com/lemonfiber/lemonfiber/pull/8",
+        title: "feat: the rule",
+        author: "another",
+        bot: false,
+        draft: false,
+        created_at: "2026-10-07T12:00:00Z",
+        updated_at: "2026-10-07T12:00:00Z",
+        head: "feat/rule",
+        last_commit_at: "2026-10-07T12:00:00Z",
+        stale: false,
+        cites: ["GOV-R2"],
+      },
+      {
+        repo: "spec",
+        number: 9,
+        url: "https://github.com/lemonfiber/spec/pull/9",
+        title: "chore(deps): bump",
+        author: "dependabot",
+        bot: true,
+        draft: false,
+        created_at: null,
+        updated_at: null,
+        head: null,
+        last_commit_at: null,
+        stale: false,
+        cites: [],
+      },
     ],
+    claims: { cap: 3, stale_days: 14 },
+    contested: [{ id: "GOV-R2", pulls: ["lemonfiber#7", "lemonfiber#8"] }],
     repos: [
-      repo("spec", null),
-      repo("lemonfiber", "present"),
-      repo("sdk-php", "unread"),
+      { ...repo("spec", null), pages: ["../README.md"], open_pulls: 1 },
+      {
+        ...repo("lemonfiber", "present"),
+        pages: ["lemonfiber.md"],
+        open_pulls: 2,
+        counted_pulls: 2,
+      },
+      {
+        ...repo("sdk-php", "unread"),
+        open_pulls: null,
+        counted_pulls: null,
+        over_cap: null,
+      },
     ],
     releases: [
       {
@@ -169,6 +220,8 @@ function repo(name: string, tracker: Board["repos"][number]["tracker"]) {
     note: null,
     pages: [],
     open_pulls: 0,
+    counted_pulls: 0,
+    over_cap: false,
     tracker,
   };
 }

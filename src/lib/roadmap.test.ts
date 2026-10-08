@@ -6,8 +6,11 @@ import {
   finished,
   goalsByVerdict,
   manifestUrl,
+  repoFile,
+  repoTree,
   requirementUrl,
   specFile,
+  takingWork,
   verdictCounts,
 } from "./roadmap";
 import { fixtureBoard } from "../test/board.fixture";
@@ -57,7 +60,33 @@ describe("finished", () => {
   });
 });
 
+describe("takingWork", () => {
+  it("is the first two versions on the train still taking work", () => {
+    const more = {
+      versions: [
+        ...board.versions,
+        { ...planned, version: "0.4.0", status: "staged" },
+        { ...planned, version: "0.5.0" },
+      ],
+    };
+    expect(takingWork(more).map((v) => v.version)).toEqual(["0.3.0", "0.4.0"]);
+    expect(takingWork(board).map((v) => v.version)).toEqual(["0.3.0"]);
+  });
+});
+
 describe("addresses", () => {
+  it("names a file in any repository at the revision read", () => {
+    expect(repoFile(board, "lemonfiber", "status/A1.toml")).toBe(
+      `https://github.com/lemonfiber/lemonfiber/blob/${"b".repeat(40)}/status/A1.toml`,
+    );
+    expect(repoFile(board, "brand", "README.md")).toBe(
+      "https://github.com/lemonfiber/brand/blob/main/README.md",
+    );
+    expect(repoTree(board, "brand", "assets")).toBe(
+      "https://github.com/lemonfiber/brand/tree/main/assets",
+    );
+  });
+
   it("names a file in spec at the revision the snapshot read", () => {
     expect(specFile(board, "x.md")).toBe(
       `https://github.com/lemonfiber/spec/blob/${spec}/x.md`,

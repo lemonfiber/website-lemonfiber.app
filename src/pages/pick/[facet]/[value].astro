@@ -1,0 +1,68 @@
+---
+// The goals to pick up filtered to one version, area or repository, built as
+// a page of its own so every filter works without script.
+import Base from "../../../layouts/Base.astro";
+import SnapshotNote from "../../../components/SnapshotNote.astro";
+import PickList from "../../../components/PickList.astro";
+import PickFacets from "../../../components/PickFacets.astro";
+import { loadBoard } from "../../../lib/board";
+import {
+  PICK_FACETS,
+  pickFacetValues,
+  pickMatches,
+  pickable,
+  type PickFacet,
+} from "../../../lib/pick";
+import { pickCopy as t } from "../../../i18n";
+
+export async function getStaticPaths() {
+  const goals = pickable(await loadBoard()).flatMap((v) => v.goals);
+  const values = pickFacetValues(goals);
+  return PICK_FACETS.flatMap((facet) =>
+    values[facet].map((value) => ({ params: { facet, value } })),
+  );
+}
+
+const { facet, value } = Astro.params as { facet: PickFacet; value: string };
+const board = await loadBoard();
+const all = pickable(board);
+const values = pickFacetValues(all.flatMap((v) => v.goals));
+const versions = all
+  .map((v) => ({
+    ...v,
+    goals: v.goals.filter((g) => pickMatches(g, facet, value)),
+  }))
+  .filter((v) => facet !== "version" || v.version.version === value);
+const named = `${t.label[facet] ?? facet} ${value}`;
+---
+
+<Base active="pick" title={`${named} · ${t.title}`} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <a class="back" href="/pick/">
+        {t.all}
+      </a>
+      <h1 class="head__h">
+        {t.filteredTo} {named}
+      </h1>
+      <SnapshotNote board={board} />
+      <PickFacets values={values} current={{ facet, value }} />
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <PickList versions={versions} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .back {
+    color: var(--text-muted);
+    font-size: var(--size-caption);
+  }
+  .head__h {
+    font-size: var(--size-display-l);
+    margin: var(--space-3) 0 var(--space-4);
+  }
+</style>

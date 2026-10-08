@@ -1,0 +1,196 @@
+---
+import Base from "../../layouts/Base.astro";
+import SnapshotNote from "../../components/SnapshotNote.astro";
+import ReqLink from "../../components/ReqLink.astro";
+import { loadBoard } from "../../lib/board";
+import type { BoardRepo } from "../../lib/board";
+import {
+  againstCap,
+  repoMapUrl,
+  repoPageUrl,
+  repoState,
+} from "../../lib/repos";
+import { requirementPage } from "../../lib/feature-page";
+import { manifestUrl } from "../../lib/roadmap";
+import { reposCopy as t, roadmapCopy } from "../../i18n";
+
+export async function getStaticPaths() {
+  const board = await loadBoard();
+  return board.repos.map((repo) => ({
+    params: { name: repo.name },
+    props: { repo },
+  }));
+}
+
+const { repo } = Astro.props as { repo: BoardRepo };
+const board = await loadBoard();
+const state = repoState(board, repo);
+const cap = board.claims.cap;
+const pulls = againstCap(repo);
+const pullsLabel = () => {
+  if (!pulls) return t.notRead;
+  const bots = pulls.bots > 0 ? ` + ${t.bots(pulls.bots)}` : "";
+  return `${pulls.counted} ${t.of} ${cap}${bots}`;
+};
+const facts: [string, string][] = [
+  [t.group, repo.group ?? "—"],
+  [t.language, repo.lang ?? "—"],
+  [
+    t.tracker,
+    repo.tracker === null
+      ? t.noTracker
+      : (t.trackerState[repo.tracker] ?? repo.tracker),
+  ],
+  [t.pulls, pullsLabel()],
+];
+const byWhom = (author: string | null, bot: boolean) =>
+  bot ? `${author ?? ""} (${t.bot})` : (author ?? "");
+const goals = (state.version?.goals ?? []).map((g) => ({
+  id: g.id,
+  page: requirementPage(board, g.id),
+  verdict: roadmapCopy.verdict[g.verdict],
+  verdictId: g.verdict,
+}));
+---
+
+<Base active="repos" title={repo.name} description={t.descriptionOf(repo.name)}>
+  <section class="section head">
+    <div class="container">
+      <a class="back" href="/repos/">
+        {t.back}
+      </a>
+      <h1 class="head__h mono">{repo.name}</h1>
+      {repo.note && <p class="lead">{repo.note}</p>}
+      <dl class="facts">
+        {facts.map(([k, v]) => (
+          <div>
+            <dt>{k}</dt>
+            <dd>{v}</dd>
+          </div>
+        ))}
+        {repo.tracker === "present" && (
+          <div>
+            <dt>{t.rows}</dt>
+            <dd class="mono">
+              {`${state.rows.open} · ${state.rows.partial} · ${state.rows.done}`}
+            </dd>
+          </div>
+        )}
+      </dl>
+      {repo.over_cap && (
+        <p>
+          <span class="badge badge--danger">{t.overCap}</span>
+        </p>
+      )}
+      <p class="src">
+        <a href={repoMapUrl(board)}>{t.map}</a>
+        {repo.pages.map((page) => (
+          <>
+            {" · "}
+            <a
+              href={repoPageUrl(board, page)}
+            >{`${t.pages}: ${page.split("/").pop()}`}</a>
+          </>
+        ))}
+        {state.trackerUrl && (
+          <>
+            {" · "}
+            <a href={state.trackerUrl}>{t.trackerFile}</a>
+          </>
+        )}
+      </p>
+      <SnapshotNote board={board} />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="sec__h">{t.openPullsOf}</h2>
+      {state.pulls.length === 0 ? (
+        <p>{t.noPulls}</p>
+      ) : (
+        <ul class="list">
+          {state.pulls.map((p) => (
+            <li>
+              <a href={p.url}>{`#${p.number} ${p.title ?? ""}`}</a>
+              <span class="muted"> {byWhom(p.author, p.bot)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {state.version ? (
+        <>
+          <h2 class="sec__h">
+            {t.goalsOf.replace("{version}", state.version.version.version)}
+          </h2>
+          <p class="src">
+            <a href={`/roadmap/${state.version.version.version}/`}>
+              {state.version.version.version}
+            </a>
+            {" · "}
+            <a href={manifestUrl(board, state.version.version.version)}>
+              {roadmapCopy.manifest}
+            </a>
+          </p>
+          {goals.length === 0 ? (
+            <p>{t.noGoals}</p>
+          ) : (
+            <ul class="list">
+              {goals.map((g) => (
+                <li>
+                  <ReqLink id={g.id} page={g.page} />{" "}
+                  <span class={`verdict is-${g.verdictId}`}>
+                    {`${g.verdict.glyph} ${g.verdict.word}`}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </>
+      ) : (
+        <p>{t.noVersion}</p>
+      )}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .back,
+  .muted,
+  .src,
+  .src a {
+    color: var(--text-muted);
+  }
+  .back,
+  .src {
+    font-size: var(--size-caption);
+  }
+  .head__h {
+    font-size: var(--size-display-l);
+    margin: var(--space-3) 0 var(--space-4);
+  }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3) var(--space-6);
+    margin: 0 0 var(--space-4);
+  }
+  .facts dt {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .facts dd {
+    margin: 0;
+  }
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-3) 0 var(--space-6);
+    display: grid;
+    gap: var(--space-2);
+  }
+  .verdict {
+    font-size: var(--size-caption);
+  }
+</style>

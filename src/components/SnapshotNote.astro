@@ -1,0 +1,78 @@
+---
+// When the snapshot a page renders was written, and the revision of every
+// repository it was read at (REPO-R64), each linked to its commit.
+import type { Board } from "../lib/board";
+import { commitUrl, specFile } from "../lib/roadmap";
+import { snapshotCopy as t } from "../i18n";
+
+interface Props {
+  board: Pick<Board, "generated_at" | "sources" | "unread">;
+  /** A document in `spec` the page's facts follow, linked beside the time. */
+  rule?: { path: string; label: string };
+}
+
+const { board, rule } = Astro.props;
+const sources = Object.entries(board.sources).sort(([a], [b]) =>
+  a.localeCompare(b),
+);
+---
+
+<div class="snap">
+  <p class="snap__line mono">
+    {t.asOf}
+    <time datetime={board.generated_at}>{board.generated_at}</time> ·
+    <a href={commitUrl(`spec@${board.sources.spec ?? ""}`)}>
+      {`${t.revision} ${(board.sources.spec ?? "").slice(0, 7)}`}
+    </a>
+    {rule && (
+      <>
+        {" · "}
+        <a href={specFile(board, rule.path)}>{rule.label}</a>
+      </>
+    )}
+  </p>
+  <details class="snap__sources">
+    <summary>{t.sources}</summary>
+    <ul class="mono">
+      {sources.map(([repo, sha]) => (
+        <li>
+          <a
+            href={commitUrl(`${repo}@${sha}`)}
+          >{`${repo}@${sha.slice(0, 7)}`}</a>
+        </li>
+      ))}
+    </ul>
+  </details>
+  {board.unread.length > 0 && (
+    <p class="snap__unread">
+      {t.unreadNote} {board.unread.map((u) => u.repo).join(", ")}.
+    </p>
+  )}
+</div>
+
+<style>
+  .snap {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+  }
+  .snap__line {
+    margin: 0;
+  }
+  .snap a {
+    color: var(--text-muted);
+  }
+  .snap__sources summary {
+    cursor: pointer;
+  }
+  .snap__sources ul {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-2) 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+  }
+  .snap__unread {
+    margin: var(--space-2) 0 0;
+  }
+</style>
