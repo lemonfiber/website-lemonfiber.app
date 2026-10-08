@@ -96,6 +96,66 @@ src/pages/             index · transparency · contribute · 404
 src/styles/tokens.css  design tokens mirrored from lemonfiber/brand
 ```
 
+## Proving the propose form
+
+`/contribute/propose/` composes a proposal or a gap and opens it on GitHub under
+the person's own account. It is proved end to end from an account outside the
+organisation, with read access to `spec` only and no git installed. The checklist
+below is that proof, and the parameter checks in it are the S51 spike.
+
+**Before.** Sign in to GitHub as the outside account. In a private window, check
+that `https://github.com/lemonfiber/spec` shows no _Settings_ tab.
+
+**A proposal.**
+
+1. [ ] Open `https://lemonfiber.app/contribute/propose/`. The form shows _A new or
+       changed behaviour_ selected, and the file preview updates as you type.
+2. [ ] Fill in area `B`, title `Proof of the propose form`, amends `B1`, a problem,
+       one statement using MUST, and a rationale. The _Before it can be opened_ list
+       empties and _Open it on GitHub_ appears.
+3. [ ] Press _Open it on GitHub_. GitHub says it has created a fork of
+       `lemonfiber/spec` for the account, or offers to, and opens the new-file page.
+4. [ ] The new-file page shows the path
+       `10-functional/proposals/proof-of-the-propose-form.md` and the file exactly as
+       the preview showed it.
+5. [ ] Commit it to a new branch. GitHub's commit form signs the commit off, as the
+       organisation requires on web commits. The commit on the fork shows
+       _Verified_, and its message ends with `Signed-off-by:` naming the account.
+6. [ ] Open the pull request against `lemonfiber/spec` `main`. Paste the title and
+       body the site shows, and replace the sign-off line with the one GitHub added
+       to the commit, the same name and address.
+7. [ ] On the pull request, the checks run:
+   - `squash-message` passes;
+   - `integrity` passes, because the file is in the proposal shape;
+   - `dco` passes on the commit.
+     Then close the pull request, since it was only a proof.
+
+**A gap.**
+
+8. [ ] Open `https://lemonfiber.app/contribute/propose/?kind=gap`. _Something the
+       specification does not say_ is selected.
+9. [ ] Fill in area, title, amends and what it does not say, then repeat steps 3
+       to 7. The file carries `kind: gap` and a _What the specification does not say_
+       section.
+
+**Without script.**
+
+10. [ ] With JavaScript off, the page shows the file's path and the template in
+        two fields. Edit both and press _Open it on GitHub_. GitHub opens the
+        new-file page with both filled in.
+
+**The spike: what GitHub's new-file page honours.** Add each parameter by hand to
+the address step 3 opened, and note whether GitHub fills it in.
+
+11. [ ] `message=` fills the commit message.
+12. [ ] `description=` fills the extended commit description.
+13. [ ] `target_branch=` or `branch=` names the new branch.
+14. [ ] The page still opens when the address is over 8,000 characters, for a
+        long proposal.
+
+A parameter that works is added to the form, and one that does not is noted
+here.
+
 ## Contributing
 
 Every change cites a requirement in the

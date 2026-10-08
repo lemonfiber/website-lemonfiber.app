@@ -40,3 +40,46 @@ export const fixADocCopy = {
   pagesOf: "{n} pages",
   editShort: "Edit",
 };
+
+export const proposeCopy = {
+  title: "Propose a change",
+  description:
+    "Compose a proposal for the specification, or report what it does not say, and open it on GitHub under your own account.",
+  eyebrow: "Propose a change",
+  heading: "Say what it should do.",
+  lead: "A proposal is a pull request adding one file to the specification, with no identifier: a maintainer's approval allocates them. Fill this in, check the file it makes, and open it on GitHub, where you commit it under your own account and open the pull request.",
+  kind: "What it is",
+  kindProposal: "A new or changed behaviour",
+  kindGap: "Something the specification does not say",
+  area: "Area",
+  areaChoose: "Choose one",
+  titleLabel: "Title",
+  titleHint: "A short phrase naming the capability.",
+  amends: "What it amends",
+  amendsHint:
+    "A feature's identifier, like B3, or a page's path, like 20-architecture/overview.md. A gap names the one that is silent.",
+  problem: "The problem",
+  problemHint: "What does not work today, and for whom.",
+  statements: "The proposed behaviour",
+  statementsHint:
+    "One statement a line, each using MUST, SHOULD or MAY: The dashboard MUST show each service's state.",
+  rationale: "Why",
+  rationaleHint: "Why this, and what was considered instead.",
+  missing: "What it does not say",
+  missingHint: "The question the feature or page leaves unanswered.",
+  preview: "The file it makes",
+  faults: "Before it can be opened",
+  open: "Open it on GitHub",
+  steps:
+    "GitHub opens its new-file page with the file filled in, and makes you a copy of the specification if you cannot write to it. Commit the file there, signed off as GitHub asks, then open the pull request with this title and body.",
+  pullTitle: "Pull request title",
+  pullBody: "Pull request body",
+  pullBodyHint:
+    "Replace the sign-off line with the one GitHub added to your commit, the same name and address. The body becomes the commit on main, so it keeps the Spec: line and the sign-off.",
+  noscript:
+    "The form needs JavaScript. Without it, edit the file below and open it on GitHub, or run `lfdev propose` or `lfdev gap` in a checkout of spec.",
+  plainFilename: "The file's path",
+  plainValue: "The file",
+  privacy:
+    "Nothing you type here leaves your browser until you open it on GitHub, which receives the file in the address.",
+};
