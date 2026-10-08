@@ -2,6 +2,8 @@
 import { defineConfig } from "astro/config";
 import sitemap from "@astrojs/sitemap";
 import preact from "@astrojs/preact";
+import { satteri } from "@astrojs/markdown-satteri";
+import { requirementAnchors } from "./src/lib/spec-pages.ts";
 
 // The public URL the site is served from.
 //
@@ -16,6 +18,11 @@ export default defineConfig({
   build: {
     // Emit foo/index.html so routes work identically on a static host.
     format: "directory",
+  },
+  // The specification's pages are Markdown; every requirement row in them is
+  // given its identifier as an anchor (REPO-R79).
+  markdown: {
+    processor: satteri({ hastPlugins: [requirementAnchors] }),
   },
   devToolbar: {
     enabled: false,

@@ -1,0 +1,76 @@
+---
+// The specification's index: each section, with its own page and the pages
+// directly inside it, at the commit of `spec` the board snapshot read.
+import Base from "../../layouts/Base.astro";
+import SnapshotNote from "../../components/SnapshotNote.astro";
+import { getCollection } from "astro:content";
+import { loadBoard } from "../../lib/board";
+import { specSections } from "../../lib/spec-pages";
+import { specCopy as t } from "../../i18n";
+
+const board = await loadBoard();
+const pages = (await getCollection("spec")).map((entry) => ({
+  id: entry.id,
+  title: entry.data.title,
+}));
+const sections = specSections(pages);
+---
+
+<Base active="spec" title={t.title} description={t.description}>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h">{t.heading}</h1>
+      <p class="lead">{t.lead}</p>
+      <SnapshotNote board={board} />
+    </div>
+  </section>
+  <section class="section">
+    <div class="container sections">
+      {sections.map((section) => (
+        <section class="sect card" aria-labelledby={`s-${section.directory}`}>
+          <h2 class="sect__h" id={`s-${section.directory}`}>
+            {section.page ? (
+              <a href={`/${section.page.id}/`}>{section.page.title}</a>
+            ) : (
+              <span class="mono">{section.directory}</span>
+            )}
+          </h2>
+          <ul class="sect__pages">
+            {section.pages.map((page) => (
+              <li>
+                <a href={`/${page.id}/`}>{page.title}</a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0;
+  }
+  .sections {
+    display: grid;
+    gap: var(--space-4);
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  }
+  .sect {
+    padding: var(--space-4) var(--space-5);
+  }
+  .sect__h {
+    font-size: var(--size-display-m);
+    margin: 0 0 var(--space-3);
+  }
+  .sect__pages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-1);
+  }
+</style>

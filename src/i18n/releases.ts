@@ -38,3 +38,16 @@ export const proposalsCopy = {
   none: "None.",
   source: "source",
 };
+
+export const specCopy = {
+  title: "Specification",
+  eyebrow: "The specification",
+  heading: "What lemonfiber does, requirement by requirement.",
+  lead: "The canonical description of every behaviour, authored and checked in the spec repository and rendered here at the commit the board snapshot read, so a requirement's text and its verdict on the board are the same revision.",
+  description:
+    "lemonfiber's specification, rendered at the commit the board snapshot read, with an anchor for every requirement and a link to edit it in the spec repository.",
+  back: "← The specification",
+  renderedAt: "Rendered from spec at",
+  source: "its source",
+  edit: "Edit this page",
+};

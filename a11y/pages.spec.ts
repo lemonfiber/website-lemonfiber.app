@@ -24,6 +24,8 @@ const routes = [
   "/releases/",
   "/releases/0.1.0/",
   "/proposals/",
+  "/spec/",
+  "/spec/50-governance/working-in-the-repositories/",
 ];
 const themes = { light: "paper", dark: "ink" } as const;
 
