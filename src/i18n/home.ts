@@ -73,7 +73,7 @@ export const homeCopy = {
 
   slices: {
     eyebrow: "Run only the part you need",
-    title: "Not “all twenty services or nothing.”",
+    title: "Not “all twenty-two services or nothing.”",
     lead: "A form is a name for one part of the stack. Ask for that name and only those apps start — the rest stays off. Pick one and see what actually runs.",
   },
 
@@ -100,7 +100,7 @@ export const homeCopy = {
 
   inside: {
     eyebrow: "What's inside",
-    title: "Twenty apps, set up and talking to each other.",
+    title: "Twenty-two apps, set up and talking to each other.",
     sub: "Jellyfin, Sonarr, Radarr and the rest — every one open-source, running on your own machine. Grouped by the job they do.",
   },
 
@@ -154,6 +154,8 @@ export const homeCopy = {
     "Calibre-Web-Automated": "Ebook library",
     Audiobookshelf: "Audiobooks & podcasts",
     Navidrome: "Music streaming",
+    "Request gate": "Holds Seerr's keys",
+    "Decline service": "Turning an invitation down",
     Recyclarr: "Quality profiles",
     Unpackerr: "Archive extraction",
     Homepage: "Dashboard",

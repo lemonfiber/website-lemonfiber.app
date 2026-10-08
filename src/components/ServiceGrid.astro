@@ -1,6 +1,14 @@
 ---
 import { services } from "../data/site";
 import { homeCopy as t } from "../i18n";
+import { holdTo } from "../lib/stack";
+import { readStack } from "../lib/stack-source";
+
+// The list drawn here is the stack's, or the build fails naming the difference.
+holdTo(
+  await readStack(),
+  services.map((s) => s.id),
+);
 
 const order = ["Find", "Download", "Organise", "Enjoy", "Tune", "Access"];
 const groups = order.map((g) => ({

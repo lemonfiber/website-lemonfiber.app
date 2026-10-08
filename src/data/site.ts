@@ -1,9 +1,8 @@
 // Static, editorial content — the parts of the site that are prose, not motor
 // data. The service/profile/form model follows lemonfiber-media-stack's
 // manifest: profiles and forms in `stack.toml`, each service in the
-// `services/<id>.toml` its `include` names. It draws the twenty services the
-// stack runs from other projects; lemonfiber's own decline and request-gate
-// services, in the `media` profile, are not drawn.
+// `services/<id>.toml` its `include` names. It draws every service the stack
+// runs, lemonfiber's own decline and request-gate among them.
 
 export const site = {
   name: "Lemonfiber",
@@ -53,7 +52,7 @@ export const promises = [
   },
 ] as const;
 
-// profile key → the drawn services it starts, as each service file's `profile` says.
+// profile key → the services it starts, as each service file's `profile` says.
 export const profiles: Record<string, { label: string; services: string[] }> = {
   search: {
     label: "Indexers",
@@ -74,6 +73,8 @@ export const profiles: Record<string, { label: string; services: string[] }> = {
       "Calibre-Web-Automated",
       "Audiobookshelf",
       "Navidrome",
+      "Request gate",
+      "Decline service",
     ],
   },
   tuning: { label: "Tuning", services: ["Recyclarr", "Unpackerr"] },
@@ -168,6 +169,8 @@ export const forms: {
 ];
 
 export interface Service {
+  /** The service's id in the stack, as `services/<id>.toml` names it. */
+  id: string;
   name: string;
   role: string;
   profile: string;
@@ -176,9 +179,9 @@ export interface Service {
   household?: boolean;
 }
 
-// What the household reaches: the `media` profile, every service in it on the
-// LAN.
-const library = (name: string, role: string): Service => ({
+// What the household reaches: a service of the `media` profile on the LAN.
+const library = (id: string, name: string, role: string): Service => ({
+  id,
   name,
   role,
   profile: "media",
@@ -186,28 +189,39 @@ const library = (name: string, role: string): Service => ({
   household: true,
 });
 
-// The 20 services, in the order the pipeline flows.
+// Every service the stack runs, in the order the pipeline flows. The build
+// refuses a list that differs from the stack manifest's `include`.
 export const services: Service[] = [
   {
+    id: "prowlarr",
     name: "Prowlarr",
     role: "Indexer manager",
     profile: "search",
     group: "Find",
   },
   {
+    id: "flaresolverr",
     name: "FlareSolverr",
     role: "Cloudflare solver",
     profile: "search",
     group: "Find",
   },
-  { name: "NZBHydra2", role: "Meta-indexer", profile: "search", group: "Find" },
   {
+    id: "nzbhydra2",
+    name: "NZBHydra2",
+    role: "Meta-indexer",
+    profile: "search",
+    group: "Find",
+  },
+  {
+    id: "sabnzbd",
     name: "SABnzbd",
     role: "Usenet downloader",
     profile: "usenet",
     group: "Download",
   },
   {
+    id: "gluetun",
     name: "Gluetun",
     role: "VPN gateway",
     profile: "torrent",
@@ -215,51 +229,92 @@ export const services: Service[] = [
     vpn: true,
   },
   {
+    id: "qbittorrent",
     name: "qBittorrent",
     role: "Torrent client",
     profile: "torrent",
     group: "Download",
     vpn: true,
   },
-  { name: "Sonarr", role: "TV automation", profile: "tv", group: "Organise" },
   {
+    id: "sonarr",
+    name: "Sonarr",
+    role: "TV automation",
+    profile: "tv",
+    group: "Organise",
+  },
+  {
+    id: "radarr",
     name: "Radarr",
     role: "Movie automation",
     profile: "movies",
     group: "Organise",
   },
   {
+    id: "lidarr",
     name: "Lidarr",
     role: "Music automation",
     profile: "music",
     group: "Organise",
   },
   {
+    id: "bindery",
     name: "Bindery",
     role: "Book automation",
     profile: "books",
     group: "Organise",
   },
-  { name: "Bazarr", role: "Subtitles", profile: "subs", group: "Organise" },
-  library("Jellyfin", "Media server"),
-  library("Seerr", "Request portal"),
-  library("Calibre-Web-Automated", "Ebook library"),
-  library("Audiobookshelf", "Audiobooks & podcasts"),
-  library("Navidrome", "Music streaming"),
   {
+    id: "bazarr",
+    name: "Bazarr",
+    role: "Subtitles",
+    profile: "subs",
+    group: "Organise",
+  },
+  library("jellyfin", "Jellyfin", "Media server"),
+  library("seerr", "Seerr", "Request portal"),
+  library("calibre-web-automated", "Calibre-Web-Automated", "Ebook library"),
+  library("audiobookshelf", "Audiobookshelf", "Audiobooks & podcasts"),
+  library("navidrome", "Navidrome", "Music streaming"),
+  // lemonfiber's own two. The request gate holds Sonarr's, Radarr's and
+  // Jellyfin's keys so Seerr holds none, and answers only inside the stack; the
+  // decline service is on the LAN, where somebody invited can turn it down.
+  {
+    id: "request-gate",
+    name: "Request gate",
+    role: "Holds Seerr's keys",
+    profile: "media",
+    group: "Enjoy",
+  },
+  library("decline", "Decline service", "Turning an invitation down"),
+  {
+    id: "recyclarr",
     name: "Recyclarr",
     role: "Quality profiles",
     profile: "tuning",
     group: "Tune",
   },
   {
+    id: "unpackerr",
     name: "Unpackerr",
     role: "Archive extraction",
     profile: "tuning",
     group: "Tune",
   },
-  { name: "Homepage", role: "Dashboard", profile: "dash", group: "Access" },
-  { name: "Caddy", role: "Reverse proxy", profile: "proxy", group: "Access" },
+  {
+    id: "homepage",
+    name: "Homepage",
+    role: "Dashboard",
+    profile: "dash",
+    group: "Access",
+  },
+  {
+    id: "caddy",
+    name: "Caddy",
+    role: "Reverse proxy",
+    profile: "proxy",
+    group: "Access",
+  },
 ];
 
 // Compute the container set a form boots, from its profiles. Pure — used by

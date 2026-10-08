@@ -52,12 +52,12 @@ This site links there rather than keeping a second copy.
 
 ## Pages
 
-| Route           | What it shows                                                           |
-| --------------- | ----------------------------------------------------------------------- |
-| `/`             | The pitch, a live status strip, the forms switcher, the twenty services |
-| `/transparency` | Every repo, release and open issue — read live from GitHub              |
-| `/contribute`   | Ways to help + live good-first-issues                                   |
-| `/404`          | The one that says where everything else went                            |
+| Route           | What it shows                                                               |
+| --------------- | --------------------------------------------------------------------------- |
+| `/`             | The pitch, a live status strip, the forms switcher, the twenty-two services |
+| `/transparency` | Every repo, release and open issue — read live from GitHub                  |
+| `/contribute`   | Ways to help + live good-first-issues                                       |
+| `/404`          | The one that says where everything else went                                |
 
 ## Develop
 
