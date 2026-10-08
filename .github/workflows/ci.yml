@@ -19,14 +19,14 @@ jobs:
       pull-requests: write
     uses: lemonfiber/spec/.github/workflows/spec-check.yml@284f02dd30992b611a1e72209cb22089d8cd3185 # v1.0.57
   hygiene:
-    uses: lemonfiber/spec/.github/workflows/hygiene.yml@284f02dd30992b611a1e72209cb22089d8cd3185 # v1.0.57
+    uses: lemonfiber/spec/.github/workflows/hygiene.yml@9e4af595a441995073b44629dcac592813f646bf # v1.0.60
   # Every pin this repository holds on a shared workflow, against what the spec's
   # default branch holds now. It fails naming the commits a pin has not taken; a
   # run that could not ask which they are says so rather than reporting clean.
   workflow-pins:
     uses: lemonfiber/spec/.github/workflows/workflow-pins.yml@c26ed83df4ecfeb0b1a2d4e565011605b67c648b # v1.0.38
   security:
-    uses: lemonfiber/spec/.github/workflows/security.yml@c26ed83df4ecfeb0b1a2d4e565011605b67c648b # v1.0.38
+    uses: lemonfiber/spec/.github/workflows/security.yml@9e4af595a441995073b44629dcac592813f646bf # v1.0.60
   dco:
     uses: lemonfiber/spec/.github/workflows/dco.yml@c26ed83df4ecfeb0b1a2d4e565011605b67c648b # v1.0.38
   attribution:
