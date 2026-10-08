@@ -123,31 +123,37 @@ export function claimPages(
   const textOf = new Map(board.requirements.map((r) => [r.id, r.text]));
   const countOf = new Map(board.repos.map((r) => [r.name, r.counted_pulls]));
   const cap = board.claims.cap;
+  const seen = new Set<string>();
   return takingWork(board).flatMap((version) =>
-    version.goals.map((goal) => {
+    version.goals.flatMap((goal) => {
+      // A goal two versions lock is claimed once, in the earlier.
+      if (seen.has(goal.id)) return [];
+      seen.add(goal.id);
       const text = textOf.get(goal.id);
-      return {
-        id: goal.id,
-        version: version.version,
-        verdict: goal.verdict,
-        text: text === undefined ? null : plainText(text),
-        page: requirementPage(board, goal.id),
-        holders: holders(board, goal.id, goal.claims),
-        repos: version.satisfied_in.map((repo) => {
-          const counted = countOf.get(repo) ?? null;
-          return {
-            repo,
-            counted,
-            atCap: counted !== null && counted >= cap,
-            editor: editorFor(board, repo, goal.id),
-          };
-        }),
-        cap,
-        command: `lfdev claim ${goal.id}`,
-        row: claimRow(goal.id),
-        title: `chore(claim): ${goal.id}`,
-        body: `Claiming ${goal.id}.\n\nSpec: ${goal.id}\n\nSigned-off-by: Your Name <you@example.org>`,
-      };
+      return [
+        {
+          id: goal.id,
+          version: version.version,
+          verdict: goal.verdict,
+          text: text === undefined ? null : plainText(text),
+          page: requirementPage(board, goal.id),
+          holders: holders(board, goal.id, goal.claims),
+          repos: version.satisfied_in.map((repo) => {
+            const counted = countOf.get(repo) ?? null;
+            return {
+              repo,
+              counted,
+              atCap: counted !== null && counted >= cap,
+              editor: editorFor(board, repo, goal.id),
+            };
+          }),
+          cap,
+          command: `lfdev claim ${goal.id}`,
+          row: claimRow(goal.id),
+          title: `chore(claim): ${goal.id}`,
+          body: `Claiming ${goal.id}.\n\nSpec: ${goal.id}\n\nSigned-off-by: Your Name <you@example.org>`,
+        },
+      ];
     }),
   );
 }
