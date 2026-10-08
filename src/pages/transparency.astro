@@ -5,11 +5,18 @@ import ProgressBar from "../components/ProgressBar.astro";
 import { getSiteData } from "../lib/github";
 import { loadBoard } from "../lib/board";
 import { progressOf, trainOf } from "../lib/train";
+import { newestFirst } from "../lib/releases";
+import { againstCap } from "../lib/repos";
 import { site } from "../data/site";
-import { relativeTime, compact } from "../lib/format";
 
 const data = await getSiteData();
-const train = progressOf(trainOf(await loadBoard()));
+const board = await loadBoard();
+const train = progressOf(trainOf(board));
+const openPulls = board.repos.reduce(
+  (n, r) => n + (againstCap(r)?.counted ?? 0),
+  0,
+);
+const releases = newestFirst(board).slice(0, 6);
 const primary = data.repos.filter((r) => r.primary);
 const secondary = data.repos.filter((r) => !r.primary);
 ---
@@ -18,16 +25,17 @@ const secondary = data.repos.filter((r) => !r.primary);
   active="transparency"
   stars={data.stars}
   title="Transparency"
-  description="Every repo, release and open issue in the Lemonfiber org — read live from GitHub, never edited by hand."
+  description="Every repository, release and open pull request in the Lemonfiber org — read from the specification's board snapshot and from GitHub at build time, never edited by hand."
 >
   <section class="section head">
     <div class="container">
       <p class="eyebrow">Build in the open</p>
       <h1 class="head__h">Nothing here is written by a human.</h1>
       <p class="lead head__lead">
-        This whole page is generated from the {site.name} org at build time —
-        repos, releases, open issues, the version train. If the repos change, so
-        does this page, with zero maintenance.
+        This whole page is generated at build time, from the board snapshot the
+        specification publishes and from the {site.name} org on GitHub —
+        repositories, releases, open pull requests, the version train. If the
+        repositories change, so does this page, with zero maintenance.
         <span class:list={["freshness", { "is-stale": !data.live }]}>
           {data.live ? "● Live at last build" : "○ Last known snapshot"}
         </span>
@@ -41,14 +49,14 @@ const secondary = data.repos.filter((r) => !r.primary);
             <ProgressBar pct={train.pct} status="partial" size="sm" />
           </div>
         </div>
-        <div class="kpi card">
-          <span class="kpi__n">{data.repos.length}</span>
-          <span class="kpi__l">public repositories</span>
-        </div>
-        <div class="kpi card">
-          <span class="kpi__n">{compact(data.stars)}</span>
-          <span class="kpi__l">GitHub stars</span>
-        </div>
+        <a class="kpi card" href="/repos/">
+          <span class="kpi__n">{board.repos.length}</span>
+          <span class="kpi__l">repositories</span>
+        </a>
+        <a class="kpi card" href="/in-flight/">
+          <span class="kpi__n">{openPulls}</span>
+          <span class="kpi__l">open pull requests</span>
+        </a>
         <div class="kpi card">
           <span class="kpi__n">
             {train.released}/{train.versions}
@@ -83,23 +91,22 @@ const secondary = data.repos.filter((r) => !r.primary);
     <div class="container split__grid">
       <div>
         <h2 class="sec__h">Latest releases</h2>
-        {data.releases.length > 0 ? (
+        {releases.length > 0 ? (
           <ul class="rel">
-            {data.releases.map((r) => (
+            {releases.map((r) => (
               <li class="rel__item">
-                <a href={r.url} target="_blank" rel="noopener">
-                  <span class="rel__repo">{r.repo}</span>
-                  <span class="rel__tag mono">{r.tag}</span>
-                  <span class="rel__when">{relativeTime(r.publishedAt)}</span>
+                <a href={`/releases/${r.version}/`}>
+                  <span class="rel__repo">lemonfiber</span>
+                  <span class="rel__tag mono">{r.tag ?? r.version}</span>
+                  <span class="rel__when">{r.released_on}</span>
                 </a>
               </li>
             ))}
           </ul>
         ) : (
           <p class="empty card">
-            GitHub could not be reached at build time, so the releases are not
-            listed here. They are on the org, and what is coming is on the
-            <a href="/roadmap/">roadmap</a>.
+            No release is recorded in the core's changelog yet. What is coming
+            is on the <a href="/roadmap/">roadmap</a>.
           </p>
         )}
       </div>
@@ -166,6 +173,8 @@ const secondary = data.repos.filter((r) => !r.primary);
     margin-top: var(--space-6);
   }
   .kpi {
+    color: inherit;
+    text-decoration: none;
     padding: var(--space-5);
     display: flex;
     flex-direction: column;

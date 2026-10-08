@@ -8,16 +8,26 @@ const cols = [
     links: [
       { label: t.nav.home, href: "/" },
       { label: t.nav.roadmap, href: "/roadmap/" },
+      { label: t.nav.board, href: "/board/" },
+      { label: t.nav.releases, href: "/releases/" },
       { label: t.nav.install, href: `${site.docsUrl}/start/install/` },
-      { label: t.nav.changelog, href: `${site.docsUrl}/project/changelog/` },
-      { label: t.nav.transparency, href: "/transparency" },
-      { label: t.nav.contribute, href: "/contribute" },
       { label: t.nav.docs, href: site.docsUrl },
       { label: t.nav.faq, href: `${site.docsUrl}/spec/90-appendix/faq/` },
       {
         label: t.nav.colophon,
         href: `${site.docsUrl}/spec/90-appendix/colophon/`,
       },
+    ],
+  },
+  {
+    title: t.footer.work,
+    links: [
+      { label: t.nav.repos, href: "/repos/" },
+      { label: t.nav.inFlight, href: "/in-flight/" },
+      { label: t.nav.pick, href: "/pick/" },
+      { label: t.nav.proposals, href: "/proposals/" },
+      { label: t.nav.contribute, href: "/contribute" },
+      { label: t.nav.transparency, href: "/transparency" },
     ],
   },
   {
@@ -39,7 +49,6 @@ const cols = [
     title: "Specification",
     links: [
       { label: "Browse the spec", href: `${site.docsUrl}/spec/` },
-      { label: "RFCs & Drafts", href: `${site.docsUrl}/contributing/rfcs/` },
       {
         label: "Features",
         href: `${site.docsUrl}/spec/10-functional/features/`,
@@ -190,7 +199,7 @@ const cols = [
   }
   .ft__cols {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
     gap: var(--space-5);
   }
   .ft__col h5 {
