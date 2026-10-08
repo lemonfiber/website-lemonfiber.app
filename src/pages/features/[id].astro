@@ -8,7 +8,8 @@ import {
   requirementPage,
 } from "../../lib/feature-page";
 import { commitUrl, featureSources } from "../../lib/roadmap";
-import { featureCopy as t, roadmapCopy } from "../../i18n";
+import { claimPages } from "../../lib/claim";
+import { claimCopy, featureCopy as t, roadmapCopy } from "../../i18n";
 
 export async function getStaticPaths() {
   const board = await loadBoard();
@@ -24,6 +25,12 @@ const states = featureState(board, feature.id);
 const source = featureSources(board)[feature.id];
 const area = board.areas.find((a) => a.id === feature.area);
 const known = new Set(board.features.map((f) => f.id));
+// A goal still to be built links to its claim page; a met one has nothing to claim.
+const claimable = new Map(
+  claimPages(board)
+    .filter((p) => p.verdict !== "met")
+    .map((p) => [p.id, p]),
+);
 const facts: [string, string][] = [
   [t.area, area?.name ? `${feature.area} — ${area.name}` : feature.area],
   [t.audience, feature.audience],
@@ -108,6 +115,13 @@ const facts: [string, string][] = [
               </span>
               {s.requirement.keyword && (
                 <span class="req__kw mono">{s.requirement.keyword}</span>
+              )}
+              {claimable.has(s.requirement.id) && (
+                <a class="req__claim" href={`/claim/${s.requirement.id}/`}>
+                  {(claimable.get(s.requirement.id)?.holders.length ?? 0) > 0
+                    ? claimCopy.holders
+                    : claimCopy.claim}
+                </a>
               )}
             </div>
             <p class="req__text">{plainText(s.requirement.text)}</p>
@@ -256,6 +270,9 @@ const facts: [string, string][] = [
   .req__kw {
     font-size: var(--size-caption);
     color: var(--text-muted);
+  }
+  .req__claim {
+    font-size: var(--size-caption);
   }
   .req__status.is-withdrawn,
   .req__status.is-superseded {

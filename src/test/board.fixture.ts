@@ -196,6 +196,10 @@ export function fixtureBoard(): Board {
       { kind: "feature", id: "B1", title: "Forms", url: null },
       { kind: "rfc", id: 4, title: "RFC: a thing", url: "https://x/4" },
     ],
+    tools: [
+      { name: "next", purpose: "goals nobody has claimed, to pick up" },
+      { name: "doctor", purpose: "check this clone is set up to commit" },
+    ],
   };
 }
 

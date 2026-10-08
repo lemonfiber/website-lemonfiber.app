@@ -1,0 +1,155 @@
+---
+// A goal's claim page (GOV-R57, GOV-R58): who holds it, where it is built
+// and how full each repository is, and the two ways to claim it — the lfdev
+// command, and the tracker row to paste in GitHub's editor with the pull
+// request's title and the lines its body ends with (GOV-R62). A met goal, a
+// held one and a repository at the cap offer nothing.
+import Base from "../../layouts/Base.astro";
+import SnapshotNote from "../../components/SnapshotNote.astro";
+import ReqLink from "../../components/ReqLink.astro";
+import { loadBoard } from "../../lib/board";
+import { claimPages, offered, type ClaimPage } from "../../lib/claim";
+import { claimCopy as t, roadmapCopy } from "../../i18n";
+
+export async function getStaticPaths() {
+  const board = await loadBoard();
+  return claimPages(board).map((page) => ({
+    params: { id: page.id },
+    props: { page },
+  }));
+}
+
+const { page } = Astro.props as { page: ClaimPage };
+const board = await loadBoard();
+const open = offered(page);
+const verdict = roadmapCopy.verdict[page.verdict];
+---
+
+<Base
+  active="pick"
+  title={t.title(page.id)}
+  description={t.description(page.id)}
+>
+  <section class="section head">
+    <div class="container">
+      <p class="eyebrow">{t.eyebrow}</p>
+      <h1 class="head__h mono">{page.id}</h1>
+      <p class="lead">
+        <a href={`/roadmap/${page.version}/#${page.id}`}>
+          {t.of(page.version)}
+        </a>
+        {" · "}
+        <span>{`${verdict.glyph} ${verdict.word}`}</span>
+      </p>
+      <SnapshotNote
+        board={board}
+        rule={{
+          path: "50-governance/working-in-the-repositories.md#claiming-work",
+          label: t.rule,
+        }}
+      />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <h2 class="sec__h">{t.requirement}</h2>
+      <p>
+        <ReqLink id={page.id} page={page.page} />
+        {" — "}
+        {page.text ?? t.noText}
+      </p>
+
+      {page.verdict === "met" && <p class="note">{t.met}</p>}
+
+      {page.holders.length > 0 && (
+        <>
+          <p class="note">{t.held}</p>
+          <ul class="holders">
+            {page.holders.map((h) => (
+              <li>
+                <a class="mono" href={h.url}>{`${h.repo}#${h.number}`}</a>{" "}
+                {h.author ? `${t.by} ${h.author}` : `(${t.unknownAuthor})`}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      <h2 class="sec__h">{t.repos}</h2>
+      {page.repos.length === 0 && <p>{t.noRepos}</p>}
+      <ul class="repos">
+        {page.repos.map((r) => (
+          <li class="repo">
+            <h3 class="repo__h">
+              <a class="mono" href={`/repos/${r.repo}/`}>
+                {r.repo}
+              </a>
+              <span class="repo__count">{t.open(r.counted, page.cap)}</span>
+            </h3>
+            {open && r.atCap && <p class="note">{t.atCap}</p>}
+            {open && !r.atCap && (
+              <div class="how">
+                <h4>{t.how}</h4>
+                <p>{t.command}</p>
+                <pre><code>{page.command}</code></pre>
+                <p>{t.orEditor}</p>
+                <pre><code>{page.row}</code></pre>
+                {r.editor ? (
+                  <p>
+                    <a href={r.editor.url}>
+                      {r.editor.creates
+                        ? t.create(r.editor.path)
+                        : t.edit(r.editor.path)}
+                    </a>
+                  </p>
+                ) : (
+                  <p>{t.noEditor}</p>
+                )}
+                <p>{t.pr}</p>
+                <pre><code>{page.title}</code></pre>
+                <p>{t.body}</p>
+                <pre><code>{page.body}</code></pre>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .head__h {
+    font-size: var(--size-display-xl);
+    margin: var(--space-3) 0;
+  }
+  .note {
+    font-weight: 600;
+  }
+  .holders,
+  .repos {
+    list-style: none;
+    padding: 0;
+  }
+  .repo {
+    padding: var(--space-4) 0;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .repo__h {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-2);
+    font-size: var(--size-body);
+  }
+  .repo__count {
+    font-size: var(--size-caption);
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  pre {
+    overflow-x: auto;
+  }
+</style>

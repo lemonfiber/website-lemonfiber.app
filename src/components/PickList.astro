@@ -4,7 +4,7 @@
 import ReqLink from "./ReqLink.astro";
 import type { Version } from "../lib/board";
 import { byRepo, type Pickable } from "../lib/pick";
-import { pickCopy as t, roadmapCopy } from "../i18n";
+import { claimCopy, pickCopy as t, roadmapCopy } from "../i18n";
 
 interface Props {
   versions: { version: Version; goals: Pickable[] }[];
@@ -44,6 +44,9 @@ const { versions } = Astro.props;
               {g.area && (
                 <span class="goal__area">{`${t.label.area} ${g.area}`}</span>
               )}
+              <a class="goal__claim" href={`/claim/${g.id}/`}>
+                {claimCopy.claim}
+              </a>
               {g.text && <p class="goal__text">{g.text}</p>}
             </li>
           ))}
@@ -88,6 +91,9 @@ const { versions } = Astro.props;
     gap: var(--space-1) var(--space-3);
     padding-bottom: var(--space-3);
     border-bottom: 1px solid var(--border-soft);
+  }
+  .goal__claim {
+    font-size: var(--size-caption);
   }
   .goal__text {
     flex-basis: 100%;

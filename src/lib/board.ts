@@ -164,6 +164,12 @@ export interface Proposal {
   url: string | null;
 }
 
+/** A command of the developer command line, as its `commands.json` lists it. */
+export interface Tool {
+  name: string;
+  purpose: string;
+}
+
 export interface Board {
   format: typeof FORMAT;
   generated_at: string;
@@ -182,6 +188,8 @@ export interface Board {
   repos: BoardRepo[];
   releases: BoardRelease[];
   proposals: Proposal[];
+  /** Every command of `lfdev`; the commit read is `sources["tool-lfdev"]`. */
+  tools: Tool[];
 }
 
 /** The fields every snapshot carries as a list. */
@@ -197,6 +205,7 @@ const LISTS = [
   "repos",
   "releases",
   "proposals",
+  "tools",
 ] as const;
 
 function isRecord(v: unknown): v is Record<string, unknown> {

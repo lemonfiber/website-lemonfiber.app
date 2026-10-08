@@ -100,3 +100,37 @@ export const pickCopy = {
   filteredTo: "Filtered to",
   all: "← Every goal to pick up",
 };
+
+export const claimCopy = {
+  title: (id: string) => `Claim ${id}`,
+  description: (id: string) =>
+    `Who holds ${id}, where it is built and how many pull requests each repository has open, and how to claim it — read from the specification's board snapshot.`,
+  eyebrow: "Claim a goal",
+  of: (version: string) => `A goal of ${version}`,
+  requirement: "The requirement",
+  noText: "This snapshot does not carry the requirement's words.",
+  met: "This goal is met. There is nothing to claim.",
+  held: "Somebody already holds this goal, so it is not offered. Their pull requests:",
+  by: "by",
+  unknownAuthor: "author not read",
+  repos: "Where it is built",
+  noRepos: "No repository is named for this version yet.",
+  open: (n: number | null, cap: number) =>
+    n === null
+      ? "its open pull requests were not read"
+      : `${n} of ${cap} open pull requests`,
+  atCap:
+    "At the cap: nothing is offered here until one of its pull requests closes.",
+  how: "How to claim it",
+  command: "With lfdev, from a clone of the repository:",
+  orEditor: "Or in GitHub's editor, adding this row to the tracker:",
+  edit: (path: string) => `Edit ${path} on GitHub`,
+  create: (path: string) => `Create ${path} on GitHub, the row filled in`,
+  noEditor:
+    "This snapshot does not show how this repository keeps its tracker; lfdev knows.",
+  pr: "Open the pull request as a draft, titled:",
+  body: "Its body ends with these lines, the sign-off in your own name:",
+  rule: "How work is claimed",
+  claim: "Claim it",
+  holders: "Who holds it",
+};
