@@ -28,7 +28,7 @@
   "dependencies": {
     "@astrojs/markdown-satteri": "0.4.2",
     "@astrojs/preact": "6.0.6",
-    "@lemonfiber/website-kit": "github:lemonfiber/website-kit#68785e093659bcc944969f5a9bcb9f1d50fb94a8",
+    "@lemonfiber/website-kit": "github:lemonfiber/website-kit#30ab4066abfb83a3ce65ed4f013f3344f977b4dd",
     "astro": "7.3.5",
     "preact": "10.29.8"
   },

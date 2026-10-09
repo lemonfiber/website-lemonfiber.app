@@ -10,9 +10,7 @@ import { scrollableTables } from "@lemonfiber/website-kit/tables";
 // The public URL the site is served from.
 //
 // Custom domain (lemonfiber.app) → `base` stays "/". `.app` is HSTS-preloaded,
-// so the host must serve HTTPS (GitHub Pages and Cloudflare Pages both do).
-// For a project page (lemonfiber.github.io/website-lemonfiber.app) set
-// `base: "/website-lemonfiber.app"`.
+// so the host must serve HTTPS, which Cloudflare and GitHub Pages both do.
 export default defineConfig({
   site: "https://lemonfiber.app",
   base: "/",
