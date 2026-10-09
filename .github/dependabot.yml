@@ -84,9 +84,16 @@ updates:
     # fixes it is still offered. `1.0.0` is unaffected, and so is
     # `prettier@3.9.8` — the two were bumped together and only the plugin is at
     # fault, which a run of each pairing says plainly.
+    #
+    # `preact` is held below 11: `@astrojs/preact`, which renders the islands,
+    # declares `preact: ^10.6.5` as its peer, so npm refuses an install with 11.
+    # Its release that accepts 11 arrives as its own update, and preact moves
+    # with it in the same pull request.
     ignore:
       - dependency-name: prettier-plugin-astro
         versions: ["1.0.1"]
+      - dependency-name: preact
+        update-types: ["version-update:semver-major"]
     groups:
       npm:
         patterns: ["*"]
