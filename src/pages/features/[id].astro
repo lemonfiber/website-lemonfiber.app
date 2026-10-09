@@ -57,8 +57,7 @@ const facts: [string, string][] = [
         {t.back}
       </a>
       <h1 class="head__h">
-        <span class="mono">{feature.id}</span>
-        {feature.title}
+        <span class="mono">{feature.id}</span> {feature.title}
       </h1>
       <dl class="facts">
         {facts.map(([k, v]) => (
@@ -90,9 +89,10 @@ const facts: [string, string][] = [
         )}
       </dl>
       <p class="src">
-        <a href={source}>{t.source}</a> ·
+        <a href={source}>{t.source}</a>
+        {" · "}
         <span class="mono">
-          {roadmapCopy.asOf}
+          {roadmapCopy.asOf}{" "}
           <time datetime={board.generated_at}>{board.generated_at}</time>
         </span>
       </p>

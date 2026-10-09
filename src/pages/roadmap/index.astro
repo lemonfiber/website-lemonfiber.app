@@ -31,8 +31,8 @@ const barLabel = (v: Version) => {
       <h1 class="head__h">{t.heading}</h1>
       <p class="lead">{t.lead}</p>
       <p class="asof mono">
-        {t.asOf}
-        <time datetime={board.generated_at}>{board.generated_at}</time> ·
+        {t.asOf} <time datetime={board.generated_at}>{board.generated_at}</time>
+        {" · "}
         <a href={specFile(board, "70-operations/versions/")}>
           {`${t.revision} ${(board.sources.spec ?? "").slice(0, 7)}`}
         </a>{" "}

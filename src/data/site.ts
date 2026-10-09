@@ -15,6 +15,7 @@ export const site = {
   discord: "https://discord.nightworks.io",
   specUrl: "https://github.com/lemonfiber/spec",
   docsUrl: "https://docs.lemonfiber.app",
+  contributeUrl: "https://contribute.lemonfiber.app",
   license: "Hippocratic License 3.0",
   licenseUrl: "https://firstdonoharm.dev",
   by: { name: "NightWorks.io", url: "https://nightworks.io" },
