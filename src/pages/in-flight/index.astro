@@ -134,7 +134,7 @@ const staleNote = t.staleNote.replace("{days}", String(staleDays));
                     </>
                   )}
                   {contested.length > 0 && (
-                    <span class="badge badge--warn">
+                    <span class="badge badge--warn badge--list">
                       {`${t.contests} ${contested.join(", ")}`}
                     </span>
                   )}
@@ -190,8 +190,12 @@ const staleNote = t.staleNote.replace("{days}", String(staleDays));
     display: grid;
     gap: var(--space-3);
   }
+  /* A pull request's title, branch or path can be one long token; it breaks
+     rather than widening the list past the screen. */
   .pull {
+    min-width: 0;
     padding: var(--space-3) var(--space-4);
+    overflow-wrap: anywhere;
   }
   .pull__top {
     display: flex;
@@ -200,6 +204,7 @@ const staleNote = t.staleNote.replace("{days}", String(staleDays));
     gap: var(--space-3);
   }
   .pull__title {
+    min-width: 0;
     color: var(--text);
     font-weight: 600;
   }
