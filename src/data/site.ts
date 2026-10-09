@@ -233,6 +233,9 @@ export const services: Service[] = [
   service("bindery", "Bindery", "Book automation", "books", "Organise"),
   service("bazarr", "Bazarr", "Subtitles", "subs", "Organise"),
   library("jellyfin", "Jellyfin", "Media server"),
+  // Caddy in front of Jellyfin: the household reaches Jellyfin through it, and
+  // an item's stream or picture goes only to someone allowed to see it.
+  library("door", "Door", "Jellyfin's front door"),
   library("seerr", "Seerr", "Request portal"),
   library("calibre-web-automated", "Calibre-Web-Automated", "Ebook library"),
   library("audiobookshelf", "Audiobookshelf", "Audiobooks & podcasts"),
