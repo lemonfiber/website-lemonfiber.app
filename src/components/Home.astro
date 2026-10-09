@@ -12,6 +12,7 @@ import { progressOf, trainOf } from "../lib/train";
 import { homeCopy as t, copy } from "../i18n";
 import { promises, site, services } from "../data/site";
 import { relativeTime } from "../lib/format";
+import { coreRelease } from "../lib/releases";
 
 const siteDescription = copy.meta.description;
 
@@ -25,7 +26,7 @@ const scale = copy.spec.scale
   .replace("{features}", String(counts.features))
   .replace("{requirements}", String(counts.requirements))
   .replace("{areas}", counts.areas);
-const latest = data.releases[0];
+const latest = coreRelease(data.releases);
 const promiseIcon: Record<string, string> = {
   lemon: "🍋",
   slice: "✂️",
@@ -121,8 +122,7 @@ const application = {
       <p class="eyebrow">{t.strip.eyebrow}</p>
       <h2 class="strip__h">{t.strip.title}</h2>
       <p class="strip__sub">
-        {t.strip.sub}
-        {data.live ? t.strip.fresh : t.strip.snapshot}
+        {t.strip.sub} {data.live ? t.strip.fresh : t.strip.snapshot}
       </p>
     </div>
     <div class="strip__stats">
@@ -371,7 +371,7 @@ const application = {
     background:
       radial-gradient(
         120% 80% at 85% -10%,
-        color-mix(in srgb, var(--lf-lemon) 22%, transparent),
+        color-mix(in srgb, var(--lf-color-lemon) 22%, transparent),
         transparent 60%
       ),
       radial-gradient(
@@ -618,25 +618,25 @@ const application = {
   .cta {
     text-align: center;
     padding: var(--space-8) var(--space-5);
-    background: var(--lf-ink);
-    color: var(--lf-paper);
-    border-radius: var(--radius-lg);
+    background: var(--lf-color-ink);
+    color: var(--lf-color-paper);
+    border-radius: var(--radius-md);
     background-image: radial-gradient(
       80% 120% at 50% 0%,
-      color-mix(in srgb, var(--lf-fiber) 30%, transparent),
+      color-mix(in srgb, var(--lf-color-fiber) 30%, transparent),
       transparent 60%
     );
   }
   .cta__h {
     font-size: var(--size-display-l);
-    color: var(--lf-paper);
+    color: var(--lf-color-paper);
     max-width: 20ch;
     margin-inline: auto;
   }
   .cta__p {
     margin: var(--space-4) auto 0;
     max-width: 48ch;
-    color: color-mix(in srgb, var(--lf-paper) 75%, transparent);
+    color: color-mix(in srgb, var(--lf-color-paper) 75%, transparent);
   }
   .cta__row {
     display: flex;
@@ -646,16 +646,16 @@ const application = {
     margin-top: var(--space-6);
   }
   .cta .btn--primary {
-    background: var(--lf-lemon);
-    color: var(--lf-ink);
+    background: var(--lf-color-lemon);
+    color: var(--lf-color-ink);
   }
   .cta .btn--ghost {
-    color: var(--lf-paper);
-    border-color: color-mix(in srgb, var(--lf-paper) 30%, transparent);
+    color: var(--lf-color-paper);
+    border-color: color-mix(in srgb, var(--lf-color-paper) 30%, transparent);
   }
   .cta .btn--ghost:hover {
-    background: color-mix(in srgb, var(--lf-paper) 10%, transparent);
-    border-color: var(--lf-paper);
+    background: color-mix(in srgb, var(--lf-color-paper) 10%, transparent);
+    border-color: var(--lf-color-paper);
   }
 
   @media (max-width: 900px) {

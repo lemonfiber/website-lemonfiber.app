@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  CORE,
   changelogUrl,
+  coreRelease,
   entryCount,
   gatedOn,
   newestFirst,
@@ -51,5 +53,29 @@ describe("releases", () => {
           groups: [...release.groups, ...release.groups],
         }),
     ).toBe(2);
+  });
+});
+
+describe("coreRelease", () => {
+  const release = (repo: string, tag: string) => ({
+    repo,
+    tag,
+    name: tag,
+    url: `https://github.com/lemonfiber/${repo}/releases/tag/${tag}`,
+    publishedAt: "2026-10-09T00:00:00Z",
+  });
+
+  it("takes lemonfiber's newest release, passing any other repository's", () => {
+    expect(
+      coreRelease([
+        release("website-docs.lemonfiber.app", "docs-v0.16"),
+        release(CORE, "v0.17.0"),
+        release(CORE, "v0.16.0"),
+      ])?.tag,
+    ).toBe("v0.17.0");
+  });
+
+  it("finds none where lemonfiber has released nothing", () => {
+    expect(coreRelease([release("brand", "v1.0.0")])).toBeUndefined();
   });
 });

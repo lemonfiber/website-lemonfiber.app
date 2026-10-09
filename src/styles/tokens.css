@@ -1,79 +1,59 @@
 /*
- * Design tokens — the single source of truth for the site's look.
+ * Design tokens: the site's names for brand's values, and the roles they play.
  *
- * Primitives are lifted verbatim from lemonfiber/brand (tokens.json / tokens.css)
- * so the site and the future in-app web UI render from one palette. Do not
- * hand-pick colours here; add a primitive to the brand repo and mirror it.
+ * Every primitive is brand's own, from `@lemonfiber/brand/tokens.css`, which
+ * global.css imports ahead of this file: colour as --lf-color-*, type as
+ * --lf-font-* and --lf-size-*, space as --lf-space-*, radius as --lf-radius-*.
+ * This file names no value brand declares.
  *
- *   Primitives   raw brand values, theme-independent      (--lf-color-lemon …)
- *   Semantic     role-based, swapped per theme            (--bg, --text, --accent …)
+ *   Scale      brand's values under the names the components use (--space-4 …)
+ *   Semantic   role-based, swapped per theme                     (--bg, --text …)
  */
 
 :root {
-  /* ── Primitives — core ─────────────────────────────────────────── */
-  --lf-ink: #17160f;
-  --lf-ink-soft: #241f14;
-  --lf-lemon: #f0c419;
-  --lf-lemon-bright: #ffd84d;
-  --lf-fiber: #e07a17;
-  --lf-fiber-deep: #9c5411;
-  --lf-fiber-light: #f09a3c;
-  --lf-leaf: #5b6b2a;
-
-  /* ── Primitives — surfaces ─────────────────────────────────────── */
-  --lf-paper: #fbf7ea;
-  --lf-pith: #fbf6e7;
-  --lf-canvas: #ede7d5;
-  --lf-line: #dad2bc;
-  --lf-line-soft: #e4dcc7;
-  --lf-text-muted: #565344;
-  --lf-text-faint: #6a6756;
-
   /* ── Type ──────────────────────────────────────────────────────── */
-  --font-display: "Bricolage Grotesque", "Helvetica Neue", Arial, sans-serif;
-  --font-body:
-    "Golos Text", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-mono: "DM Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-  --weight-display: 800;
+  --font-display: var(--lf-font-display);
+  --font-body: var(--lf-font-body);
+  --font-mono: var(--lf-font-mono);
+  --weight-display: var(--lf-weight-display);
   --weight-semibold: 650;
-  --weight-body: 500;
-  --tracking-display: -0.045em;
+  --weight-body: var(--lf-weight-body);
+  --tracking-display: var(--lf-tracking-display);
   --tracking-tight: -0.02em;
-  --tracking-eyebrow: 0.18em;
+  --tracking-eyebrow: var(--lf-tracking-eyebrow);
 
+  /* Display sizes grow with the screen up to brand's size. */
   --size-hero: clamp(2.3rem, 3.4vw + 1rem, 3.4rem);
-  --size-display-xl: clamp(2.1rem, 4vw + 0.5rem, 3.375rem);
-  --size-display-l: clamp(1.7rem, 2.4vw + 0.6rem, 2.375rem);
-  --size-display-m: clamp(1.3rem, 1vw + 0.9rem, 1.6875rem);
+  --size-display-xl: clamp(2.1rem, 4vw + 0.5rem, var(--lf-size-display-xl));
+  --size-display-l: clamp(1.7rem, 2.4vw + 0.6rem, var(--lf-size-display-l));
+  --size-display-m: clamp(1.3rem, 1vw + 0.9rem, var(--lf-size-display-m));
+  /* Body copy is set at 16px, as on the documentation and contributor sites. */
   --size-body: 1rem;
-  --size-caption: 0.8125rem;
+  --size-caption: var(--lf-size-caption);
   /* The smallest text the site sets, labels and stamps included. */
-  --size-caption-min: 0.75rem;
-  --size-eyebrow: 0.75rem;
+  --size-caption-min: var(--lf-size-eyebrow);
+  --size-eyebrow: var(--lf-size-eyebrow);
 
-  /* ── Space — 4px base ──────────────────────────────────────────── */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 2.5rem;
-  --space-8: 3.5rem;
+  /* ── Space — brand's 4px scale, and two steps past it for sections ── */
+  --space-1: var(--lf-space-1);
+  --space-2: var(--lf-space-2);
+  --space-3: var(--lf-space-3);
+  --space-4: var(--lf-space-4);
+  --space-5: var(--lf-space-5);
+  --space-6: var(--lf-space-6);
+  --space-7: var(--lf-space-7);
+  --space-8: var(--lf-space-8);
   --space-9: 5rem;
   --space-10: 7rem;
 
   /* ── Radius & elevation ────────────────────────────────────────── */
-  --radius-sm: 3px;
-  --radius-md: 6px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-icon: 22%;
-  --radius-pill: 999px;
+  --radius-sm: var(--lf-radius-sm);
+  --radius-md: var(--lf-radius-md);
+  --radius-icon: var(--lf-radius-icon);
+  --radius-pill: var(--lf-radius-pill);
 
   --shadow-sm: 0 1px 2px rgba(23, 22, 15, 0.06);
-  --shadow-lift:
-    0 2px 5px rgba(23, 22, 15, 0.1), 0 8px 24px rgba(23, 22, 15, 0.06);
+  --shadow-lift: var(--lf-shadow-lift);
   --shadow-pop:
     0 4px 12px rgba(23, 22, 15, 0.12), 0 18px 48px rgba(23, 22, 15, 0.1);
 
@@ -84,25 +64,25 @@
   --target-min: 24px;
 
   /* ── Semantic — LIGHT (paper) is the default ───────────────────── */
-  --bg: var(--lf-paper);
-  --bg-tint: var(--lf-pith);
+  --bg: var(--lf-color-paper);
+  --bg-tint: var(--lf-color-pith);
   --surface: #ffffff;
-  --surface-2: var(--lf-canvas);
+  --surface-2: var(--lf-color-canvas);
   --surface-inset: #f4efdf;
-  --border: var(--lf-line);
-  --border-soft: var(--lf-line-soft);
-  --text: var(--lf-ink);
-  --text-muted: var(--lf-text-muted);
-  --text-faint: var(--lf-text-faint);
-  --accent: var(--lf-fiber);
-  --accent-strong: var(--lf-fiber-deep);
-  --accent-2: var(--lf-lemon);
-  --leaf: var(--lf-leaf);
+  --border: var(--lf-color-line);
+  --border-soft: var(--lf-color-line-soft);
+  --text: var(--lf-color-ink);
+  --text-muted: var(--lf-color-text-muted);
+  --text-faint: var(--lf-color-text-faint);
+  --accent: var(--lf-color-fiber);
+  --accent-strong: var(--lf-color-fiber-deep);
+  --accent-2: var(--lf-color-lemon);
+  --leaf: var(--lf-color-leaf);
 
   /* status semantics */
-  --ok: var(--lf-leaf);
+  --ok: var(--lf-color-ok);
   --ok-bg: #eaeed8;
-  --wip: var(--lf-fiber);
+  --wip: var(--lf-color-fiber);
   --wip-bg: #f8e6cf;
   --todo: #b7ad91;
   --todo-bg: #efe9d7;
@@ -113,18 +93,13 @@
   --border-strong: #c4b99c;
 
   /* Message semantics. Every colour has a tinted background sibling so a
-   * callout never has to hand-mix one at the call site.
-   *
-   * NOTE: unlike the primitives above, these are picked here rather than
-   * mirrored from lemonfiber/brand — the brand repo has no message palette
-   * yet. When it grows one, replace these with references to it. --accent-bg
-   * and --warn are derived from existing brand values; --danger and --info
-   * are new and are the two to review first. */
+   * callout never has to hand-mix one at the call site. Brand declares the
+   * alarm and the two tints; --warn and --info are the site's. */
   --accent-bg: rgba(224, 122, 23, 0.12);
   --warn: #a8730c;
-  --warn-bg: #faeecb;
-  --danger: #a32d1f;
-  --danger-bg: #f7dfd9;
+  --warn-bg: var(--lf-color-warn-tint);
+  --danger: var(--lf-color-alarm);
+  --danger-bg: var(--lf-color-alarm-tint);
   --info: #3c6577;
   --info-bg: #dde9ee;
 
@@ -139,24 +114,24 @@
 
 /* ── Semantic — INK (dark) ───────────────────────────────────────── */
 :root[data-theme="ink"] {
-  --bg: var(--lf-ink);
+  --bg: var(--lf-color-ink);
   --bg-tint: #1c1a12;
   --surface: #211e15;
   --surface-2: #2a271b;
   --surface-inset: #1a180f;
   --border: #34322a;
   --border-soft: #2b2921;
-  --text: var(--lf-paper);
+  --text: var(--lf-color-paper);
   --text-muted: #b3ac93;
   --text-faint: #958e78;
-  --accent: var(--lf-fiber-light);
-  --accent-strong: var(--lf-fiber);
-  --accent-2: var(--lf-lemon-bright);
+  --accent: var(--lf-color-fiber-light);
+  --accent-strong: var(--lf-color-fiber);
+  --accent-2: var(--lf-color-lemon-bright);
   --leaf: #8ea24a;
 
   --ok: #8ea24a;
   --ok-bg: #24291a;
-  --wip: var(--lf-fiber-light);
+  --wip: var(--lf-color-fiber-light);
   --wip-bg: #33261595;
   --todo: #6e6853;
   --todo-bg: #24221a;
@@ -165,7 +140,7 @@
   --border-strong: #45423a;
 
   --accent-bg: rgba(240, 154, 60, 0.14);
-  --warn: var(--lf-lemon-bright);
+  --warn: var(--lf-color-lemon-bright);
   --warn-bg: rgba(255, 216, 77, 0.13);
   --danger: #e8705c;
   --danger-bg: rgba(232, 112, 92, 0.14);
@@ -178,30 +153,30 @@
 /* Honour the OS preference until the user explicitly flips the toggle. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="paper"]) {
-    --bg: var(--lf-ink);
+    --bg: var(--lf-color-ink);
     --bg-tint: #1c1a12;
     --surface: #211e15;
     --surface-2: #2a271b;
     --surface-inset: #1a180f;
     --border: #34322a;
     --border-soft: #2b2921;
-    --text: var(--lf-paper);
+    --text: var(--lf-color-paper);
     --text-muted: #b3ac93;
     --text-faint: #958e78;
-    --accent: var(--lf-fiber-light);
-    --accent-strong: var(--lf-fiber);
-    --accent-2: var(--lf-lemon-bright);
+    --accent: var(--lf-color-fiber-light);
+    --accent-strong: var(--lf-color-fiber);
+    --accent-2: var(--lf-color-lemon-bright);
     --leaf: #8ea24a;
     --ok: #8ea24a;
     --ok-bg: #24291a;
-    --wip: var(--lf-fiber-light);
+    --wip: var(--lf-color-fiber-light);
     --wip-bg: #33261595;
     --todo: #6e6853;
     --todo-bg: #24221a;
     --surface-raised: #282419;
     --border-strong: #45423a;
     --accent-bg: rgba(240, 154, 60, 0.14);
-    --warn: var(--lf-lemon-bright);
+    --warn: var(--lf-color-lemon-bright);
     --warn-bg: rgba(255, 216, 77, 0.13);
     --danger: #e8705c;
     --danger-bg: rgba(232, 112, 92, 0.14);

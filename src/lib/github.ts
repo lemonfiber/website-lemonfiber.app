@@ -285,7 +285,6 @@ export async function getSiteData(): Promise<SiteData> {
     repos,
     goodFirstIssues,
     releases,
-    latestRelease: releases[0],
   };
   return cached;
 }

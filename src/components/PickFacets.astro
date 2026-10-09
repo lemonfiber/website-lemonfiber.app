@@ -42,16 +42,27 @@ const heading: Record<PickFacet, string> = {
 </nav>
 
 <style>
+  /* One row per facet, its heading beside its values, so the values wrap
+     across the page rather than down a narrow column. */
   .facets {
     display: grid;
-    gap: var(--space-4);
-    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--space-3);
     margin-top: var(--space-5);
+  }
+  .facet {
+    display: grid;
+    gap: var(--space-1) var(--space-4);
+  }
+  @media (min-width: 40rem) {
+    .facet {
+      grid-template-columns: 8rem 1fr;
+      align-items: baseline;
+    }
   }
   .facet__h {
     font-size: var(--size-caption);
     color: var(--text-muted);
-    margin: 0 0 var(--space-2);
+    margin: 0;
     font-weight: 600;
   }
   .facet ul {
@@ -60,7 +71,10 @@ const heading: Record<PickFacet, string> = {
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-1) var(--space-3);
+    gap: var(--space-1) var(--space-4);
+  }
+  .facet a {
+    white-space: nowrap;
   }
   .facet a[aria-current="page"] {
     font-weight: 700;

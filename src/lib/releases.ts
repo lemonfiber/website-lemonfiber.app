@@ -6,9 +6,10 @@
 
 import type { Board, BoardRelease, Goal } from "./board";
 import { repoFile } from "./roadmap";
+import type { Release } from "./types";
 
-/** The repository whose changelog the releases are read from. */
-const CORE = "lemonfiber";
+/** The repository whose changelog the releases are read from: lemonfiber's own. */
+export const CORE = "lemonfiber";
 /** Where the core keeps one JSON file per release. */
 const CHANGELOG = "reference/changelog";
 /** `#680`: a pull request in the core, as its changelog names one. */
@@ -45,4 +46,13 @@ export function gatedOn(
 /** How many entries a release records across its groups. */
 export function entryCount(release: BoardRelease): number {
   return release.groups.reduce((n, g) => n + g.entries.length, 0);
+}
+
+/**
+ * lemonfiber's newest release, out of every repository's, newest first. The
+ * other repositories release too (the documentation site keeps each frozen
+ * version as one), and none of them is the version of lemonfiber.
+ */
+export function coreRelease(releases: readonly Release[]): Release | undefined {
+  return releases.find((release) => release.repo === CORE);
 }

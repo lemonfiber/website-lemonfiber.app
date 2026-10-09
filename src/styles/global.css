@@ -1,6 +1,7 @@
 /* Base styles + a small utility layer. Component-specific CSS is scoped
  * inside each .astro component; this file is only the shared foundation. */
 
+@import "@lemonfiber/brand/tokens.css";
 @import "./tokens.css";
 
 *,
@@ -136,8 +137,8 @@ samp {
 }
 
 ::selection {
-  background: var(--lf-lemon);
-  color: var(--lf-ink);
+  background: var(--lf-color-lemon);
+  color: var(--lf-color-ink);
 }
 
 /* ── Utilities ─────────────────────────────────────────────────── */
@@ -207,7 +208,7 @@ samp {
 .card {
   background: var(--surface);
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
 }
 
@@ -238,8 +239,8 @@ samp {
 }
 
 .btn--primary {
-  background: var(--lf-ink);
-  color: var(--lf-paper);
+  background: var(--lf-color-ink);
+  color: var(--lf-color-paper);
   box-shadow: var(--shadow-lift);
 }
 :root[data-theme="ink"] .btn--primary,
@@ -247,13 +248,13 @@ samp {
   /* keep ink button legible in ink theme */
 }
 :root[data-theme="ink"] .btn--primary {
-  background: var(--lf-lemon);
-  color: var(--lf-ink);
+  background: var(--lf-color-lemon);
+  color: var(--lf-color-ink);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="paper"]) .btn--primary {
-    background: var(--lf-lemon);
-    color: var(--lf-ink);
+    background: var(--lf-color-lemon);
+    color: var(--lf-color-ink);
   }
 }
 .btn--primary:hover {
@@ -273,6 +274,7 @@ samp {
 .badge {
   display: inline-flex;
   align-items: center;
+  max-width: 100%;
   gap: 0.4em;
   font-size: var(--size-caption);
   font-weight: 600;
@@ -282,6 +284,13 @@ samp {
   background: var(--surface);
   color: var(--text-muted);
   white-space: nowrap;
+}
+
+/* A badge that lists things wraps inside its container, and takes a corner
+ * rather than a pill's end once it runs to two lines. */
+.badge--list {
+  white-space: normal;
+  border-radius: var(--radius-md);
 }
 
 /* Tinted variants. `.badge` is lemonfiber's name for what the beatrax site
@@ -402,8 +411,8 @@ summary {
   left: var(--space-4);
   top: -100px;
   z-index: 200;
-  background: var(--lf-ink);
-  color: var(--lf-paper);
+  background: var(--lf-color-ink);
+  color: var(--lf-color-paper);
   padding: 0.6em 1em;
   border-radius: var(--radius-md);
   transition: top 0.15s ease;

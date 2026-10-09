@@ -42,7 +42,4 @@ export interface SiteData {
   repos: Repo[];
   goodFirstIssues: Issue[];
   releases: Release[];
-  // Newest published release across the org, for the version the front page
-  // names. Optional because a fresh org genuinely has none.
-  latestRelease?: Release;
 }
