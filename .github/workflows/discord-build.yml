@@ -6,20 +6,7 @@
 name: discord-build
 on:
   workflow_run:
-    workflows:
-      [
-        ci,
-        build,
-        deploy,
-        codeql,
-        scorecard,
-        spec-check,
-        hygiene,
-        security,
-        dco,
-        commitlint,
-        labeler,
-      ]
+    workflows: [gates, build, deploy, codeql, scorecard]
     types: [completed]
 permissions:
   contents: read

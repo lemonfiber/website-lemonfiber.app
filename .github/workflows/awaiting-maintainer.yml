@@ -7,10 +7,8 @@
 # is a workflow the flag never waits for. The checks `main` requires come from
 # these workflows:
 #
-#   ci      spec-check / spec-check, dco / dco, commitlint / commitlint,
-#           attribution / attribution, workflow-pins / workflow-pins,
-#           hygiene / {actionlint, invite, lines, links, markdown, pins,
-#           shared-files, typos}, security / {gitleaks, osv-scanner}
+#   gates   gates / gates
+#   pin-only pin-only / pin-only
 #   build   build
 #   sonar   gate / gate
 #   codeql  analyze (actions), analyze (javascript-typescript), alerts / alerts
@@ -26,7 +24,7 @@ on:
   # nothing afterwards to notice the pull request became mergeable — the flag
   # never goes up and nothing says why.
   workflow_run:
-    workflows: [ci, build, sonar, codeql]
+    workflows: [gates, pin-only, build, sonar, codeql]
     types: [completed]
   pull_request_review:
     types: [submitted]
