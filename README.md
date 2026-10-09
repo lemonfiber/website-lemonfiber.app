@@ -99,7 +99,7 @@ src/i18n/              the site's copy — chrome, front page, content pages
 src/layouts/Base.astro the shell every page renders into
 src/components/        Nav · Footer · Console · FormsSwitcher · RepoCard · …
 src/pages/             index · transparency · contribute · 404
-src/styles/tokens.css  design tokens mirrored from lemonfiber/brand
+src/styles/tokens.css  brand's tokens, named and mapped to roles
 ```
 
 ## Proving the propose form

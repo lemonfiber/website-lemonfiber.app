@@ -40,7 +40,7 @@ src/
 ├── components/       Nav, Footer, Console, FormsSwitcher, RepoCard, …
 ├── layouts/Base.astro
 ├── pages/            index · transparency · contribute · 404
-└── styles/tokens.css design tokens mirrored from lemonfiber/brand
+└── styles/tokens.css brand's tokens, named and mapped to roles
 public/brand/         logo + mark, copied from the brand repo
 ```
 
@@ -55,10 +55,11 @@ public/brand/         logo + mark, copied from the brand repo
   cannot be read, or is in an unknown format, fails the build so the published
   site stays as it was, and no committed copy of it may stand in. A GitHub API
   read for something the snapshot does not hold falls back to `src/data/seed.ts`.
-- **Tokens come from `brand`.** Colours, spacing and the type scale mirror
-  `lemonfiber/brand`. The faces do not yet: brand's tokens name Golos Text for
-  body and DM Mono for mono, and this site still sets Bricolage and JetBrains
-  Mono. Don't invent a colour here; add it there and mirror it.
+- **Tokens come from `brand`.** `@lemonfiber/brand/tokens.css`, pinned by
+  commit, declares every colour, face, size, space and radius;
+  `src/styles/tokens.css` names them for the components and maps them to roles,
+  and declares no value brand has. The faces are served from
+  `@lemonfiber/website-kit`. Don't invent a colour here; add it to brand.
 - **Nothing renders in `lib`.** The motor returns data; components render it.
 - **Self-hosted assets only.** No external fonts, scripts or trackers at runtime
   — privacy is a promise the site itself must keep.

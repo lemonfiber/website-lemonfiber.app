@@ -28,7 +28,7 @@ const html = lines.join("\n");
   .console {
     background: var(--term-bg);
     border: 1px solid var(--term-line);
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     overflow: hidden;
     box-shadow: var(--shadow-pop);
     font-family: var(--font-mono);
@@ -51,7 +51,7 @@ const html = lines.join("\n");
     background: #e0533f;
   }
   .dot--y {
-    background: var(--lf-lemon);
+    background: var(--lf-color-lemon);
   }
   .dot--g {
     background: #7bb04a;
@@ -74,7 +74,7 @@ const html = lines.join("\n");
     scrollbar-width: thin;
   }
   :global(.c-prompt) {
-    color: var(--lf-lemon);
+    color: var(--lf-color-lemon);
     font-weight: 700;
   }
   :global(.c-cmd) {
@@ -82,7 +82,7 @@ const html = lines.join("\n");
     font-weight: 600;
   }
   :global(.c-flag) {
-    color: var(--lf-fiber-light);
+    color: var(--lf-color-fiber-light);
   }
   :global(.c-dim) {
     color: var(--term-dim);
@@ -91,7 +91,7 @@ const html = lines.join("\n");
     color: #9ccc5a;
   }
   :global(.c-warn) {
-    color: var(--lf-fiber-light);
+    color: var(--lf-color-fiber-light);
   }
   :global(.c-box) {
     color: var(--term-dim);
