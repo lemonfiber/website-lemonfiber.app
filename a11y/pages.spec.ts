@@ -1,4 +1,10 @@
+import { existsSync, readFileSync } from "node:fs";
+
 import AxeBuilder from "@axe-core/playwright";
+import {
+  HEADERS_FILE,
+  headersViolations,
+} from "@lemonfiber/website-kit/headers";
 import { layoutViolations, probeLayout } from "@lemonfiber/website-kit/layout";
 import { expect, test } from "@playwright/test";
 
@@ -111,4 +117,12 @@ test("the menu opens below the bar, with every link on screen", async ({
     );
     expect((box?.x ?? -1) + (box?.width ?? 0)).toBeLessThanOrEqual(PHONE.width);
   }
+});
+
+/** The build the suite serves is the one the host is given. */
+test("the build carries the headers its host sends", () => {
+  const path = `dist/${HEADERS_FILE}`;
+  expect(
+    headersViolations(existsSync(path) ? readFileSync(path, "utf8") : null),
+  ).toEqual([]);
 });

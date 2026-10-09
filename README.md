@@ -44,6 +44,12 @@ fails and the published site stays as it was; `BOARD_SNAPSHOT` names a local
 file or another address to build from. If GitHub's API cannot be reached, the
 build uses the committed snapshot in `src/data/seed.ts` and `seed-releases.ts`.
 
+`deploy.yml` publishes the build to Cloudflare, as the assets-only Worker
+`wrangler.jsonc` declares, and to GitHub Pages while the domain still points
+there. The headers the host sends with every page come from the `_headers` file
+the build writes at its root (`@lemonfiber/website-kit/headers`), and the
+Playwright suite holds the build to them.
+
 User documentation is not here. Installing, the FAQ, the specification, the
 roadmap and the changelog are on
 [docs.lemonfiber.app](https://docs.lemonfiber.app), built from
