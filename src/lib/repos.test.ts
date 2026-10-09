@@ -6,6 +6,8 @@ import {
   repoState,
   repoStates,
   trackerUrl,
+  repoRoute,
+  repoSlug,
 } from "./repos";
 import { fixtureBoard } from "../test/board.fixture";
 
@@ -70,5 +72,17 @@ describe("addresses", () => {
       `${SPEC}/30-repos/lemonfiber.md`,
     );
     expect(repoMapUrl(board)).toBe(`${SPEC}/30-repos/repos.toml`);
+  });
+});
+
+describe("repoRoute", () => {
+  it("is the repository's name below /repos/", () => {
+    expect(repoRoute("lemonfiber")).toBe("/repos/lemonfiber/");
+    expect(repoSlug("sdk-ts")).toBe("sdk-ts");
+  });
+
+  it("spells a leading dot out, since a hidden directory is not served", () => {
+    expect(repoRoute(".github")).toBe("/repos/dot-github/");
+    expect(repoSlug(".github")).toBe("dot-github");
   });
 });

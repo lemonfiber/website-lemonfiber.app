@@ -4,6 +4,7 @@ import SnapshotNote from "../../components/SnapshotNote.astro";
 import ReqLink from "../../components/ReqLink.astro";
 import { loadBoard } from "../../lib/board";
 import { pullsByRepo } from "../../lib/in-flight";
+import { repoRoute } from "../../lib/repos";
 import { requirementPage } from "../../lib/feature-page";
 import { inFlightCopy as t } from "../../i18n";
 
@@ -89,7 +90,7 @@ const staleNote = t.staleNote.replace("{days}", String(staleDays));
       {groups.map((g) => (
         <section class="repo" id={g.name} aria-labelledby={`h-${g.name}`}>
           <h2 class="sec__h" id={`h-${g.name}`}>
-            <a class="mono" href={`/repos/${g.name}/`}>
+            <a class="mono" href={repoRoute(g.name)}>
               {g.name}
             </a>
             <span class="repo__count">

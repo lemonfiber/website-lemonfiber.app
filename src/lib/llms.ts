@@ -6,6 +6,7 @@
 // A pure function over its inputs. The endpoint serves what it returns.
 
 import type { Board, BoardRepo } from "./board";
+import { repoRoute } from "./repos";
 import type { SitePage } from "../data/pages";
 
 const ORIGIN = "https://lemonfiber.app";
@@ -23,7 +24,7 @@ export interface LlmsProse {
 /** One repository, linked to its page here, with its language. */
 function repoLine(repo: Pick<BoardRepo, "name" | "lang">): string {
   const lang = repo.lang ? ` — ${repo.lang}` : "";
-  return `- [lemonfiber/${repo.name}](${ORIGIN}/repos/${repo.name}/)${lang}`;
+  return `- [lemonfiber/${repo.name}](${ORIGIN}${repoRoute(repo.name)})${lang}`;
 }
 
 /** The newest release's tag, the one an install names. */

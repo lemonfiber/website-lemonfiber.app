@@ -18,7 +18,7 @@ const facets = facetValues(cards);
       <h1 class="head__h">{t.heading}</h1>
       <p class="lead">{t.lead}</p>
       <p class="asof mono">
-        {roadmapCopy.asOf}
+        {roadmapCopy.asOf}{" "}
         <time datetime={board.generated_at}>{board.generated_at}</time>
       </p>
     </div>
@@ -101,6 +101,9 @@ const facets = facetValues(cards);
     padding: var(--space-1) var(--space-2);
   }
   .board :global(.bf__clear) {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
     font-size: var(--size-caption);
     color: var(--text);
   }

@@ -123,6 +123,12 @@ samp {
   font-size: 0.9em;
 }
 
+/* A path or an identifier in running text breaks rather than pushing the page
+   wider than the screen. */
+:not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
 :focus-visible {
   outline: 2.5px solid var(--accent);
   outline-offset: 3px;
@@ -145,6 +151,12 @@ samp {
 
 .section {
   padding-block: clamp(var(--space-8), 8vw, var(--space-10));
+}
+
+/* A page's heading block and the section after it are one unit: the heading's
+ * own bottom padding is the gap, not that and the next section's top too. */
+.section.head + .section {
+  padding-top: 0;
 }
 
 .prose {
@@ -361,6 +373,28 @@ samp {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+/* A link that stands alone — an identifier, a back link, a source — gets at
+ * least a target's box (WCAG 2.5.8). Links inside a sentence are exempt and
+ * keep the text's own line. */
+a.mono,
+.mono a,
+dd > a,
+.src a,
+.back,
+.item__src {
+  display: inline-block;
+  min-width: var(--target-min);
+  min-height: var(--target-min);
+  line-height: var(--target-min);
+}
+
+/* A disclosure's summary is a control, and gets a control's height. */
+summary {
+  min-height: var(--target-min);
+  line-height: var(--target-min);
+  cursor: pointer;
 }
 
 .skip-link {

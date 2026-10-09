@@ -10,6 +10,7 @@ import ReqLink from "../../components/ReqLink.astro";
 import { loadBoard } from "../../lib/board";
 import { claimPages, offered, type ClaimPage } from "../../lib/claim";
 import { claimCopy as t, roadmapCopy } from "../../i18n";
+import { repoRoute } from "../../lib/repos";
 
 export async function getStaticPaths() {
   const board = await loadBoard();
@@ -82,7 +83,7 @@ const verdict = roadmapCopy.verdict[page.verdict];
         {page.repos.map((r) => (
           <li class="repo">
             <h3 class="repo__h">
-              <a class="mono" href={`/repos/${r.repo}/`}>
+              <a class="mono" href={repoRoute(r.repo)}>
                 {r.repo}
               </a>
               <span class="repo__count">{t.open(r.counted, page.cap)}</span>
@@ -149,7 +150,10 @@ const verdict = roadmapCopy.verdict[page.verdict];
     color: var(--text-muted);
     font-weight: 400;
   }
+  /* Text to copy wraps rather than scrolling: a phone shows all of it, and
+     what is copied keeps its own line breaks. */
   pre {
-    overflow-x: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
   }
 </style>

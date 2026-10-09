@@ -19,8 +19,8 @@ const sources = Object.entries(board.sources).sort(([a], [b]) =>
 
 <div class="snap">
   <p class="snap__line mono">
-    {t.asOf}
-    <time datetime={board.generated_at}>{board.generated_at}</time> ·
+    {t.asOf} <time datetime={board.generated_at}>{board.generated_at}</time>
+    {" · "}
     <a href={commitUrl(`spec@${board.sources.spec ?? ""}`)}>
       {`${t.revision} ${(board.sources.spec ?? "").slice(0, 7)}`}
     </a>

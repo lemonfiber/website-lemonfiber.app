@@ -4,6 +4,7 @@
 import ReqLink from "./ReqLink.astro";
 import type { Version } from "../lib/board";
 import { byRepo, type Pickable } from "../lib/pick";
+import { repoRoute } from "../lib/repos";
 import { claimCopy, pickCopy as t, roadmapCopy } from "../i18n";
 
 interface Props {
@@ -27,7 +28,7 @@ const { versions } = Astro.props;
       <section class="grp">
         <h3 class="grp__h">
           {group.repo ? (
-            <a class="mono" href={`/repos/${group.repo}/`}>
+            <a class="mono" href={repoRoute(group.repo)}>
               {group.repo}
             </a>
           ) : (

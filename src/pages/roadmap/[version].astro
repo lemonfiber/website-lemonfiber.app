@@ -62,8 +62,7 @@ const repoUrl = (repo: string) => `https://github.com/lemonfiber/${repo}`;
       {version.delivers && <p class="lead">{version.delivers}</p>}
       <VerdictBar counts={counts} label={label} />
       <p class="asof mono">
-        {t.asOf}
-        <time datetime={board.generated_at}>{board.generated_at}</time>
+        {t.asOf} <time datetime={board.generated_at}>{board.generated_at}</time>
       </p>
     </div>
   </section>

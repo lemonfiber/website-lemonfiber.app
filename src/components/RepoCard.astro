@@ -25,7 +25,7 @@ const langColor: Record<string, string> = {
   rel="noopener"
 >
   <div class="rc__top">
-    <h4 class="rc__name">{repo.name}</h4>
+    <h3 class="rc__name">{repo.name}</h3>
     <span class="rc__role">{repo.role}</span>
   </div>
   <p class="rc__desc">{repo.description}</p>
@@ -85,7 +85,7 @@ const langColor: Record<string, string> = {
     letter-spacing: var(--tracking-tight);
   }
   .rc__role {
-    font-size: 0.7rem;
+    font-size: var(--size-caption-min);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.08em;
@@ -123,7 +123,7 @@ const langColor: Record<string, string> = {
   }
   .rc__chip {
     font-family: var(--font-mono);
-    font-size: 0.72rem;
+    font-size: var(--size-caption-min);
     color: var(--text-muted);
     background: var(--surface-inset);
     border: 1px solid var(--border-soft);

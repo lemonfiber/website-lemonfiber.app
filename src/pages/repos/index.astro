@@ -5,6 +5,7 @@ import { loadBoard } from "../../lib/board";
 import {
   againstCap,
   repoMapUrl,
+  repoRoute,
   repoStates,
   type RepoState,
 } from "../../lib/repos";
@@ -57,7 +58,7 @@ const rows = states.map((s) => ({
             {rows.map(({ s, cell, pulls }) => (
               <tr>
                 <th scope="row">
-                  <a class="mono" href={`/repos/${s.repo.name}/`}>
+                  <a class="mono" href={repoRoute(s.repo.name)}>
                     {s.repo.name}
                   </a>
                 </th>

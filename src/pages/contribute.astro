@@ -41,7 +41,10 @@ const commandsSource = toolCommit
         >
           Join the Discord
         </a>
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}>
+        <a
+          class="btn btn--ghost"
+          href={`${site.contributeUrl}/community/how-change-gets-in/`}
+        >
           Contributing guide
         </a>
         <a class="btn btn--ghost" href="/spec/">
@@ -72,7 +75,7 @@ const commandsSource = toolCommit
               {w.emoji}
             </span>
             <div>
-              <h3 class="way__title">{w.title}</h3>
+              <h2 class="way__title">{w.title}</h2>
               <p class="way__body">{w.body}</p>
             </div>
           </article>
@@ -206,18 +209,18 @@ const commandsSource = toolCommit
         </p>
       </div>
       <div class="start__links">
-        <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/`}>
-          How change gets in
-        </a>
         <a
           class="btn btn--ghost"
-          href={`${site.docsUrl}/contributing/cite-the-spec/`}
+          href={`${site.contributeUrl}/community/how-change-gets-in/`}
         >
+          How change gets in
+        </a>
+        <a class="btn btn--ghost" href="/spec/50-governance/contributing/">
           The one rule
         </a>
         <a
           class="btn btn--ghost"
-          href={`${site.docsUrl}/contributing/conduct/`}
+          href={`${site.contributeUrl}/community/conduct/`}
         >
           Code of Conduct
         </a>
@@ -438,6 +441,7 @@ const commandsSource = toolCommit
     }
     .start__links {
       flex-direction: row;
+      flex-wrap: wrap;
     }
     .gfi__meta .gfi__when {
       display: none;

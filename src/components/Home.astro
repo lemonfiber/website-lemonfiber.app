@@ -295,7 +295,7 @@ const application = {
       <a class="btn btn--ghost" href="/spec/">
         Browse the spec
       </a>
-      <a class="btn btn--ghost" href={`${site.docsUrl}/contributing/rfcs/`}>
+      <a class="btn btn--ghost" href="/proposals/">
         RFCs &amp; Drafts
       </a>
       <a class="btn btn--ghost" href="/roadmap/">
@@ -470,7 +470,7 @@ const application = {
     color: var(--accent-strong);
   }
   .cell__l {
-    font-size: 0.72rem;
+    font-size: var(--size-caption-min);
     color: var(--text-faint);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -485,7 +485,7 @@ const application = {
     border-top: 1px dashed var(--border);
   }
   .strip__now-label {
-    font-size: 0.7rem;
+    font-size: var(--size-caption-min);
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;

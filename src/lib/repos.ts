@@ -101,3 +101,17 @@ export function repoPageUrl(
 export function repoMapUrl(board: Pick<Board, "sources">): string {
   return specFile(board, "30-repos/repos.toml");
 }
+
+/** The address of a repository's page here.
+ *
+ *  A name that starts with a dot, such as `.github`, would be a hidden
+ *  directory in the built site, which the static host does not serve; it is
+ *  spelt with `dot-` in its place. */
+export function repoRoute(name: string): string {
+  return `/repos/${repoSlug(name)}/`;
+}
+
+/** The route parameter a repository's page is built at. */
+export function repoSlug(name: string): string {
+  return name.startsWith(".") ? `dot-${name.slice(1)}` : name;
+}
