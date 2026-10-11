@@ -14,9 +14,10 @@ on:
   repository_dispatch:
     types: [rebuild-site]
 
+# One deploy at a time, and a deploy already running is never cancelled.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: read
