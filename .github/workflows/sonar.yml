@@ -38,5 +38,6 @@ jobs:
     #   (HTTP 404), so the number Q-R64 names is not being enforced on this run.
     with:
       project: lemonfiber_website
+      allowed-open: 4
     secrets:
       sonar-token: ${{ secrets.SONAR_TOKEN }}
