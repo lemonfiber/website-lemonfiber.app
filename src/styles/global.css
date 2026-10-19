@@ -22,12 +22,12 @@ html {
   html {
     scroll-behavior: auto;
   }
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
+  :not(#\#),
+  :not(#\#)::before,
+  :not(#\#)::after {
+    animation-duration: 0.001ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.001ms;
   }
 }
 
@@ -76,13 +76,11 @@ button {
 }
 
 /* The `hidden` attribute is only display:none in the UA stylesheet, so any
- * author rule that sets display — a flex row, a grid item — silently outranks
- * it and the element stays visible. Everything on this site that hides itself
- * does so with `hidden` (the language switcher, the changelog filters), so it
- * has to actually win. This is the one place !important is correct: the whole
- * point of the attribute is that it overrides layout. */
-[hidden] {
-  display: none !important;
+ * author rule that sets display — a flex row, a grid item — outranks it and
+ * the element stays visible. `:not(#\#)` matches every element with an id's
+ * weight, so this rule and the reduced-motion one above outrank any class. */
+[hidden]:not(#\#) {
+  display: none;
 }
 
 a {
