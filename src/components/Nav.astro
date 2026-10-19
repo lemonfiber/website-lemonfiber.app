@@ -72,7 +72,11 @@ const links = [
         href={site.githubOrg}
         target="_blank"
         rel="noopener"
-        aria-label="Lemonfiber on GitHub"
+        aria-label={
+          stars
+            ? `Lemonfiber on GitHub, ${compact(stars)} stars`
+            : "Lemonfiber on GitHub"
+        }
       >
         <svg
           viewBox="0 0 16 16"
