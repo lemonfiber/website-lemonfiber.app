@@ -26,29 +26,29 @@
     "lint": "eslint . --max-warnings 0"
   },
   "dependencies": {
-    "@astrojs/markdown-satteri": "0.4.3",
-    "@astrojs/preact": "6.0.6",
+    "@astrojs/markdown-satteri": "0.4.4",
+    "@astrojs/preact": "6.1.0",
     "@lemonfiber/brand": "github:lemonfiber/brand#46981e8a7cd1a8d1e9728bf30d53357d2679eb93",
     "@lemonfiber/website-kit": "github:lemonfiber/website-kit#30ab4066abfb83a3ce65ed4f013f3344f977b4dd",
-    "astro": "7.3.8",
+    "astro": "7.4.0",
     "preact": "10.29.8"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
     "@astrojs/sitemap": "^3.7.4",
-    "@axe-core/playwright": "4.13.0",
+    "@axe-core/playwright": "4.14.0",
     "@eslint/js": "10.0.1",
-    "@playwright/test": "1.64.0",
+    "@playwright/test": "1.64.1",
     "@types/hast": "3.0.5",
     "@types/node": "26.6.5",
-    "@vitest/coverage-v8": "5.0.3",
+    "@vitest/coverage-v8": "5.0.5",
     "eslint": "10.12.0",
     "eslint-plugin-astro": "3.2.1",
     "globals": "17.13.0",
-    "prettier": "3.9.9",
+    "prettier": "3.9.10",
     "prettier-plugin-astro": "1.1.1",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.71.1",
-    "vitest": "5.0.3"
+    "typescript-eslint": "8.71.2",
+    "vitest": "5.0.5"
   }
 }
