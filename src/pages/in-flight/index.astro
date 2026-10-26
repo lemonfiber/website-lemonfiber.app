@@ -10,8 +10,7 @@ import { inFlightCopy as t } from "../../i18n";
 
 const board = await loadBoard();
 const groups = pullsByRepo(board);
-const { cap, stale_days: staleDays } = board.claims;
-const over = board.repos.filter((r) => r.over_cap);
+const { stale_days: staleDays } = board.claims;
 const urlOf = new Map(board.pulls.map((p) => [`${p.repo}#${p.number}`, p.url]));
 const age = (days: number | null) => {
   if (days === null) return null;
@@ -38,49 +37,28 @@ const staleNote = t.staleNote.replace("{days}", String(staleDays));
   </section>
 
   <section class="section">
-    <div class="container flags">
-      <div>
-        <h2 class="sec__h">{t.overCap}</h2>
-        {over.length === 0 ? (
-          <p>{t.overCapNone}</p>
-        ) : (
-          <ul class="list">
-            {over.map((r) => (
-              <li>
-                <a class="mono" href={`#${r.name}`}>
-                  {r.name}
-                </a>{" "}
-                <span class="badge badge--danger">
-                  {`${r.counted_pulls} ${t.counted} ${cap}`}
-                </span>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-      <div>
-        <h2 class="sec__h">{t.contested}</h2>
-        {board.contested.length === 0 ? (
-          <p>{t.contestedNone}</p>
-        ) : (
-          <ul class="list">
-            {board.contested.map((c) => (
-              <li>
-                <ReqLink id={c.id} page={page(c.id)} />
-                {" — "}
-                {c.pulls.map((key, i) => (
-                  <>
-                    {i > 0 && ", "}
-                    <a class="mono" href={urlOf.get(key)}>
-                      {key}
-                    </a>
-                  </>
-                ))}
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+    <div class="container">
+      <h2 class="sec__h">{t.contested}</h2>
+      {board.contested.length === 0 ? (
+        <p>{t.contestedNone}</p>
+      ) : (
+        <ul class="list">
+          {board.contested.map((c) => (
+            <li>
+              <ReqLink id={c.id} page={page(c.id)} />
+              {" — "}
+              {c.pulls.map((key, i) => (
+                <>
+                  {i > 0 && ", "}
+                  <a class="mono" href={urlOf.get(key)}>
+                    {key}
+                  </a>
+                </>
+              ))}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   </section>
 
@@ -93,14 +71,7 @@ const staleNote = t.staleNote.replace("{days}", String(staleDays));
             <a class="mono" href={repoRoute(g.name)}>
               {g.name}
             </a>
-            <span class="repo__count">
-              {`${g.pulls.length} ${t.pullsIn}`}
-              {typeof g.repo?.counted_pulls === "number" &&
-                ` · ${g.repo.counted_pulls} ${t.counted} ${cap}`}
-            </span>
-            {g.repo?.over_cap && (
-              <span class="badge badge--danger">{t.overCapBadge}</span>
-            )}
+            <span class="repo__count">{`${g.pulls.length} ${t.pullsIn}`}</span>
           </h2>
           <ul class="pulls">
             {g.pulls.map(({ pull, age: days, contested }) => (
@@ -152,11 +123,6 @@ const staleNote = t.staleNote.replace("{days}", String(staleDays));
   .head__h {
     font-size: var(--size-display-xl);
     margin: var(--space-3) 0;
-  }
-  .flags {
-    display: grid;
-    gap: var(--space-6);
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
   }
   .list {
     list-style: none;

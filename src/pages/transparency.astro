@@ -6,16 +6,12 @@ import { getSiteData } from "../lib/github";
 import { loadBoard } from "../lib/board";
 import { progressOf, trainOf } from "../lib/train";
 import { newestFirst } from "../lib/releases";
-import { againstCap } from "../lib/repos";
 import { site } from "../data/site";
 
 const data = await getSiteData();
 const board = await loadBoard();
 const train = progressOf(trainOf(board));
-const openPulls = board.repos.reduce(
-  (n, r) => n + (againstCap(r)?.counted ?? 0),
-  0,
-);
+const openPulls = board.pulls.length;
 const releases = newestFirst(board).slice(0, 6);
 const primary = data.repos.filter((r) => r.primary);
 const secondary = data.repos.filter((r) => !r.primary);

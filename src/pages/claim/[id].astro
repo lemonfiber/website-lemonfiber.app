@@ -1,9 +1,9 @@
 ---
-// A goal's claim page (GOV-R57, GOV-R58): who holds it, where it is built
-// and how full each repository is, and the two ways to claim it — the lfdev
-// command, and the tracker row to paste in GitHub's editor with the pull
-// request's title and the lines its body ends with (GOV-R62). A met goal, a
-// held one and a repository at the cap offer nothing.
+// A goal's claim page (GOV-R57): who holds it, where it is built and how many
+// pull requests each repository has open, and the two ways to claim it — the
+// lfdev command, and the tracker row to paste in GitHub's editor with the pull
+// request's title and the lines its body ends with (GOV-R62). A met goal and a
+// held one offer nothing.
 import Base from "../../layouts/Base.astro";
 import SnapshotNote from "../../components/SnapshotNote.astro";
 import ReqLink from "../../components/ReqLink.astro";
@@ -86,10 +86,9 @@ const verdict = roadmapCopy.verdict[page.verdict];
               <a class="mono" href={repoRoute(r.repo)}>
                 {r.repo}
               </a>
-              <span class="repo__count">{t.open(r.counted, page.cap)}</span>
+              <span class="repo__count">{t.open(r.open)}</span>
             </h3>
-            {open && r.atCap && <p class="note">{t.atCap}</p>}
-            {open && !r.atCap && (
+            {open && (
               <div class="how">
                 <h4>{t.how}</h4>
                 <p>{t.command}</p>

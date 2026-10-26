@@ -3,7 +3,6 @@ import Base from "../../layouts/Base.astro";
 import SnapshotNote from "../../components/SnapshotNote.astro";
 import { loadBoard } from "../../lib/board";
 import {
-  againstCap,
   repoMapUrl,
   repoRoute,
   repoStates,
@@ -13,16 +12,11 @@ import { reposCopy as t } from "../../i18n";
 
 const board = await loadBoard();
 const states = repoStates(board);
-const cap = board.claims.cap;
 const trackerCell = (s: RepoState) =>
   s.repo.tracker === null
     ? { text: t.noTracker, href: null }
     : { text: t.trackerState[s.repo.tracker], href: s.trackerUrl };
-const rows = states.map((s) => ({
-  s,
-  cell: trackerCell(s),
-  pulls: againstCap(s.repo),
-}));
+const rows = states.map((s) => ({ s, cell: trackerCell(s) }));
 ---
 
 <Base active="repos" title={t.title} description={t.description}>
@@ -30,12 +24,12 @@ const rows = states.map((s) => ({
     <div class="container">
       <p class="eyebrow">{t.eyebrow}</p>
       <h1 class="head__h">{t.heading}</h1>
-      <p class="lead">{t.lead.replace("{cap}", String(cap))}</p>
+      <p class="lead">{t.lead}</p>
       <SnapshotNote
         board={board}
         rule={{
           path: "50-governance/working-in-the-repositories.md",
-          label: t.capRule,
+          label: t.working,
         }}
       />
     </div>
@@ -55,7 +49,7 @@ const rows = states.map((s) => ({
             </tr>
           </thead>
           <tbody>
-            {rows.map(({ s, cell, pulls }) => (
+            {rows.map(({ s, cell }) => (
               <tr>
                 <th scope="row">
                   <a class="mono" href={repoRoute(s.repo.name)}>
@@ -78,18 +72,10 @@ const rows = states.map((s) => ({
                     : "—"}
                 </td>
                 <td>
-                  {pulls ? (
-                    <>
-                      <span class="mono">{`${pulls.counted} ${t.of} ${cap}`}</span>
-                      {pulls.bots > 0 && (
-                        <span class="muted">{` + ${t.bots(pulls.bots)}`}</span>
-                      )}
-                      {s.repo.over_cap && (
-                        <span class="badge badge--danger">{t.overCap}</span>
-                      )}
-                    </>
-                  ) : (
+                  {s.repo.open_pulls === null ? (
                     <span class="muted">{t.notRead}</span>
+                  ) : (
+                    <span class="mono">{s.repo.open_pulls}</span>
                   )}
                 </td>
               </tr>

@@ -43,8 +43,6 @@ describe("llmsText", () => {
             note: null,
             pages: [],
             open_pulls: null,
-            counted_pulls: null,
-            over_cap: null,
             tracker: null,
           },
         ],

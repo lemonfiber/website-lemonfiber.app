@@ -11,12 +11,12 @@ export const snapshotCopy = {
 export const reposCopy = {
   title: "Repositories",
   description:
-    "Every repository of the lemonfiber organisation: what its tracker records built, its open pull requests against the cap of three, and the goals it holds — read from the specification's board snapshot.",
+    "Every repository of the lemonfiber organisation: what its tracker records built, its open pull requests, and the goals it holds — read from the specification's board snapshot.",
   eyebrow: "The repositories",
   heading: "Every repository, and the work it holds.",
-  lead: "Each repository records what it has built in its tracker, and holds at most {cap} open pull requests from people and agents at once; the organisation's bots are not counted.",
+  lead: "Each repository records what it has built in its tracker, and works on more in its open pull requests.",
   map: "The repository map",
-  capRule: "The cap",
+  working: "How work moves through the repositories",
   name: "Repository",
   group: "Group",
   tracker: "Tracker",
@@ -28,11 +28,8 @@ export const reposCopy = {
     unread: "not read",
   } as Record<string, string>,
   noTracker: "not asked for",
-  of: "of",
-  bots: (n: number) => (n === 1 ? "1 bot" : `${n} bots`),
   notRead: "not read",
   bot: "bot",
-  overCap: "over the cap",
   back: "← Every repository",
   descriptionOf: (name: string) =>
     `${name}: what its tracker records built, its open pull requests, and the goals it holds — read from the specification's board snapshot.`,
@@ -49,23 +46,19 @@ export const reposCopy = {
 export const inFlightCopy = {
   title: "In flight",
   description:
-    "Every open pull request in the repositories lemonfiber's versions are satisfied in, with what each cites, its age, contested goals and repositories over the cap — read from the specification's board snapshot.",
+    "Every open pull request in the repositories lemonfiber's versions are satisfied in, with what each cites, its age and the goals more than one contests — read from the specification's board snapshot.",
   eyebrow: "Work in flight",
   heading: "Every open pull request, and what it claims.",
   lead: "A pull request claims the requirements its Spec: lines cite. These are the open ones in every repository a version is satisfied in.",
   claiming: "How work is claimed",
-  overCap: "Repositories over the cap",
-  overCapBadge: "over the cap",
-  overCapNone: "No repository is over the cap.",
   contested: "Goals more than one pull request claims",
   contestedNone: "No goal is claimed twice.",
   pullsIn: "open",
-  counted: "counted against the cap of",
   draft: "draft",
   ready: "ready",
   stale: "stale",
   staleNote: "a draft with no commit for more than {days} days",
-  bot: "bot, not counted",
+  bot: "bot",
   opened: "opened",
   daysAgo: (n: number) => (n === 1 ? "1 day ago" : `${n} days ago`),
   today: "today",
@@ -115,12 +108,10 @@ export const claimCopy = {
   unknownAuthor: "author not read",
   repos: "Where it is built",
   noRepos: "No repository is named for this version yet.",
-  open: (n: number | null, cap: number) =>
-    n === null
-      ? "its open pull requests were not read"
-      : `${n} of ${cap} open pull requests`,
-  atCap:
-    "At the cap: nothing is offered here until one of its pull requests closes.",
+  open: (n: number | null) => {
+    if (n === null) return "its open pull requests were not read";
+    return n === 1 ? "1 open pull request" : `${n} open pull requests`;
+  },
   how: "How to claim it",
   command: "With lfdev, from a clone of the repository:",
   orEditor: "Or in GitHub's editor, adding this row to the tracker:",

@@ -20,7 +20,7 @@ describe("pullsByRepo", () => {
       [7, 7],
       [8, 0],
     ]);
-    expect(groups[1]?.repo?.counted_pulls).toBe(2);
+    expect(groups[1]?.repo?.open_pulls).toBe(2);
   });
 
   it("names the goals each contests with another", () => {

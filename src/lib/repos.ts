@@ -1,6 +1,6 @@
 // What the repository pages need from the board snapshot: each repository's
-// tracker counted by state, its open pull requests against the cap, and the
-// goals of the version taking work that its tracker holds.
+// tracker counted by state, its open pull requests, and the goals of the
+// version taking work that its tracker holds.
 //
 // Pure functions over the snapshot. Components render; nothing here does.
 
@@ -30,18 +30,6 @@ export interface RepoState {
   /** The first version taking work that is satisfied here, with the goals its
    *  tracker holds; null where no version taking work is satisfied here. */
   version: { version: Version; goals: Goal[] } | null;
-}
-
-/** A repository's open pull requests split into those the cap counts and the
- *  bots', or null where its pull requests were not read. */
-export function againstCap(
-  repo: Pick<BoardRepo, "open_pulls" | "counted_pulls">,
-): { counted: number; bots: number } | null {
-  if (repo.open_pulls === null || repo.counted_pulls === null) return null;
-  return {
-    counted: repo.counted_pulls,
-    bots: repo.open_pulls - repo.counted_pulls,
-  };
 }
 
 /** Where a tracker is kept, from the file one of its rows names: that file,

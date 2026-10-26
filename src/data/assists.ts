@@ -33,7 +33,7 @@ export const assists: Assist[] = [
     produces:
       "A draft pull request in the repository that builds it, opening with an empty signed commit carrying the Spec: line and a sign-off.",
     after:
-      "pr-cap says when a repository is at its cap; goal-automations labels it; the board shows the claim on its next run.",
+      "goal-automations labels it; the board shows the claim on its next run.",
   },
   {
     command: "propose",

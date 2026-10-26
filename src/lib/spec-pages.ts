@@ -39,7 +39,7 @@ export const SPEC_MIRROR: Mirror = {
   include: SPEC_SECTIONS,
 };
 
-/** A requirement's identifier, the whole of a table cell: `F8-R6`, `GOV-R58`. */
+/** A requirement's identifier, the whole of a table cell: `F8-R6`, `GOV-R57`. */
 const REQUIREMENT_ID = /^[A-Z][A-Z0-9]*-R\d+$/;
 
 /** The text a node holds, its markup left out. */

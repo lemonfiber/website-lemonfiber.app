@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
 import {
-  againstCap,
   repoMapUrl,
   repoPageUrl,
   repoState,
@@ -36,17 +35,6 @@ describe("repoState", () => {
   it("reads one repository on its own", () => {
     const sdk = board.repos[2];
     expect(sdk && repoState(board, sdk).pulls).toEqual([]);
-  });
-});
-
-describe("againstCap", () => {
-  it("splits the open pull requests, or says nothing where none were read", () => {
-    expect(againstCap({ open_pulls: 5, counted_pulls: 3 })).toEqual({
-      counted: 3,
-      bots: 2,
-    });
-    expect(againstCap({ open_pulls: null, counted_pulls: null })).toBeNull();
-    expect(againstCap({ open_pulls: 1, counted_pulls: null })).toBeNull();
   });
 });
 

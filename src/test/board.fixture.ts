@@ -1,4 +1,4 @@
-// A small board snapshot in format 1, for the unit tests: two areas, two
+// A small board snapshot in format 2, for the unit tests: two areas, two
 // features, a requirement of each status, three versions (one released, one
 // releasable, one planned), a tracker, a draft and a ready pull request
 // contesting a goal and a bot's, a repository of each tracker state, a release
@@ -36,7 +36,7 @@ const version = (
 
 export function fixtureBoard(): Board {
   return {
-    format: 1,
+    format: 2,
     generated_at: "2026-10-08T00:00:00Z",
     ref: "HEAD",
     sources: { spec: "a".repeat(40), lemonfiber: "b".repeat(40) },
@@ -159,7 +159,7 @@ export function fixtureBoard(): Board {
         cites: [],
       },
     ],
-    claims: { cap: 3, stale_days: 14 },
+    claims: { stale_days: 14 },
     contested: [{ id: "GOV-R2", pulls: ["lemonfiber#7", "lemonfiber#8"] }],
     repos: [
       { ...repo("spec", null), pages: ["../README.md"], open_pulls: 1 },
@@ -167,14 +167,8 @@ export function fixtureBoard(): Board {
         ...repo("lemonfiber", "present"),
         pages: ["lemonfiber.md"],
         open_pulls: 2,
-        counted_pulls: 2,
       },
-      {
-        ...repo("sdk-php", "unread"),
-        open_pulls: null,
-        counted_pulls: null,
-        over_cap: null,
-      },
+      { ...repo("sdk-php", "unread"), open_pulls: null },
     ],
     releases: [
       {
@@ -224,8 +218,6 @@ function repo(name: string, tracker: Board["repos"][number]["tracker"]) {
     note: null,
     pages: [],
     open_pulls: 0,
-    counted_pulls: 0,
-    over_cap: false,
     tracker,
   };
 }
