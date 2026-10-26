@@ -23,8 +23,8 @@ describe("parseBoard", () => {
   });
 
   it("refuses a format it does not know, naming both", () => {
-    expect(() => parseBoard({ ...fixtureBoard(), format: 2 })).toThrow(
-      `board.json is format 2; this site reads format ${FORMAT}`,
+    expect(() => parseBoard({ ...fixtureBoard(), format: 1 })).toThrow(
+      `board.json is format 1; this site reads format ${FORMAT}`,
     );
     expect(() => parseBoard({ generated_at: "x" })).toThrow(
       "is format undefined",

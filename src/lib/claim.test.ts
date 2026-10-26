@@ -140,7 +140,6 @@ describe("claimPages", () => {
       command: "lfdev claim B1-R1",
       row: claimRow("B1-R1"),
       title: "chore(claim): B1-R1",
-      cap: 3,
       holders: [],
     });
     expect(b1?.body.split("\n").slice(-3)).toEqual([
@@ -156,31 +155,20 @@ describe("claimPages", () => {
     expect([gov?.text, gov?.page]).toEqual([null, null]);
   });
 
-  it("counts each repository's open pull requests against the cap", () => {
+  it("names each repository's open pull requests", () => {
     const b1 = pages.find((p) => p.id === "B1-R1");
     expect(b1?.repos).toEqual([
       {
         repo: "lemonfiber",
-        counted: 2,
-        atCap: false,
+        open: 2,
         editor: editorFor(board, "lemonfiber", "B1-R1"),
       },
     ]);
-    const full = {
-      ...board,
-      repos: board.repos.map((r) =>
-        r.name === "lemonfiber" ? { ...r, counted_pulls: 3 } : r,
-      ),
-    };
-    expect(claimPages(full)[0]?.repos[0]?.atCap).toBe(true);
     const unread = {
       ...board,
       repos: board.repos.filter((r) => r.name !== "lemonfiber"),
     };
-    expect(claimPages(unread)[0]?.repos[0]).toMatchObject({
-      counted: null,
-      atCap: false,
-    });
+    expect(claimPages(unread)[0]?.repos[0]?.open).toBeNull();
   });
 });
 

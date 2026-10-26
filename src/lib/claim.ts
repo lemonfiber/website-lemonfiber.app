@@ -1,8 +1,8 @@
-// What a goal's claim page needs from the board snapshot (GOV-R57, GOV-R58):
-// whether somebody already holds it, each repository it is built in with its
-// open pull requests against the cap, and the two ways to claim it — the
-// command, and the tracker row to paste in GitHub's editor, with the pull
-// request's title and the lines its body ends with (GOV-R62).
+// What a goal's claim page needs from the board snapshot (GOV-R57): whether
+// somebody already holds it, each repository it is built in with its open pull
+// requests, and the two ways to claim it — the command, and the tracker row to
+// paste in GitHub's editor, with the pull request's title and the lines its
+// body ends with (GOV-R62).
 //
 // Pure functions over the snapshot. Components render; nothing here does.
 
@@ -36,9 +36,8 @@ export interface Editor {
 /** One repository the goal is built in. */
 export interface ClaimRepo {
   repo: string;
-  /** Its open pull requests from people and agents, or null where unread. */
-  counted: number | null;
-  atCap: boolean;
+  /** Its open pull requests, or null where they were not read. */
+  open: number | null;
   /** Null where the snapshot does not say how it keeps its tracker. */
   editor: Editor | null;
 }
@@ -52,7 +51,6 @@ export interface ClaimPage {
   page: string | null;
   holders: Holder[];
   repos: ClaimRepo[];
-  cap: number;
   command: string;
   row: string;
   title: string;
@@ -111,18 +109,11 @@ export function holders(
 export function claimPages(
   board: Pick<
     Board,
-    | "versions"
-    | "trackers"
-    | "requirements"
-    | "features"
-    | "pulls"
-    | "repos"
-    | "claims"
+    "versions" | "trackers" | "requirements" | "features" | "pulls" | "repos"
   >,
 ): ClaimPage[] {
   const textOf = new Map(board.requirements.map((r) => [r.id, r.text]));
-  const countOf = new Map(board.repos.map((r) => [r.name, r.counted_pulls]));
-  const cap = board.claims.cap;
+  const openOf = new Map(board.repos.map((r) => [r.name, r.open_pulls]));
   const seen = new Set<string>();
   return takingWork(board).flatMap((version) =>
     version.goals.flatMap((goal) => {
@@ -138,16 +129,11 @@ export function claimPages(
           text: text === undefined ? null : plainText(text),
           page: requirementPage(board, goal.id),
           holders: holders(board, goal.id, goal.claims),
-          repos: version.satisfied_in.map((repo) => {
-            const counted = countOf.get(repo) ?? null;
-            return {
-              repo,
-              counted,
-              atCap: counted !== null && counted >= cap,
-              editor: editorFor(board, repo, goal.id),
-            };
-          }),
-          cap,
+          repos: version.satisfied_in.map((repo) => ({
+            repo,
+            open: openOf.get(repo) ?? null,
+            editor: editorFor(board, repo, goal.id),
+          })),
           command: `lfdev claim ${goal.id}`,
           row: claimRow(goal.id),
           title: `chore(claim): ${goal.id}`,

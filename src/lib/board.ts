@@ -18,7 +18,7 @@ export const BOARD_URL =
   "https://github.com/lemonfiber/spec/releases/download/board/board.json";
 
 /** The one shape of `board.json` this site reads. */
-export const FORMAT = 1;
+export const FORMAT = 2;
 
 const TIMEOUT_MS = 30_000;
 
@@ -135,11 +135,8 @@ export interface BoardRepo {
   lang: string | null;
   note: string | null;
   pages: string[];
-  /** Null, as are the two below, where its pull requests were not read. */
+  /** Null where its pull requests were not read. */
   open_pulls: number | null;
-  /** The open pull requests from people and agents, which the cap counts. */
-  counted_pulls: number | null;
-  over_cap: boolean | null;
   tracker: "present" | "absent" | "unread" | null;
 }
 
@@ -182,8 +179,8 @@ export interface Board {
   versions: Version[];
   trackers: Tracker[];
   pulls: Pull[];
-  /** The rules the report flags claims by. */
-  claims: { cap: number; stale_days: number };
+  /** The rule the report flags a stale claim by. */
+  claims: { stale_days: number };
   contested: Contested[];
   repos: BoardRepo[];
   releases: BoardRelease[];

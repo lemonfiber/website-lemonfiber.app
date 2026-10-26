@@ -4,13 +4,7 @@ import SnapshotNote from "../../components/SnapshotNote.astro";
 import ReqLink from "../../components/ReqLink.astro";
 import { loadBoard } from "../../lib/board";
 import type { BoardRepo } from "../../lib/board";
-import {
-  againstCap,
-  repoMapUrl,
-  repoPageUrl,
-  repoSlug,
-  repoState,
-} from "../../lib/repos";
+import { repoMapUrl, repoPageUrl, repoSlug, repoState } from "../../lib/repos";
 import { requirementPage } from "../../lib/feature-page";
 import { manifestUrl } from "../../lib/roadmap";
 import { reposCopy as t, roadmapCopy } from "../../i18n";
@@ -26,13 +20,6 @@ export async function getStaticPaths() {
 const { repo } = Astro.props as { repo: BoardRepo };
 const board = await loadBoard();
 const state = repoState(board, repo);
-const cap = board.claims.cap;
-const pulls = againstCap(repo);
-const pullsLabel = () => {
-  if (!pulls) return t.notRead;
-  const bots = pulls.bots > 0 ? ` + ${t.bots(pulls.bots)}` : "";
-  return `${pulls.counted} ${t.of} ${cap}${bots}`;
-};
 const facts: [string, string][] = [
   [t.group, repo.group ?? "—"],
   [t.language, repo.lang ?? "—"],
@@ -42,7 +29,7 @@ const facts: [string, string][] = [
       ? t.noTracker
       : (t.trackerState[repo.tracker] ?? repo.tracker),
   ],
-  [t.pulls, pullsLabel()],
+  [t.pulls, repo.open_pulls === null ? t.notRead : String(repo.open_pulls)],
 ];
 const byWhom = (author: string | null, bot: boolean) =>
   bot ? `${author ?? ""} (${t.bot})` : (author ?? "");
@@ -78,11 +65,6 @@ const goals = (state.version?.goals ?? []).map((g) => ({
           </div>
         )}
       </dl>
-      {repo.over_cap && (
-        <p>
-          <span class="badge badge--danger">{t.overCap}</span>
-        </p>
-      )}
       <p class="src">
         <a href={repoMapUrl(board)}>{t.map}</a>
         {repo.pages.map((page) => (

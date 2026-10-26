@@ -36,10 +36,10 @@ describe("rowRequirement", () => {
   it("reads the identifier a row's first cell defines", () => {
     const row = el("tr", [
       text("\n"),
-      el("td", [el("strong", [text(" GOV-R58 ")])]),
+      el("td", [el("strong", [text(" GOV-R57 ")])]),
       el("td", [text("A repository MUST …")]),
     ]);
-    expect(rowRequirement(row)).toBe("GOV-R58");
+    expect(rowRequirement(row)).toBe("GOV-R57");
     expect(rowRequirement(el("tr", [el("th", [text("A1-R1")])]))).toBe("A1-R1");
   });
 
