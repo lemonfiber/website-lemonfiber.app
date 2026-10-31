@@ -17,6 +17,7 @@ import {
 import { execFileSync } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const CHROME =
   process.env.CHROME ??
@@ -24,7 +25,10 @@ const CHROME =
 
 const token = (name) => {
   const m = new RegExp(String.raw`^\s*${name}:\s*([^;]+);`, "m").exec(
-    readFileSync("src/styles/tokens.css", "utf8"),
+    readFileSync(
+      fileURLToPath(import.meta.resolve("@lemonfiber/brand/tokens.css")),
+      "utf8",
+    ),
   );
   if (!m) throw new Error(`token ${name} not found`);
   return m[1].trim();
@@ -38,10 +42,10 @@ if (!font)
 
 const mark = readFileSync("public/brand/mark-small.svg", "utf8");
 const [ink, lemon, fiber, paper] = [
-  "--lf-ink",
-  "--lf-lemon",
-  "--lf-fiber",
-  "--lf-paper",
+  "--lf-color-ink",
+  "--lf-color-lemon",
+  "--lf-color-fiber",
+  "--lf-color-paper",
 ].map(token);
 
 const card = ({
@@ -59,7 +63,7 @@ body{font-family:"Bricolage",system-ui,sans-serif;background:${ink};color:${pape
  background-size:auto,auto,24px 24px;
  display:flex;flex-direction:column;justify-content:space-between;padding:74px 82px}
 .top{display:flex;align-items:center;gap:22px}
-.top svg{width:76px;height:76px}
+.top svg{width:64px;height:64px}
 .word{font-weight:800;font-size:52px;letter-spacing:-.045em}
 h1{font-weight:800;font-size:76px;line-height:1.02;letter-spacing:-.048em;max-width:19ch}
 h1 em{font-style:normal;color:${fiber}}

@@ -85,7 +85,7 @@ const cols = [
   <div class="container ft__inner">
     <div class="ft__brand">
       <a href="/" class="ft__logo" aria-label="Lemonfiber home">
-        <img src="/brand/mark-small.svg" alt="" width="40" height="40" />
+        <img src="/brand/mark-small.svg" alt="" width="48" height="48" />
         <span>Lemonfiber</span>
       </a>
       <p class="ft__tag">{t.meta.tagline}.</p>
@@ -172,6 +172,9 @@ const cols = [
        gives up some width rather than squeezing the labels. */
     grid-template-columns: 1fr 2.4fr;
     gap: var(--space-7);
+  }
+  .ft__logo img {
+    image-rendering: pixelated;
   }
   .ft__logo {
     display: inline-flex;
