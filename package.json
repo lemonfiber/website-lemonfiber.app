@@ -2,7 +2,7 @@
   "name": "@lemonfiber/website-lemonfiber.app",
   "version": "0.1.0",
   "private": true,
-  "description": "The lemonfiber frontpage — a build-in-the-open site driven by the GitHub org.",
+  "description": "The lemonfiber frontpage \u2014 a build-in-the-open site driven by the GitHub org.",
   "type": "module",
   "license": "Hippocratic-3.0",
   "engines": {
@@ -50,5 +50,8 @@
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.0",
     "vitest": "5.0.5"
+  },
+  "overrides": {
+    "minimatch": "^11.0.3"
   }
 }
