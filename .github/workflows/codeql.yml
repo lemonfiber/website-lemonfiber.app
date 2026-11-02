@@ -54,6 +54,6 @@ jobs:
     permissions:
       contents: read
       security-events: read
-    uses: lemonfiber/spec/.github/workflows/codeql-alerts.yml@b7a0715bcb2e66bbe50cced0001bf41a03178e84 # v1.0.131
+    uses: lemonfiber/spec/.github/workflows/codeql-alerts.yml@679d0d4d8f7dd31771cd3d7333693069a27df7d1 # v1.0.138
     with:
       analysis: ${{ needs.analyze.result }}
