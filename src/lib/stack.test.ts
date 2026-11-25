@@ -1,27 +1,36 @@
 import { describe, expect, it } from "vitest";
 import { services } from "../data/site";
-import { drift, holdTo, included } from "./stack";
+import { drift, holdTo, pinned } from "./stack";
 
-const ROOT = `schema_version = 1
-include = [
-  "services/prowlarr.toml",
-  "services/request-gate.toml",
-]
+const BUNDLE = `schema = 2
 
 [[profile]]
 id = "search"
+
+[[plugin]]
+id           = "prowlarr"
+profile      = "search"
+
+[[plugin]]
+revision = "0"
+
+[[plugin]]
+id           = "request-gate"
+
+[[offered]]
+id           = "byparr"
 `;
 
 describe("the stack's services", () => {
-  it("reads the include list's ids in order", () => {
-    expect(included(ROOT)).toEqual(["prowlarr", "request-gate"]);
+  it("reads the ids the bundle pins in order, and none it only offers", () => {
+    expect(pinned(BUNDLE)).toEqual(["prowlarr", "request-gate"]);
   });
 
-  it("refuses a manifest with no include list, or one including nothing", () => {
-    expect(() => included('[[service]]\nid = "x"\n')).toThrow(
-      "names no include list",
+  it("refuses a bundle that pins no plugin", () => {
+    expect(() => pinned('[[offered]]\nid = "x"\n')).toThrow(
+      "the bundle pins no plugin",
     );
-    expect(() => included("include = []\n")).toThrow("includes no service");
+    expect(() => pinned("schema = 2\n")).toThrow("the bundle pins no plugin");
   });
 
   it("names every service one side has and the other does not", () => {
@@ -34,12 +43,12 @@ describe("the stack's services", () => {
 
   it("fails a build whose list differs, and passes one that agrees", () => {
     expect(() => {
-      holdTo(ROOT, ["prowlarr"]);
+      holdTo(BUNDLE, ["prowlarr"]);
     }).toThrow(
       "src/data/site.ts services differ from the stack: the stack runs request-gate",
     );
     expect(() => {
-      holdTo(ROOT, ["prowlarr", "request-gate"]);
+      holdTo(BUNDLE, ["prowlarr", "request-gate"]);
     }).not.toThrow();
   });
 

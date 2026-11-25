@@ -1,24 +1,24 @@
-// The services the stack runs, as lemonfiber-media-stack's manifest names them:
-// `stack.toml` lists a file per service, `services/<id>.toml`, in its
-// `include`, and that list alone decides what the stack holds (ARCH-R171). The
-// site's own list is held to it, so a service added to the stack or taken out
-// of it fails the build until the site says so too.
+// The services the stack runs, as the bundle in lemonfiber-plugins pins them:
+// one `[[plugin]]` table per service, its `id` first, and that list alone
+// decides what the stack holds (REPO-R91). A plugin the bundle only offers is
+// not one. The site's own list is held to it, so a service added to the stack
+// or taken out of it fails the build until the site says so too.
 
-/** Where the stack manifest is read from, unless STACK_MANIFEST names a copy. */
+/** Where the bundle is read from, unless STACK_BUNDLE names a copy. */
 export const STACK_URL =
-  "https://raw.githubusercontent.com/lemonfiber/lemonfiber-media-stack/main/stack.toml";
+  "https://raw.githubusercontent.com/lemonfiber/lemonfiber-plugins/main/bundle/bundle.toml";
 
-const INCLUDE = /^include\s*=\s*\[([^\]]*)\]/m;
-const ENTRY = /"services\/([a-z0-9][a-z0-9-]*)\.toml"/g;
+const TABLE = /^(?=\[\[)/m;
+const PIN = "[[plugin]]";
+const ID = /^id\s*=\s*"([a-z0-9][a-z0-9-]*)"/m;
 
-/** The service ids a root manifest's `include` names, in order. */
-export function included(manifest: string): string[] {
-  const list = INCLUDE.exec(manifest)?.[1];
-  if (list === undefined)
-    throw new Error("the stack manifest names no include list");
-  const ids = [...list.matchAll(ENTRY)].flatMap((entry) => entry.slice(1, 2));
-  if (ids.length === 0)
-    throw new Error("the stack manifest includes no service");
+/** The plugin ids the bundle pins, in order. */
+export function pinned(bundle: string): string[] {
+  const ids = bundle
+    .split(TABLE)
+    .filter((table) => table.startsWith(`${PIN}\n`))
+    .flatMap((table) => ID.exec(table)?.slice(1, 2) ?? []);
+  if (ids.length === 0) throw new Error("the bundle pins no plugin");
   return ids;
 }
 
@@ -36,9 +36,9 @@ export function drift(stack: string[], site: string[]): string[] {
   ];
 }
 
-/** The site's ids against the manifest's text; a build that differs fails. */
-export function holdTo(manifest: string, site: string[]): void {
-  const said = drift(included(manifest), site);
+/** The site's ids against the bundle's text; a build that differs fails. */
+export function holdTo(bundle: string, site: string[]): void {
+  const said = drift(pinned(bundle), site);
   if (said.length > 0) {
     throw new Error(
       `src/data/site.ts services differ from the stack: ${said.join("; ")}`,

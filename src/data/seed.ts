@@ -47,10 +47,10 @@ export const seedRepos: Repo[] = [
     { primary: true, latestRelease: "v0.16.0" },
   ),
   seed(
-    "lemonfiber-media-stack",
+    "lemonfiber-plugins",
     "the stack",
-    "Shell",
-    "The Docker Compose stack it runs, and its stack.toml manifest. Works with plain docker compose too.",
+    "Python",
+    "The stack lemonfiber ships, as the first-party plugins its bundle pins, and the reviewed catalogue where plugins are listed so people can find them.",
     { primary: true },
   ),
   seed(
@@ -130,12 +130,6 @@ export const seedRepos: Repo[] = [
     "a plugin",
     "TOML",
     "Plex as a plugin: a worked example that cannot be installed yet.",
-  ),
-  seed(
-    "lemonfiber-plugins",
-    "the catalogue",
-    "TOML",
-    "The reviewed catalogue where plugins are listed so people can find them.",
   ),
   seed(
     "brand",
