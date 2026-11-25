@@ -1,8 +1,8 @@
 // Static, editorial content — the parts of the site that are prose, not motor
-// data. The service/profile/form model follows lemonfiber-media-stack's
-// manifest: profiles and forms in `stack.toml`, each service in the
-// `services/<id>.toml` its `include` names. It draws every service the stack
-// runs, lemonfiber's own decline and request-gate among them.
+// data. The service/profile/form model follows the bundle in
+// lemonfiber-plugins: profiles and forms in `bundle/bundle.toml`, and a service
+// for each first-party plugin it pins. It draws every service the stack runs,
+// lemonfiber's own door, decline and request-gate among them.
 
 export const site = {
   name: "Lemonfiber",
