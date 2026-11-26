@@ -96,7 +96,7 @@ const automated = [
 ];
 
 // Named forms — the slices you actually type. `lemonfiber up tv`, etc. Every
-// form in stack.toml but `proxy`, which layers onto another form and is named
+// form in the bundle but `proxy`, which layers onto another form and is named
 // in the switcher's footnote instead.
 export const forms: {
   key: string;
